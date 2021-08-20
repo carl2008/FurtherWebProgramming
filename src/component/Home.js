@@ -4,9 +4,11 @@ import CovidAPI from './CovidAPI/CovidAPI';
 class Home extends Component {
     render() {
         return (
-            <div class="container">
+            <div>
                 <p>This is home page</p>
-                <CovidAPI />
+                <div className="container">
+                    <CovidAPI />
+                </div>
             </div>
         )
     }
