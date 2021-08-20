@@ -1,17 +1,14 @@
 import { useEffect, useState } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './API.css';
-// import * as React from 'react';
 
 export default function CovidAPI() {
-    // const endPoint = "https://disease.sh/v3/covid-19/countries/vietnam"
     const endPoint = "https://api.covid19api.com/dayone/country/vietnam"
     const [data, setData] = useState([])
     let yesterdayTotalCase = 0
     let dayBeforeYesterdayTotalCase = 0
     let yesterdayTotalDeath = 0
     let dayBeforeYesterdayTotalDeath = 0
-    // const [loadCount, setLoadCount] = useState(0)
     const [timeStamp, setTimeStamp] = useState();
     var casePer7Days = []
     const vnPopulation = 98326682
@@ -25,7 +22,6 @@ export default function CovidAPI() {
     // initial API load
     useEffect(() => {
         load()
-        // setLoadCount(count => count + 1)
         let currentDate = new Date()
         let month = currentDate.getMonth() + 1
         let minute = currentDate.getMinutes()
@@ -40,7 +36,6 @@ export default function CovidAPI() {
     useEffect(() => {
         const intervalId = setInterval(() => {
             load()
-            // setLoadCount(count => count + 1)
             let currentDate = new Date()
             let month = currentDate.getMonth() + 1
             let minute = currentDate.getMinutes()
@@ -78,7 +73,7 @@ export default function CovidAPI() {
                     }
                     var avgCasePer7 = totalCasePer7 / casePer7Days.length
 
-                    // if today's cases are update then use this data set
+                    // if today's cases are update then use today's data set
                     if (item.Confirmed !== yesterdayTotalCase) {
                         return (
                             <div key="index" className="row">
@@ -90,7 +85,7 @@ export default function CovidAPI() {
                                 </div>
                                 <div className="stat">
                                     <div className="stat-icon-bg" style={{ background: "#E3F4F7" }}>
-                                        <i className="fa fa-user stat-icon" style={{ margin: "30% 38%", color: "#00CFE8" }}></i>
+                                    <i className="fa fa-user-plus stat-icon" style={{ margin: "30% 36%", color: "#00CFE8" }}></i>
                                     </div>
                                     <p className="stat-num"><b>Latest Cases</b><br /><span className="d-flex justify-content-center" style={{ fontSize: "24px" }}>{item.Confirmed - yesterdayTotalCase}</span></p>
                                 </div>
@@ -107,34 +102,24 @@ export default function CovidAPI() {
                                     <p className="stat-num"><b>Average Cases Per 7 Days</b><br /><span className="d-flex justify-content-center" style={{ fontSize: "24px" }}>{Math.ceil(avgCasePer7)}</span></p>
                                 </div>
                                 <div className="stat">
+                                    <div className="stat-icon-bg" style={{ background: "#E3F4F7" }}>
+                                        <i className="fa fa-user stat-icon" style={{ margin: "30% 38%", color: "#00CFE8" }}></i>
+                                    </div>
+                                    <p className="stat-num"><b>1 Case For Every</b><br /><span className="d-flex justify-content-center" style={{ fontSize: "24px" }}>{Math.ceil(vnPopulation / item.Confirmed)} People</span></p>
+                                </div>
+                                <div className="stat">
                                     <div className="stat-icon-bg" style={{ background: "#E6F4EC" }}>
                                         <i className="fa fa-calendar stat-icon" style={{ margin: "30% 35%", color: "#61D194" }}></i>
                                     </div>
                                     <p className="stat-num" style={{ textAlign: "center" }}><b>Last Updated</b><br /><span className="d-flex justify-content-center" style={{ fontSize: "22px" }}>{timeStamp}</span></p>
                                 </div>
-                                <div className="stat">
-                                    <div className="stat-icon-bg" style={{ background: "#E3F4F7" }}>
-                                        <i className="fa fa-code stat-icon" style={{ margin: "26% 29%", color: "#00CFE8", fontSize: "20px" }}></i>
-                                    </div>
-                                    <p className="stat-num"><b>Cases Per 1 Million People</b><br /><span className="d-flex justify-content-center" style={{ fontSize: "24px" }}>{Math.ceil((1000000 * item.Confirmed) / (vnPopulation))}</span></p>
-                                </div>
-                                <div className="stat">
-                                    <div className="stat-icon-bg" style={{ background: "#E3F4F7" }}>
-                                        <i className="fa fa-code stat-icon" style={{ margin: "26% 29%", color: "#00CFE8", fontSize: "20px" }}></i>
-                                    </div>
-                                    <p className="stat-num"><b>1 Case For Every</b><br /><span className="d-flex justify-content-center" style={{ fontSize: "24px" }}>{Math.ceil(vnPopulation / item.Confirmed)} People</span></p>
-                                </div>
-                                {/* <div className="stat">
-                                    <div className="stat-icon-bg" style={{ background: "#E3F4F7" }}>
-                                        <i className="fa fa-code stat-icon" style={{ margin: "26% 29%", color: "#00CFE8", fontSize: "20px" }}></i>
-                                    </div>
-                                    <p className="stat-num"><b>Load Count</b><br /><span className="d-flex justify-content-center" style={{ fontSize: "24px" }}>{loadCount}</span></p>
-                                </div> */}
+
+                                {/* empty out casePer7Days array for future updates */}
                                 {casePer7Days = []}
                             </div>
                         )
                     }
-                    // if today's cases is not updated then use yesterday's cases
+                    // if today's cases is not updated then use yesterday's data set
                     return (
                         <div key="index" className="row">
                             <div className="stat">
@@ -145,7 +130,7 @@ export default function CovidAPI() {
                             </div>
                             <div className="stat">
                                 <div className="stat-icon-bg" style={{ background: "#E3F4F7" }}>
-                                    <i className="fa fa-user stat-icon" style={{ margin: "30% 38%", color: "#00CFE8" }}></i>
+                                    <i className="fa fa-user-plus stat-icon" style={{ margin: "30% 36%", color: "#00CFE8" }}></i>
                                 </div>
                                 <p className="stat-num"><b>Latest Cases</b><br /><span className="d-flex justify-content-center" style={{ fontSize: "24px" }}>{yesterdayTotalCase - dayBeforeYesterdayTotalCase}</span></p>
 
@@ -163,29 +148,18 @@ export default function CovidAPI() {
                                 <p className="stat-num"><b>Average Cases Per 7 Days</b><br /><span className="d-flex justify-content-center" style={{ fontSize: "24px" }}>{Math.ceil(avgCasePer7)}</span></p>
                             </div>
                             <div className="stat">
+                                <div className="stat-icon-bg" style={{ background: "#E3F4F7" }}>
+                                    <i className="fa fa-user stat-icon" style={{ margin: "30% 38%", color: "#00CFE8" }}></i>
+                                </div>
+                                <p className="stat-num"><b>1 Case For Every</b><br /><span className="d-flex justify-content-center" style={{ fontSize: "24px" }}>{Math.ceil(vnPopulation / item.Confirmed)} People</span></p>
+                            </div>
+                            <div className="stat">
                                 <div className="stat-icon-bg" style={{ background: "#E6F4EC" }}>
                                     <i className="fa fa-calendar stat-icon" style={{ margin: "30% 35%", color: "#61D194" }}></i>
                                 </div>
                                 <p className="stat-num" style={{ textAlign: "center" }}><b>Last Updated</b><br /><span className="d-flex justify-content-center" style={{ fontSize: "22px" }}>{timeStamp}</span></p>
                             </div>
-                            <div className="stat">
-                                <div className="stat-icon-bg" style={{ background: "#E3F4F7" }}>
-                                    <i className="fa fa-code stat-icon" style={{ margin: "26% 29%", color: "#00CFE8", fontSize: "20px" }}></i>
-                                </div>
-                                <p className="stat-num"><b>Cases Per 1 Million People</b><br /><span className="d-flex justify-content-center" style={{ fontSize: "24px" }}>{Math.ceil((1000000 * item.Confirmed) / (vnPopulation))}</span></p>
-                            </div>
-                            <div className="stat">
-                                <div className="stat-icon-bg" style={{ background: "#E3F4F7" }}>
-                                    <i className="fa fa-code stat-icon" style={{ margin: "26% 29%", color: "#00CFE8", fontSize: "20px" }}></i>
-                                </div>
-                                <p className="stat-num"><b>1 Case For Every</b><br /><span className="d-flex justify-content-center" style={{ fontSize: "24px" }}>{Math.ceil(vnPopulation / item.Confirmed)} People</span></p>
-                            </div>
-                            {/* <div className="stat">
-                                <div className="stat-icon-bg" style={{ background: "#E3F4F7" }}>
-                                    <i className="fa fa-code stat-icon" style={{ margin: "26% 29%", color: "#00CFE8", fontSize: "20px" }}></i>
-                                </div>
-                                <p className="stat-num"><b>Load Count</b><br /><span className="d-flex justify-content-center" style={{ fontSize: "24px" }}>{loadCount}</span></p>
-                            </div> */}
+                            
                             {/* empty out casePer7Days array for future updates */}
                             {casePer7Days = []}
                         </div>
