@@ -1,0 +1,31 @@
+.jumbotron{
+    /* display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0px;*/
+    padding: 15px 5px 15px 5px;
+    background-color: white;
+    filter: drop-shadow(0px 4px 24px lightgrey); 
+}
+.api-header-icon{
+    margin-top: 1.2%;
+    margin-left: 0.5%;
+    margin-right: 0.5%;
+    color: blue;
+}
+.stat-icon-bg{
+    /* widget-symbol */
+    margin: 0 auto;
+    position: static;
+    width: 45px;
+    height: 45px;
+    left: 0px;
+    top: 0px;
+    border-radius: 45px;
+}
+.stat{
+    margin: 0 auto;
+}
+.stat-num{
+    margin-top: 8px;
+}
