@@ -1,9 +1,15 @@
 import React, { Component } from 'react';
+import CovidAPI from './CovidAPI/CovidAPI';
 
 class Home extends Component {
-    render () {
+    render() {
         return (
-            <div>This is Home page</div>
+            <div>
+                <p>This is home page</p>
+                <div className="container">
+                    <CovidAPI />
+                </div>
+            </div>
         )
     }
 }
