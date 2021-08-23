@@ -48,7 +48,7 @@ export default function CovidAPI() {
     }, [])
 
     return (
-        <div className="jumbotron">
+        <div className="jumbotron stat-panel">
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></link>
             <div className="d-flex justify-content-center" style={{ margin: "5px 0px 10px 0px" }}>
                 <h3 style={{ marginBottom: "20px" }}>Vietnam COVID-19 Statistics <span style={{ fontSize: "16px" }}>*</span></h3>
