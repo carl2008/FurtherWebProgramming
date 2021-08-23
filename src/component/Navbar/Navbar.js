@@ -12,7 +12,7 @@ class Navbar extends Component {
             <nav className="NavbarItems">
                 <div className="navbar-rectangle">
                     <Link to='/'><img className="navbar-logo" src={logo} alt="logo"/></Link>
-                    <Link to='/' className="navbar-title">Logo</Link>
+                    <Link to='/' className="navbar-title">R-MED</Link>
                     <ul className="navbar-links">
                         {NavbarLinks.map((item, index) => {
                             return (
