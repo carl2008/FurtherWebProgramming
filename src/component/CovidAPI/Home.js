@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import CovidAPI from './CovidAPI/CovidAPI';
+import CovidAPI from './CovidAPI';
 
 class Home extends Component {
     render() {

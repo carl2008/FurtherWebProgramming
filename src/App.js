@@ -4,11 +4,11 @@ import './index.css'
 
 import React from 'react';
 import Navbar from './component/Navbar/Navbar';
-import AboutUs from './component/AboutUs';
-import Articles from './component/Articles';
-import ArticlePost from './component/ArticlePost';
-import DiscussionList from './component/DiscussionList';
-import Home from './component/Home';
+import AboutUs from './component/AboutUs/AboutUs';
+import Articles from './component/Articles/Articles';
+import ArticlePost from './component/Articles/ArticlePost';
+import DiscussionList from './component/Discussion/DiscussionList';
+import Home from './component/CovidAPI/Home';
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 function App() {
