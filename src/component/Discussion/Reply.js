@@ -35,7 +35,7 @@ export default function Reply({ id }) {
                                     <p>{reply.content}</p>
                                 </div>
                                 <button class="btn btn-xs text-muted has-icon"><i class="fa fa-heart" aria-hidden="true"></i>1</button>
-                                <a href="javascript:void(0)" class="text-muted small">Reply</a>
+                                <a href="javascript:void(0)" class="text-muted">Reply</a>
                             </div>
                         </div>
                     </div>

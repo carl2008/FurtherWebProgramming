@@ -5,7 +5,6 @@ import 'bootstrap/dist/js/bootstrap.min.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Reply from "./Reply";
 import { List } from 'antd';
-import { Collapse } from 'bootstrap';
 
 export default function DiscussionList() {
     const [discussions, setDiscussions] = useState([])
@@ -26,9 +25,15 @@ export default function DiscussionList() {
             .then(() => {
                 for (let i = 0; i < discussions.length; i++) {
                     fetch(endPoint + `/${discussions[i].id}/replies`)
-                        .then(res => res.json())
+                        .then(res => res.text())
                         .then(repliesData => {
-                            obj[discussions[i].id] = repliesData.length
+                            try{
+                                const rep = JSON.parse(repliesData)
+                                obj[discussions[i].id] = rep.length
+                            }
+                            catch(err){
+                                obj[discussions[i].id] = 0
+                            }
                         })
                 }
                 setReplies(obj)
@@ -161,8 +166,8 @@ export default function DiscussionList() {
                                                                 </span>
                                                             </p>
                                                         </div>
-                                                        <div className="text-muted small text-center align-self-center">
-                                                            <span><i className="far fa-comment ml-2"></i> {replies[discussionPost.id]}</span>
+                                                        <div className="text-muted text-center align-self-center">
+                                                            <span><i className="far fa-comment ml-5"></i> {replies[discussionPost.id]}</span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -184,9 +189,9 @@ export default function DiscussionList() {
                                                                 <div className="mt-3 font-size-sm">
                                                                     <p>{discussionPost.content}</p>
                                                                 </div>
-                                                                <a href="javascript:void(0)" className="text-muted small">Reply</a>
+                                                                <a href="javascript:void(0)" className="text-muted">Reply</a>
                                                             </div>
-                                                            <div className="text-muted small text-center">
+                                                            <div className="text-muted text-center">
                                                                 <span><i className="far fa-comment ml-2"></i> {replies[discussionPost.id]}</span>
                                                             </div>
                                                         </div>
@@ -211,7 +216,7 @@ export default function DiscussionList() {
                             <div className="modal-content">
                                 <form>
                                     <div className="modal-header d-flex align-items-center bg-primary text-white">
-                                        <h6 className="modal-title mb-0" id="threadModalLabel">New Discussion</h6>
+                                        <h6 className="modal-title mb-0" id="threadModalLabel" style={{color: 'white'}}>New Discussion</h6>
                                         <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">×</span>
                                         </button>
@@ -221,7 +226,10 @@ export default function DiscussionList() {
                                             <label for="threadTitle">Title</label>
                                             <input type="text" className="form-control" id="threadTitle" placeholder="Enter title" autofocus="" />
                                         </div>
-                                        <textarea className="form-control summernote" style={{ display: 'none' }}></textarea>
+                                        <div className="form-group">
+                                            <label for="threadContent">Content</label>
+                                            <textarea className="form-control summernote" style={{ display: 'block' }} id="threadContent" placeholder="Post your content here"></textarea>
+                                        </div>
 
                                         <div className="custom-file form-control-sm mt-3" style={{ maxWidth: '300px' }}>
                                             <input type="file" className="custom-file-input" id="customFile" multiple="" />
