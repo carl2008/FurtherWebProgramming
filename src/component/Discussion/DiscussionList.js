@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import './DiscussionList.css';
 import 'jquery/dist/jquery.min.js';
 import 'bootstrap/dist/js/bootstrap.min.js';
@@ -13,6 +13,7 @@ export default function DiscussionList() {
     const [pagination, setPagination] = useState(true);
     const [loading, setLoading] = useState(false)
     const [activeID, setActiveID] = useState('')
+    const [showSideBar, setShowSideBar] = useState(false)
 
     const endPoint = 'https://611fc518c772030017424085.mockapi.io/api/v1/topics'
 
@@ -27,11 +28,11 @@ export default function DiscussionList() {
                     fetch(endPoint + `/${discussions[i].id}/replies`)
                         .then(res => res.text())
                         .then(repliesData => {
-                            try{
+                            try {
                                 const rep = JSON.parse(repliesData)
                                 obj[discussions[i].id] = rep.length
                             }
-                            catch(err){
+                            catch (err) {
                                 obj[discussions[i].id] = 0
                             }
                         })
@@ -79,16 +80,17 @@ export default function DiscussionList() {
                 <div className="main-body p-0">
                     <div className="inner-wrapper">
                         {/*Inner sidebar*/}
-                        <div className="inner-sidebar">
+                        <div className={showSideBar ? "inner-sidebar active" : "inner-sidebar"} id="inner-sidebar">
                             {/*Inner sidebar header*/}
                             <div className="inner-sidebar-header justify-content-center">
-                                <button className="btn btn-primary has-icon btn-block" type="button" data-toggle="modal" data-target="#threadModal">
+                                <button className="btn btn-primary has-icon btn-block" type="button" data-toggle="modal" data-target="#threadModal" id="new-discussion-btn">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="feather feather-plus mr-2">
                                         <line x1="12" y1="5" x2="12" y2="19"></line>
                                         <line x1="5" y1="12" x2="19" y2="12"></line>
                                     </svg>
                                     NEW DISCUSSION
                                 </button>
+                                <a className="nav-link nav-icon rounded-circle nav-link-faded mr-3 d-md-none" href="#" onClick={() => setShowSideBar(!showSideBar)}><i className="fas fa-bars"></i></a>
                             </div>
                             {/*Inner sidebar header*/}
 
@@ -126,7 +128,7 @@ export default function DiscussionList() {
                         <div className="inner-main">
                             {/*Inner main header*/}
                             <div className="inner-main-header">
-                                <a className="nav-link nav-icon rounded-circle nav-link-faded mr-3 d-md-none" href="#" data-toggle="inner-sidebar"><i className="material-icons"></i></a>
+                                <a className="nav-link nav-icon rounded-circle nav-link-faded mr-3 d-md-none" href="#" onClick={() => setShowSideBar(!showSideBar)}><i className="fas fa-bars"></i></a>
                                 <select className="custom-select custom-select-sm w-auto mr-1" value={sortValue} onChange={(e) => setSortValue(e.target.value)}>
                                     <option value="latest">Latest</option>
                                     <option value="oldest">Oldest</option>
@@ -147,7 +149,7 @@ export default function DiscussionList() {
                                         gutter: 5,
                                         column: 1,
                                     }}
-                                    pagination={show ? { pageSize: 5, showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} results` }: false}
+                                    pagination={show ? { pageSize: 5, showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} results` } : false}
                                     dataSource={results(discussions)}
                                     renderItem={discussionPost => (
                                         <List.Item key={discussionPost.id}>
@@ -156,7 +158,7 @@ export default function DiscussionList() {
                                                     <div className="media forum-item">
                                                         <a href="#" data-toggle="collapse"><img src={discussionPost.avatar} className="mr-3 rounded-circle" width="50" alt="User" /></a>
                                                         <div className="media-body">
-                                                            <h6><a href={`/Discussion/${discussionPost.id}`} data-toggle="collapse" data-target={`#discussion-${discussionPost.id}`} className="text-body" onClick={() => {setShow(!show); setPagination(!pagination); setActiveID(discussionPost.id)}}>{discussionPost.title}</a></h6>
+                                                            <h6><a href={`/Discussion/${discussionPost.id}`} data-toggle="collapse" data-target={`#discussion-${discussionPost.id}`} className="text-body" onClick={() => { setShow(!show); setPagination(!pagination); setActiveID(discussionPost.id) }}>{discussionPost.title}</a></h6>
                                                             <p className="text-secondary">
                                                                 {discussionPost.content}
                                                             </p>
@@ -173,8 +175,8 @@ export default function DiscussionList() {
                                                 </div>
                                             </div>
                                             {/*Forum Detail*/}
-                                            <div className="inner-main-body p-2 p-sm-3 collapse forum-content" id={`discussion-${discussionPost.id}`} style={(pagination) ? { display: "none" } : (activeID===discussionPost.id && !pagination) ? { display: 'block' } : { display: 'none' }}>
-                                                <a href="#" className="btn btn-light btn-sm mb-3 has-icon" data-toggle="collapse" data-target={`#discussion-${discussionPost.id}`} onClick={() => {setShow(!show); setPagination(!pagination)}}><i className="fa fa-arrow-left mr-2"></i>Back</a>
+                                            <div className="inner-main-body p-2 p-sm-3 collapse forum-content" id={`discussion-${discussionPost.id}`} style={(pagination) ? { display: "none" } : (activeID === discussionPost.id && !pagination) ? { display: 'block' } : { display: 'none' }}>
+                                                <a href="#" className="btn btn-light btn-sm mb-3 has-icon" data-toggle="collapse" data-target={`#discussion-${discussionPost.id}`} onClick={() => { setShow(!show); setPagination(!pagination) }}><i className="fa fa-arrow-left mr-2"></i>Back</a>
                                                 <div className="card mb-2 discussion-question">
                                                     <div className="card-body">
                                                         <div className="media forum-item">
@@ -197,13 +199,27 @@ export default function DiscussionList() {
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <div className="card mb-2">
+                                                    <div className="card-body">
+                                                        <div className="media forum-item">
+                                                            <a href="javascript:void(0)" className="card-link">
+                                                                <img src="https://www.markuptag.com/images/user-icon.jpg" className="rounded-circle" width="50" alt="User" />
+                                                                <small className="d-block text-center text-muted">User</small>
+                                                            </a>
+                                                            <div className="media-body ml-3">
+                                                                <textarea placeholder="Add a new reply" className="add-reply-input"></textarea>
+                                                            </div>
+                                                        </div>
+                                                        <button className="btn btn-primary btn-sm float-right" type="button">REPLY</button>
+                                                    </div>
+                                                </div>
                                                 {/*Replies section*/}
                                                 <Reply id={discussionPost.id} />
                                             </div>
                                         </List.Item>
                                     )}
                                 />
-                                
+
                             </div>
                             {/*Forum List*/}
                         </div>
@@ -216,7 +232,7 @@ export default function DiscussionList() {
                             <div className="modal-content">
                                 <form>
                                     <div className="modal-header d-flex align-items-center bg-primary text-white">
-                                        <h6 className="modal-title mb-0" id="threadModalLabel" style={{color: 'white'}}>New Discussion</h6>
+                                        <h6 className="modal-title mb-0" id="threadModalLabel" style={{ color: 'white' }}>New Discussion</h6>
                                         <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">×</span>
                                         </button>

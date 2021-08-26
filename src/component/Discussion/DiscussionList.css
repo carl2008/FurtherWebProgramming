@@ -67,9 +67,12 @@ body{
     height: auto;
     min-height: 3.5rem;
 }
-@media (max-width: 767.98px) {
+@media (max-width: 767px) {
     .inner-sidebar {
         left: -235px;
+    }
+    .inner-sidebar.active {
+        left: 0px;
     }
     .inner-main {
         left: 0;
@@ -79,6 +82,10 @@ body{
     }
     .inner-expand .inner-wrapper {
         transform: translate3d(235px, 0, 0);
+    }
+    #new-discussion-btn {
+        max-height: 90%;
+        padding: 0;
     }
 }
 
@@ -141,4 +148,17 @@ ul.pagination::after{
 }
 .discussion-replies{
     border-left: 5px solid lightskyblue;
+}
+
+.add-reply-input{
+    width: 100%;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border: 2px solid rgb(230, 230, 230);
+    resize: vertical;
+}
+
+#inner-sidebar {
+    transition: all 0.3s;
 }
