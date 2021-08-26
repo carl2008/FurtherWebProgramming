@@ -75,7 +75,7 @@ export default function DiscussionList() {
     }
 
     const changeReply = (replyName) => {
-        setReplyValue("@"+ replyName +" "+replyValue)
+        setReplyValue("@" + replyName + " " + replyValue)
     }
 
     return (
@@ -196,7 +196,7 @@ export default function DiscussionList() {
                                                                 <div className="mt-3 font-size-sm">
                                                                     <p>{discussionPost.content}</p>
                                                                 </div>
-                                                                <a href={"#add-reply-"+discussionPost.id} className="text-muted" onClick={() => changeReply(discussionPost.name)}>Reply</a>
+                                                                <a href={"#add-reply-" + discussionPost.id} className="text-muted" onClick={() => changeReply(discussionPost.name)}>Reply</a>
                                                             </div>
                                                             <div className="text-muted text-center">
                                                                 <span><i className="far fa-comment ml-2"></i> {replies[discussionPost.id]}</span>
@@ -204,8 +204,9 @@ export default function DiscussionList() {
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div className="card mt-3 mb-3" id={"add-reply-"+discussionPost.id}>
+                                                <div className="card mt-3 mb-3" id={"add-reply-" + discussionPost.id}>
                                                     <div className="card-body">
+                                                        <p className="ml-2" style={{fontSize: '1.2em'}}><b>Join the discussion</b></p>
                                                         <div className="media forum-item">
                                                             <a href="javascript:void(0)" className="card-link">
                                                                 <img src="https://www.markuptag.com/images/user-icon.jpg" className="rounded-circle" width="50" alt="User" />
@@ -219,7 +220,7 @@ export default function DiscussionList() {
                                                     </div>
                                                 </div>
                                                 {/*Replies section*/}
-                                                <Reply id={discussionPost.id} setName={name => changeReply(name)}/>
+                                                <Reply id={discussionPost.id} setName={name => changeReply(name)} />
                                             </div>
                                         </List.Item>
                                     )}
