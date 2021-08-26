@@ -3,7 +3,7 @@ import 'antd/dist/antd.css';
 import './index.css'
 
 import React from 'react';
-import Navbar from './component/Navbar/Navbar';
+import NavigationBar from './component/Navbar/NavigationBar';
 import AboutUs from './component/AboutUs/AboutUs';
 import Articles from './component/Articles/Articles';
 import ArticlePost from './component/Articles/ArticlePost';
@@ -15,8 +15,9 @@ function App() {
   return (
     <div className="App">
       <Router>
-        <Navbar />
+        <NavigationBar />
         <br />
+        
         <Switch>
           <Route exact path="/"><Home /></Route>
           <Route exact path="/AboutUs"><AboutUs /></Route>
