@@ -13,6 +13,7 @@ export default function DiscussionList() {
     const [pagination, setPagination] = useState(true);
     const [loading, setLoading] = useState(false)
     const [activeID, setActiveID] = useState('')
+    const [replyValue, setReplyValue] = useState('')
     const [showSideBar, setShowSideBar] = useState(false)
 
     const endPoint = 'https://611fc518c772030017424085.mockapi.io/api/v1/topics'
@@ -71,6 +72,10 @@ export default function DiscussionList() {
                 break;
         }
         return results
+    }
+
+    const changeReply = (replyName) => {
+        setReplyValue("@"+ replyName +" "+replyValue)
     }
 
     return (
@@ -146,7 +151,7 @@ export default function DiscussionList() {
                                 <List
                                     loading={loading}
                                     grid={{
-                                        gutter: 5,
+                                        gutter: 1,
                                         column: 1,
                                     }}
                                     pagination={show ? { pageSize: 5, showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} results` } : false}
@@ -176,7 +181,7 @@ export default function DiscussionList() {
                                             </div>
                                             {/*Forum Detail*/}
                                             <div className="inner-main-body p-2 p-sm-3 collapse forum-content" id={`discussion-${discussionPost.id}`} style={(pagination) ? { display: "none" } : (activeID === discussionPost.id && !pagination) ? { display: 'block' } : { display: 'none' }}>
-                                                <a href="#" className="btn btn-light btn-sm mb-3 has-icon" data-toggle="collapse" data-target={`#discussion-${discussionPost.id}`} onClick={() => { setShow(!show); setPagination(!pagination) }}><i className="fa fa-arrow-left mr-2"></i>Back</a>
+                                                <a href="#" className="btn btn-light btn-sm mb-3 has-icon" data-toggle="collapse" data-target={`#discussion-${discussionPost.id}`} onClick={() => { setShow(!show); setPagination(!pagination); setReplyValue('') }}><i className="fa fa-arrow-left mr-2"></i>Back</a>
                                                 <div className="card mb-2 discussion-question">
                                                     <div className="card-body">
                                                         <div className="media forum-item">
@@ -191,7 +196,7 @@ export default function DiscussionList() {
                                                                 <div className="mt-3 font-size-sm">
                                                                     <p>{discussionPost.content}</p>
                                                                 </div>
-                                                                <a href="javascript:void(0)" className="text-muted">Reply</a>
+                                                                <a href={"#add-reply-"+discussionPost.id} className="text-muted" onClick={() => changeReply(discussionPost.name)}>Reply</a>
                                                             </div>
                                                             <div className="text-muted text-center">
                                                                 <span><i className="far fa-comment ml-2"></i> {replies[discussionPost.id]}</span>
@@ -199,7 +204,7 @@ export default function DiscussionList() {
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div className="card mb-2">
+                                                <div className="card mt-3 mb-3" id={"add-reply-"+discussionPost.id}>
                                                     <div className="card-body">
                                                         <div className="media forum-item">
                                                             <a href="javascript:void(0)" className="card-link">
@@ -207,14 +212,14 @@ export default function DiscussionList() {
                                                                 <small className="d-block text-center text-muted">User</small>
                                                             </a>
                                                             <div className="media-body ml-3">
-                                                                <textarea placeholder="Add a new reply" className="add-reply-input"></textarea>
+                                                                <textarea placeholder="Add a new reply" className="add-reply-input" value={replyValue} onChange={(e) => setReplyValue(e.target.value)}></textarea>
                                                             </div>
                                                         </div>
                                                         <button className="btn btn-primary btn-sm float-right" type="button">REPLY</button>
                                                     </div>
                                                 </div>
                                                 {/*Replies section*/}
-                                                <Reply id={discussionPost.id} />
+                                                <Reply id={discussionPost.id} setName={name => changeReply(name)}/>
                                             </div>
                                         </List.Item>
                                     )}
