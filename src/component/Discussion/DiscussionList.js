@@ -5,12 +5,15 @@ import 'bootstrap/dist/js/bootstrap.min.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Reply from "./Reply";
 import { List } from 'antd';
+import { Collapse } from 'bootstrap';
 
 export default function DiscussionList() {
     const [discussions, setDiscussions] = useState([])
     const [replies, setReplies] = useState({})
     const [show, setShow] = useState(true)
+    const [pagination, setPagination] = useState(true);
     const [loading, setLoading] = useState(false)
+    const [activeID, setActiveID] = useState('')
 
     const endPoint = 'https://611fc518c772030017424085.mockapi.io/api/v1/topics'
 
@@ -139,7 +142,7 @@ export default function DiscussionList() {
                                         gutter: 5,
                                         column: 1,
                                     }}
-                                    pagination={{ pageSize: 5, showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} results` }}
+                                    pagination={show ? { pageSize: 5, showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} results` }: false}
                                     dataSource={results(discussions)}
                                     renderItem={discussionPost => (
                                         <List.Item key={discussionPost.id}>
@@ -148,7 +151,7 @@ export default function DiscussionList() {
                                                     <div className="media forum-item">
                                                         <a href="#" data-toggle="collapse"><img src={discussionPost.avatar} className="mr-3 rounded-circle" width="50" alt="User" /></a>
                                                         <div className="media-body">
-                                                            <h6><a href={`/Discussion/${discussionPost.id}`} data-toggle="collapse" data-target={`#discussion-${discussionPost.id}`} className="text-body" onClick={() => setShow(!show)}>{discussionPost.title}</a></h6>
+                                                            <h6><a href={`/Discussion/${discussionPost.id}`} data-toggle="collapse" data-target={`#discussion-${discussionPost.id}`} className="text-body" onClick={() => {setShow(!show); setPagination(!pagination); setActiveID(discussionPost.id)}}>{discussionPost.title}</a></h6>
                                                             <p className="text-secondary">
                                                                 {discussionPost.content}
                                                             </p>
@@ -159,16 +162,15 @@ export default function DiscussionList() {
                                                             </p>
                                                         </div>
                                                         <div className="text-muted small text-center align-self-center">
-                                                            <span className="d-none d-sm-inline-block"><i className="far fa-eye"></i> 99</span>
                                                             <span><i className="far fa-comment ml-2"></i> {replies[discussionPost.id]}</span>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                             {/*Forum Detail*/}
-                                            <div className="inner-main-body p-2 p-sm-3 collapse forum-content" id={`discussion-${discussionPost.id}`}>
-                                                <a href="#" className="btn btn-light btn-sm mb-3 has-icon" data-toggle="collapse" data-target={`#discussion-${discussionPost.id}`} onClick={() => setShow(!show)}><i className="fa fa-arrow-left mr-2"></i>Back</a>
-                                                <div className="card mb-2">
+                                            <div className="inner-main-body p-2 p-sm-3 collapse forum-content" id={`discussion-${discussionPost.id}`} style={(pagination) ? { display: "none" } : (activeID===discussionPost.id && !pagination) ? { display: 'block' } : { display: 'none' }}>
+                                                <a href="#" className="btn btn-light btn-sm mb-3 has-icon" data-toggle="collapse" data-target={`#discussion-${discussionPost.id}`} onClick={() => {setShow(!show); setPagination(!pagination)}}><i className="fa fa-arrow-left mr-2"></i>Back</a>
+                                                <div className="card mb-2 discussion-question">
                                                     <div className="card-body">
                                                         <div className="media forum-item">
                                                             <a href="javascript:void(0)" className="card-link">
@@ -185,7 +187,6 @@ export default function DiscussionList() {
                                                                 <a href="javascript:void(0)" className="text-muted small">Reply</a>
                                                             </div>
                                                             <div className="text-muted small text-center">
-                                                                <span className="d-none d-sm-inline-block"><i className="far fa-eye"></i> 19</span>
                                                                 <span><i className="far fa-comment ml-2"></i> {replies[discussionPost.id]}</span>
                                                             </div>
                                                         </div>

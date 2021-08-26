@@ -21,7 +21,7 @@ export default function Reply({ id }) {
     return (
         replies.map((reply, i) => {
             return (
-                <div class="card mb-2">
+                <div class="card mb-2 discussion-replies">
                     <div class="card-body">
                         <div class="media forum-item">
                             <a href="javascript:void(0)" class="card-link">
