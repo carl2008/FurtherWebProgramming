@@ -3,6 +3,7 @@ import 'antd/dist/antd.css';
 import './index.css'
 
 import React from 'react';
+import RegisterForm from './component/RegisterForm/RegisterForm';
 import Navbar from './component/Navbar/Navbar';
 import AboutUs from './component/AboutUs/AboutUs';
 import Articles from './component/Articles/Articles';
@@ -23,6 +24,7 @@ function App() {
           <Route exact path="/Discussion"><DiscussionList /></Route>
           <Route exact path="/Articles"><Articles /></Route>
           <Route exact path="/Article/:id" component={ArticlePost} />
+          <Route exact path="/Register" component={RegisterForm}/>
         </Switch>
       </Router>
     </div>

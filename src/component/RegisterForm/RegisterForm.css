@@ -1,0 +1,31 @@
+h1{
+
+color: black;
+float:left;
+
+}
+
+div{
+
+text-align:center;
+margin:auto
+
+}
+
+form{
+    margin:auto
+
+}
+
+button{
+
+    float:left;
+    
+}
+
+.container{
+
+ border: 0.5px solid grey;
+ margin:auto;
+ padding: 1em 2em 1em 2em;
+}
