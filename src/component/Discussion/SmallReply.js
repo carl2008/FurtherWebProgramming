@@ -10,8 +10,16 @@ export default function SmallReply({ topicId, replyId, setName, load }) {
 
     const loadSmallReplies = () => {
         fetch(endPoint)
-            .then(response => response.json())
-            .then(data => setSmallRep(data))
+            .then(response => response.text())
+            .then(data => {
+                try{
+                    const repData = JSON.parse(data)
+                    setSmallRep(repData)
+                }
+                catch(err){
+                    setSmallRep([])
+                }
+            })
     }
 
     useEffect(() => {

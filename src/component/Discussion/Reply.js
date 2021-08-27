@@ -12,6 +12,8 @@ export default function Reply({ id, reset }) {
     const [replyName, setReplyName] = useState('')
     const [replyValue, setReplyValue] = useState('')
     const [reload, setReload] = useState(false)
+    //const [smallRepNum, setSmallRepNum] = useState(0)
+    //const [numOfReplies, setNumOfReplies] = useState(0)
     const endPoint = 'https://611fc518c772030017424085.mockapi.io/api/v1/topics/' + id + '/replies'
 
     const loadReplies = () => {
@@ -69,7 +71,7 @@ export default function Reply({ id, reset }) {
     }
 
     return (
-        <div>
+        <div><b>{replies.length+" replies "}</b>
             <select className="custom-select custom-select-sm w-auto mr-1 mb-2" value={sortReply} onChange={(e) => { setSortReply(e.target.value); setReload(!reload); sortReplies(); }}>
                 <option value="latest">Sort replies: Latest</option>
                 <option value="oldest">Sort replies: Oldest</option>
@@ -77,7 +79,7 @@ export default function Reply({ id, reset }) {
             </select>
             {sortReplies().map((reply, i) => {
                 return (
-                    <div>
+                    <div key={i}>
                         <div className="card mb-2 discussion-replies">
                             <div className="card-body">
                                 <div className="media forum-item">
