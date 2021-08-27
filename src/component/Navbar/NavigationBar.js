@@ -9,7 +9,7 @@ import Navbar from 'react-bootstrap/Navbar';
 class NavigationBar extends Component {
     render() {
         return (
-            <div>
+            <div className="removing-space">
                 <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
                     <Container>
                         <Navbar.Brand href="/">

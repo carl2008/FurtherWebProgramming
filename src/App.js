@@ -9,6 +9,7 @@ import Articles from './component/Articles/Articles';
 import ArticlePost from './component/Articles/ArticlePost';
 import DiscussionList from './component/Discussion/DiscussionList';
 import Home from './component/CovidAPI/Home';
+import Footer from './component/Navbar/Footer';
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 function App() {
@@ -17,7 +18,7 @@ function App() {
       <Router>
         <NavigationBar />
         <br />
-        
+
         <Switch>
           <Route exact path="/"><Home /></Route>
           <Route exact path="/AboutUs"><AboutUs /></Route>
@@ -25,6 +26,9 @@ function App() {
           <Route exact path="/Articles"><Articles /></Route>
           <Route exact path="/Article/:id" component={ArticlePost} />
         </Switch>
+
+        <br />
+        <Footer />
       </Router>
     </div>
   );
