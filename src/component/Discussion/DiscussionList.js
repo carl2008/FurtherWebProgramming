@@ -16,6 +16,8 @@ export default function DiscussionList() {
     const [replyValue, setReplyValue] = useState('')
     const [showSideBar, setShowSideBar] = useState(false)
     const [resetRepValue, setResetRepValue] = useState(false)
+    const postTitle = useRef(null)
+    const postContent = useRef(null)
 
     const endPoint = 'https://611fc518c772030017424085.mockapi.io/api/v1/topics'
 
@@ -77,6 +79,14 @@ export default function DiscussionList() {
 
     const changeReply = (replyName) => {
         setReplyValue("@" + replyName + " " + replyValue)
+    }
+
+    const postReply = () => {
+        alert(replyValue)
+    }
+
+    const postDiscussion = () => {
+        alert("Your title is: "+postTitle.current.value+"\nYour content is: "+postContent.current.value)
     }
 
     return (
@@ -217,7 +227,7 @@ export default function DiscussionList() {
                                                                 <textarea placeholder="Add a new reply" className="add-reply-input" value={replyValue} onChange={(e) => setReplyValue(e.target.value)}></textarea>
                                                             </div>
                                                         </div>
-                                                        <button className="btn btn-primary btn-sm float-right" type="button">REPLY</button>
+                                                        <button className="btn btn-primary btn-sm float-right" type="button" onClick={() => postReply()}>REPLY</button>
                                                     </div>
                                                 </div>
                                                 {/*Replies section*/}
@@ -247,11 +257,11 @@ export default function DiscussionList() {
                                     <div className="modal-body">
                                         <div className="form-group">
                                             <label for="threadTitle">Title</label>
-                                            <input type="text" className="form-control" id="threadTitle" placeholder="Enter title" autofocus="" />
+                                            <input type="text" className="form-control" id="threadTitle" placeholder="Enter title" autofocus="" ref={postTitle}/>
                                         </div>
                                         <div className="form-group">
                                             <label for="threadContent">Content</label>
-                                            <textarea className="form-control summernote" style={{ display: 'block' }} id="threadContent" placeholder="Post your content here"></textarea>
+                                            <textarea className="form-control summernote" style={{ display: 'block' }} id="threadContent" placeholder="Post your content here" ref={postContent}></textarea>
                                         </div>
 
                                         <div className="custom-file form-control-sm mt-3" style={{ maxWidth: '300px' }}>
@@ -261,7 +271,7 @@ export default function DiscussionList() {
                                     </div>
                                     <div className="modal-footer">
                                         <button type="button" className="btn btn-light" data-dismiss="modal">Cancel</button>
-                                        <button type="button" className="btn btn-primary">Post</button>
+                                        <button type="button" className="btn btn-primary" onClick={() => postDiscussion()}>Post</button>
                                     </div>
                                 </form>
                             </div>
