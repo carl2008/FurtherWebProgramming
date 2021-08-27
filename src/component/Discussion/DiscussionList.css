@@ -137,7 +137,7 @@ body{
     float: left;
 }
 
-ul.pagination::after{
+ul.pagination::after, .add-smallreply-section::after{
     content: "";
     clear: both;
     display: table;
@@ -148,6 +148,10 @@ ul.pagination::after{
 }
 .discussion-replies{
     border-left: 5px solid lightskyblue;
+}
+.discussion-smallreplies{
+    border-left: 5px solid rgb(230, 230, 230);
+    margin-left: 50px;
 }
 
 .add-reply-input{
