@@ -23,7 +23,7 @@ button{
     
 }
 
-.container{
+#formBorder{
 
  border: 0.5px solid grey;
  margin:auto;
