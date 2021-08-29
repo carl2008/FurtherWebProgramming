@@ -1,8 +1,9 @@
 import "./RegisterForm.css";
 import React, { useState} from "react";
 import "./Bootstrap.css";
+import "./UpdateDoctorForm.css";
 
-export default function UpdateForm() {
+export default function UpdateFormDoctors() {
     //use useState hook for input handlings React form
     
     const [firstName, setFirstName] = useState([]);
@@ -10,11 +11,13 @@ export default function UpdateForm() {
     const [emailAddress, setEmailAddress] = useState([]);
     const [username, setUsername] = useState([]);
     const [password, setPassword] = useState([]);
-    
+    const [specialties, setSpecialty] = useState([]);
+    const [introduction, setIntroduction] = useState([]);
+
 
     //store data in our website database --We haven't decide our database yet so I just use localhost
     // supposed this database is for doctors
-    const endPoint = "localhost:3000/user";
+    const endPoint = "localhost:3000/doctor";
 
     function save() {
         fetch(endPoint, {
@@ -23,18 +26,16 @@ export default function UpdateForm() {
                 "Content-type": "application/json",
             },
             body: JSON.stringify({ firstName: firstName , lastName:lastName , emailAddress: emailAddress,
-            username: username, password: password }),
+            username: username, password: password ,specialties: specialties,  introduction : introduction}),
         }).then((data) => {
             fetch(endPoint).then((response) =>
                 response.json().then((data) => setFirstName(data),setLastName(data),
-                 setEmailAddress(data),setUsername(data),setPassword(data))
+                 setEmailAddress(data),setUsername(data),setPassword(data),setSpecialty(data), setIntroduction(data))
             );
 
             data.json();
         });
     };
-
-    
 
     
 
@@ -75,6 +76,20 @@ export default function UpdateForm() {
                 <input type="password" class="form-control" id="inputPassword" placeholder="Change Password" 
                 value={password} onChange={(e) => setPassword(e.target.value)}/>
                 <br></br>
+            </div>
+
+            <div className="col-md-12" >
+            <input type="text" class="form-control" id="inputSpecialty" placeholder="Specialties" 
+                value={specialties} onChange={(e) => setSpecialty(e.target.value)}/>
+                <br></br>
+            
+            </div>
+
+            <div className="col-md-12" >
+            <input type="text" class="form-control" id="inputIntroduction" placeholder="Introduction" 
+                value={introduction} onChange={(e) => setIntroduction(e.target.value)}/>
+                <br></br>
+            
             </div>
                    
             <div className="col-md-12">

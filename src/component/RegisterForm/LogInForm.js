@@ -30,7 +30,7 @@ export default function LogInForm() {
 
     return (
 
-        <div className='container'>
+        <div className='container' id="formBorder">
 
             
             <form className="row g-3">

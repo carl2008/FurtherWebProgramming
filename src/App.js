@@ -11,6 +11,9 @@ import ArticlePost from './component/Articles/ArticlePost';
 import DiscussionList from './component/Discussion/DiscussionList';
 import Home from './component/CovidAPI/Home';
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import LogInForm from './component/RegisterForm/LogInForm';
+import UpdateForm from './component/RegisterForm/UpdateForm';
+import UpdateFormDoctors from './component/RegisterForm/UpdateFormDoctors';
 
 function App() {
   return (
@@ -27,6 +30,10 @@ function App() {
           <Route exact path="/Register" component={RegisterForm}/>
         </Switch>
       </Router>
+<LogInForm/>
+<UpdateForm/>
+<UpdateFormDoctors/>
+
     </div>
   );
 }
