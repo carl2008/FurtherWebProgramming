@@ -1,23 +1,17 @@
 #inputSpecialty{
 
     background-color: rgba(100, 100, 100, 0.541);
+    color:black;
+    font-style:bold;
 
 }
 
 #inputIntroduction{
 
     background-color: rgba(100, 100, 100, 0.541);
-
-}
-
-input[type='text']#inputSpecialty{
     color:black;
-    text-decoration:bold;
-    size:1em ;
+    font-style:bold;
+
 }
 
-input[type='text']#inputIntroduction{
-    color:black;
-    text-decoration:bold;
-    size:1em ;
-}
+

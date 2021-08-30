@@ -1,23 +1,17 @@
-h1{
+h1#form-title{
 
 color: black;
 float:left;
 
 }
 
-div{
-
-text-align:center;
-margin:auto
-
-}
-
-form{
-    margin:auto
+p#form-styling1{
+    margin:auto;
+    text-align:center;
 
 }
 
-button{
+#button-form{
 
     float:left;
     

@@ -33,9 +33,9 @@ export default function LogInForm() {
         <div className='container' id="formBorder">
 
             
-            <form className="row g-3">
+            <form className="row g-3" id="form-styling1">
             <div className="col-md-12">
-                <h1>Login</h1>
+                <h1 id="form-title">Login</h1>
             </div>
             
             <div className="col-md-12">
@@ -51,7 +51,7 @@ export default function LogInForm() {
             </div>
             
             <div className="col-md-12">
-                <button className="btn btn-primary col-3 mx-auto" onClick={() => LogIn()}>
+                <button className="btn btn-primary col-3 mx-auto"  id="button-form" onClick={() => LogIn()}>
                     Log In
                 </button>
             </div>
