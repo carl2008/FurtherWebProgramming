@@ -44,9 +44,9 @@ export default function UpdateFormDoctors() {
         <div className='container' id="formBorder">
 
             
-            <form className="row g-5">
+            <form className="row g-5"  id="form-styling1">
             <div className="col-md-12">
-                <h1>Update</h1>
+                <h1 id="form-title">Update</h1>
             </div>
             <div className="col-md-6">
                 <input type="text" class="form-control" id="inputFirstName" placeholder="FirstName"
@@ -93,14 +93,13 @@ export default function UpdateFormDoctors() {
             </div>
                    
             <div className="col-md-12">
-                <button className="btn btn-primary col-3 mx-auto" onClick={() => save()}>
+                <button className="btn btn-primary col-3 mx-auto" id="button-form" onClick={() => save()}>
                     Update
                 </button>
             </div>
             </form>
 
         </div>
-    
 
     );
 }
