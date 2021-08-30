@@ -31,8 +31,8 @@ class NavbarLogin extends Component {
                                 <Nav.Link href="/Articles">Articles</Nav.Link>
                             </Nav>
                             <Nav className="login-register">
-                                <Nav.Link href="#">Login</Nav.Link>
-                                <Nav.Link href="#">Register</Nav.Link>
+                                <Nav.Link href="#">Log out</Nav.Link>
+                                <Nav.Link href="#">Profile</Nav.Link>
                             </Nav>
                         </Navbar.Collapse>
                     </Container>

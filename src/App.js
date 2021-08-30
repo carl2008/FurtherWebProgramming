@@ -29,6 +29,7 @@ function App() {
           <Route exact path="/Discussion"><DiscussionList /></Route>
           <Route exact path="/Articles"><Articles /></Route>
           <Route exact path="/Article/:id" component={ArticlePost} />
+          <Route exact path="/Login" component={LogInForm}/>
           <Route exact path="/Register" component={RegisterForm}/>
         </Switch>
 

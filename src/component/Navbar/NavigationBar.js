@@ -31,8 +31,8 @@ class NavigationBar extends Component {
                                 <Nav.Link href="/Articles">Articles</Nav.Link>
                             </Nav>
                             <Nav className="login-register">
-                                <Nav.Link href="#">Login</Nav.Link>
-                                <Nav.Link href="#">Register</Nav.Link>
+                                <Nav.Link href="/Login">Login</Nav.Link>
+                                <Nav.Link href="/Register">Register</Nav.Link>
                             </Nav>
                         </Navbar.Collapse>
                     </Container>
