@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import './DiscussionList.css';
 import 'jquery/dist/jquery.min.js';
 import 'bootstrap/dist/js/bootstrap.min.js';
@@ -10,7 +10,14 @@ export default function DiscussionList() {
     const [discussions, setDiscussions] = useState([])
     const [replies, setReplies] = useState({})
     const [show, setShow] = useState(true)
+    const [pagination, setPagination] = useState(true);
     const [loading, setLoading] = useState(false)
+    const [activeID, setActiveID] = useState('')
+    const [replyValue, setReplyValue] = useState('')
+    const [showSideBar, setShowSideBar] = useState(false)
+    const [resetRepValue, setResetRepValue] = useState(false)
+    const postTitle = useRef(null)
+    const postContent = useRef(null)
 
     const endPoint = 'https://611fc518c772030017424085.mockapi.io/api/v1/topics'
 
@@ -23,9 +30,15 @@ export default function DiscussionList() {
             .then(() => {
                 for (let i = 0; i < discussions.length; i++) {
                     fetch(endPoint + `/${discussions[i].id}/replies`)
-                        .then(res => res.json())
+                        .then(res => res.text())
                         .then(repliesData => {
-                            obj[discussions[i].id] = repliesData.length
+                            try {
+                                const rep = JSON.parse(repliesData)
+                                obj[discussions[i].id] = rep.length
+                            }
+                            catch (err) {
+                                obj[discussions[i].id] = 0
+                            }
                         })
                 }
                 setReplies(obj)
@@ -64,6 +77,18 @@ export default function DiscussionList() {
         return results
     }
 
+    const changeReply = (replyName) => {
+        setReplyValue("@" + replyName + " " + replyValue)
+    }
+
+    const postReply = () => {
+        alert(replyValue)
+    }
+
+    const postDiscussion = () => {
+        alert("Your title is: "+postTitle.current.value+"\nYour content is: "+postContent.current.value)
+    }
+
     return (
         <div>
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0-2/css/all.min.css" integrity="sha256-46r060N2LrChLLb5zowXQ72/iKKNiw/lAmygmHExk/o=" crossorigin="anonymous" />
@@ -71,16 +96,17 @@ export default function DiscussionList() {
                 <div className="main-body p-0">
                     <div className="inner-wrapper">
                         {/*Inner sidebar*/}
-                        <div className="inner-sidebar">
+                        <div className={showSideBar ? "inner-sidebar active" : "inner-sidebar"} id="inner-sidebar">
                             {/*Inner sidebar header*/}
                             <div className="inner-sidebar-header justify-content-center">
-                                <button className="btn btn-primary has-icon btn-block" type="button" data-toggle="modal" data-target="#threadModal">
+                                <button className="btn btn-primary has-icon btn-block" type="button" data-toggle="modal" data-target="#threadModal" id="new-discussion-btn">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="feather feather-plus mr-2">
                                         <line x1="12" y1="5" x2="12" y2="19"></line>
                                         <line x1="5" y1="12" x2="19" y2="12"></line>
                                     </svg>
                                     NEW DISCUSSION
                                 </button>
+                                <a className="nav-link nav-icon rounded-circle nav-link-faded mr-3 d-md-none" href="#" onClick={() => setShowSideBar(!showSideBar)}><i className="fas fa-bars"></i></a>
                             </div>
                             {/*Inner sidebar header*/}
 
@@ -118,7 +144,7 @@ export default function DiscussionList() {
                         <div className="inner-main">
                             {/*Inner main header*/}
                             <div className="inner-main-header">
-                                <a className="nav-link nav-icon rounded-circle nav-link-faded mr-3 d-md-none" href="#" data-toggle="inner-sidebar"><i className="material-icons"></i></a>
+                                <a className="nav-link nav-icon rounded-circle nav-link-faded mr-3 d-md-none" href="#" onClick={() => setShowSideBar(!showSideBar)}><i className="fas fa-bars"></i></a>
                                 <select className="custom-select custom-select-sm w-auto mr-1" value={sortValue} onChange={(e) => setSortValue(e.target.value)}>
                                     <option value="latest">Latest</option>
                                     <option value="oldest">Oldest</option>
@@ -136,10 +162,10 @@ export default function DiscussionList() {
                                 <List
                                     loading={loading}
                                     grid={{
-                                        gutter: 5,
+                                        gutter: 1,
                                         column: 1,
                                     }}
-                                    pagination={{ pageSize: 5, showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} results` }}
+                                    pagination={show ? { pageSize: 5, showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} results` } : false}
                                     dataSource={results(discussions)}
                                     renderItem={discussionPost => (
                                         <List.Item key={discussionPost.id}>
@@ -148,7 +174,7 @@ export default function DiscussionList() {
                                                     <div className="media forum-item">
                                                         <a href="#" data-toggle="collapse"><img src={discussionPost.avatar} className="mr-3 rounded-circle" width="50" alt="User" /></a>
                                                         <div className="media-body">
-                                                            <h6><a href={`/Discussion/${discussionPost.id}`} data-toggle="collapse" data-target={`#discussion-${discussionPost.id}`} className="text-body" onClick={() => setShow(!show)}>{discussionPost.title}</a></h6>
+                                                            <h6><a href={`/Discussion/${discussionPost.id}`} data-toggle="collapse" data-target={`#discussion-${discussionPost.id}`} className="text-body" onClick={() => { setShow(!show); setPagination(!pagination); setActiveID(discussionPost.id); setResetRepValue(false) }}>{discussionPost.title}</a></h6>
                                                             <p className="text-secondary">
                                                                 {discussionPost.content}
                                                             </p>
@@ -158,17 +184,16 @@ export default function DiscussionList() {
                                                                 </span>
                                                             </p>
                                                         </div>
-                                                        <div className="text-muted small text-center align-self-center">
-                                                            <span className="d-none d-sm-inline-block"><i className="far fa-eye"></i> 99</span>
-                                                            <span><i className="far fa-comment ml-2"></i> {replies[discussionPost.id]}</span>
+                                                        <div className="text-muted text-center align-self-center">
+                                                            <span><i className="far fa-comment ml-5"></i> {replies[discussionPost.id]}</span>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                             {/*Forum Detail*/}
-                                            <div className="inner-main-body p-2 p-sm-3 collapse forum-content" id={`discussion-${discussionPost.id}`}>
-                                                <a href="#" className="btn btn-light btn-sm mb-3 has-icon" data-toggle="collapse" data-target={`#discussion-${discussionPost.id}`} onClick={() => setShow(!show)}><i className="fa fa-arrow-left mr-2"></i>Back</a>
-                                                <div className="card mb-2">
+                                            <div className="inner-main-body p-2 p-sm-3 collapse forum-content" id={`discussion-${discussionPost.id}`} style={(pagination) ? { display: "none" } : (activeID === discussionPost.id && !pagination) ? { display: 'block' } : { display: 'none' }}>
+                                                <a href="#" className="btn btn-light btn-sm mb-3 has-icon" data-toggle="collapse" data-target={`#discussion-${discussionPost.id}`} onClick={() => { setShow(!show); setPagination(!pagination); setReplyValue(''); setResetRepValue(true) }}><i className="fa fa-arrow-left mr-2"></i>Back</a>
+                                                <div className="card mb-2 discussion-question">
                                                     <div className="card-body">
                                                         <div className="media forum-item">
                                                             <a href="javascript:void(0)" className="card-link">
@@ -182,22 +207,36 @@ export default function DiscussionList() {
                                                                 <div className="mt-3 font-size-sm">
                                                                     <p>{discussionPost.content}</p>
                                                                 </div>
-                                                                <a href="javascript:void(0)" className="text-muted small">Reply</a>
+                                                                <a href={"#add-reply-" + discussionPost.id} className="text-muted" onClick={() => changeReply(discussionPost.name)}>Reply</a>
                                                             </div>
-                                                            <div className="text-muted small text-center">
-                                                                <span className="d-none d-sm-inline-block"><i className="far fa-eye"></i> 19</span>
+                                                            <div className="text-muted text-center">
                                                                 <span><i className="far fa-comment ml-2"></i> {replies[discussionPost.id]}</span>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <div className="card mt-3 mb-3" id={"add-reply-" + discussionPost.id}>
+                                                    <div className="card-body">
+                                                        <p className="ml-2" style={{fontSize: '1.2em'}}><b>Join the discussion</b></p>
+                                                        <div className="media forum-item">
+                                                            <a href="javascript:void(0)" className="card-link">
+                                                                <img src="https://www.markuptag.com/images/user-icon.jpg" className="rounded-circle" width="50" alt="User" />
+                                                                <small className="d-block text-center text-muted">User</small>
+                                                            </a>
+                                                            <div className="media-body ml-3">
+                                                                <textarea placeholder="Add a new reply" className="add-reply-input" value={replyValue} onChange={(e) => setReplyValue(e.target.value)}></textarea>
+                                                            </div>
+                                                        </div>
+                                                        <button className="btn btn-primary btn-sm float-right" type="button" onClick={() => postReply()}>REPLY</button>
+                                                    </div>
+                                                </div>
                                                 {/*Replies section*/}
-                                                <Reply id={discussionPost.id} />
+                                                <Reply id={discussionPost.id} reset={resetRepValue}/>
                                             </div>
                                         </List.Item>
                                     )}
                                 />
-                                
+
                             </div>
                             {/*Forum List*/}
                         </div>
@@ -210,7 +249,7 @@ export default function DiscussionList() {
                             <div className="modal-content">
                                 <form>
                                     <div className="modal-header d-flex align-items-center bg-primary text-white">
-                                        <h6 className="modal-title mb-0" id="threadModalLabel">New Discussion</h6>
+                                        <h6 className="modal-title mb-0" id="threadModalLabel" style={{ color: 'white' }}>New Discussion</h6>
                                         <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">×</span>
                                         </button>
@@ -218,9 +257,12 @@ export default function DiscussionList() {
                                     <div className="modal-body">
                                         <div className="form-group">
                                             <label for="threadTitle">Title</label>
-                                            <input type="text" className="form-control" id="threadTitle" placeholder="Enter title" autofocus="" />
+                                            <input type="text" className="form-control" id="threadTitle" placeholder="Enter title" autofocus="" ref={postTitle}/>
                                         </div>
-                                        <textarea className="form-control summernote" style={{ display: 'none' }}></textarea>
+                                        <div className="form-group">
+                                            <label for="threadContent">Content</label>
+                                            <textarea className="form-control summernote" style={{ display: 'block' }} id="threadContent" placeholder="Post your content here" ref={postContent}></textarea>
+                                        </div>
 
                                         <div className="custom-file form-control-sm mt-3" style={{ maxWidth: '300px' }}>
                                             <input type="file" className="custom-file-input" id="customFile" multiple="" />
@@ -229,7 +271,7 @@ export default function DiscussionList() {
                                     </div>
                                     <div className="modal-footer">
                                         <button type="button" className="btn btn-light" data-dismiss="modal">Cancel</button>
-                                        <button type="button" className="btn btn-primary">Post</button>
+                                        <button type="button" className="btn btn-primary" onClick={() => postDiscussion()}>Post</button>
                                     </div>
                                 </form>
                             </div>
