@@ -30,10 +30,6 @@ function App() {
           <Route exact path="/Register" component={RegisterForm}/>
         </Switch>
       </Router>
-<LogInForm/>
-<UpdateForm/>
-<UpdateFormDoctors/>
-
     </div>
   );
 }
