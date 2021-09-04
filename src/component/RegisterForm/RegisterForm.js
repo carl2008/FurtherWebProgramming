@@ -37,9 +37,9 @@ export default function RegisterForm() {
         <div className='container' id="formBorder">
 
             
-            <form className="row g-5">
+            <form className="row g-5"  id="form-styling1">
             <div className="col-md-12">
-                <h1>Sign Up</h1>
+                <h1 id="form-title">Sign Up</h1>
             </div>
             <div className="col-md-6">
                 <input type="text" class="form-control" id="inputFirstName" placeholder="FirstName"
@@ -72,7 +72,7 @@ export default function RegisterForm() {
             </div>
             
             <div className="col-md-12">
-                <button className="btn btn-primary col-3 mx-auto" onClick={() => save()}>
+                <button className="btn btn-primary col-3 mx-auto" id="button-form" onClick={() => save()}>
                     Register
                 </button>
             </div>

@@ -17,7 +17,7 @@ class AboutUs extends Component {
                         <div className="jumbotron card">
                             <h3><u>Register as a Doctor</u></h3><br></br>
                             <p className="col-10 mx-auto">Please send us an email with all your licenses and certifications attached to we can verify your doctor's background and credentials.
-                            Email us at <a href="mailto: 123@gmail.com">123@gmail.com</a>.</p>
+                            Email us at <a href="mailto: 123@gmail.com">register-doctor@rmed.com</a>.</p>
                         </div>
                     </div>
                 </div>
