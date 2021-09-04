@@ -13,6 +13,10 @@ const articles = require('./router/articleRouter')
 app.use('/', articles)
 const users = require('./router/userRouter')
 app.use('/', users)
+const likes = require('./router/likeRouter')
+app.use('/', likes)
+const comments = require('./router/commentRouter')
+app.use('/', comments)
 
 app.get("/", (req, res) => {
   res.status(200).send("Welcome to FWP API.");
