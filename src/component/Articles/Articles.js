@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { List } from 'antd';
 import moment from 'moment';
+import { Link } from "react-router-dom";
+import './Article.css'
 
 function Articles() {
     const [articleList, setArticleList] = useState([])
     const [loading, setLoading] = useState(false)
-    const endPoint = "https://611a2d11cbf1b30017eb5564.mockapi.io/api/v1/blogs"
+    const endPoint = "http://localhost:9000/articles"
 
     //get data from api
     const load = () => {
@@ -18,14 +20,14 @@ function Articles() {
                 console.log(data)
                 for (let i = 0; i < data.length; i++) {
                     listData.push({
-                        id: data[i].id,
-                        category: 'Covid-19',
+                        id: data[i]._id,
+                        category: data[i].category,
                         title: data[i].title,
                         content: data[i].content,
-                        author: data[i].author,
-                        createdAt: data[i].createdAt,
-                        likeCount: data[i].likeCount,
-                        cmtCount: data[i].cmtCount,
+                        author: `${data[i].author.firstName} ${data[i].author.lastName}`,
+                        createdAt: data[i].created_at,
+                        likeCount: data[i].likes.length,
+                        cmtCount: data[i].comments.length,
                     });
                 }
                 setArticleList(listData)
