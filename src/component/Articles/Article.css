@@ -112,11 +112,11 @@
 }
 
 /* Single post card on articles page  */
-.single_post .post-category,.post-entry .entry-title a {
+.single_post .post-category,.post-entry .entry-title a, .text-preview .entry-title a {
   color: #3438A3;
   font-weight: bold;
 }
-.single_post .post-title a, .post-entry .entry-category  {
+.single_post .post-title a, .post-entry .entry-category, .text-preview .entry-category  {
   font-weight: bold;
   color: #556270;
 }
@@ -246,6 +246,7 @@ h6.author-title{
   padding-top: 1em;
   padding-bottom: 1em;
 }
+/* Post footer */
 .post-entry .entry-footer {
   padding-top: 10px;
   border-top: 1px solid #e6e6e6;
@@ -314,3 +315,77 @@ h6.author-title{
   color:#697790
 }
 
+/* Create Form */
+/* .card-container p {
+  margin: 0;
+} */
+.card-container .ant-tabs-card .ant-tabs-content {
+  min-height: 120px;
+  margin-top: -16px;
+}
+.card-container .ant-tabs-card .ant-tabs-content .ant-tabs-tabpane {
+  padding: 16px;
+  background: #fff;
+}
+.card-container .ant-tabs-card .ant-tabs-nav::before {
+  display: none;
+}
+/* inactive tab nav */
+.card-container .ant-tabs-card .ant-tabs-tab,
+[data-theme='compact'] .card-container > .ant-tabs-card .ant-tabs-tab {
+  background: rgba(255, 255, 255, 0.527);
+  border-color: rgba(255, 255, 255, 0.527);
+  color: #96a2af
+}
+/* active tab nav */
+.card-container .ant-tabs-card .ant-tabs-tab-active,
+[data-theme='compact'] .card-container .ant-tabs-card .ant-tabs-tab-active {
+  background: #fff;
+  border-color: #fff;
+  border-top: 3px solid #3438A3;
+  font-weight: bold;
+}
+.card-container .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+  color: #000;
+}
+
+/* Text Editor */
+.card-container .ql-snow .ql-tooltip::before {
+  content: "URL:" !important;
+}
+.card-container .ql-snow .ql-tooltip {
+  position: static;
+}
+.card-container .ql-snow.ql-toolbar {
+  display: block;
+  border-top-left-radius: 0.25em;
+  border-top-right-radius: 0.25em;
+}
+.card-container .ql-container {
+  border-bottom-left-radius: 0.25em;
+  border-bottom-right-radius: 0.25em;
+}
+
+.card-container .ql-editor h1, .card-container .ql-editor  h2, .card-container .ql-editor  h3 {
+  font-weight: bold;
+  color:#697790
+}
+
+.card-container .ql-editor p, .card-container .ql-editor li{
+  line-height: 26px;
+  font-size: 18px;
+  text-align: justify;
+  text-justify: inter-word;
+
+}
+
+.card-container .ql-editor  img{
+  max-width: 100%;
+  padding-top: 1em;
+  padding-bottom: 1em;
+}
+
+
+/* .card-container .quill .ql-editor{
+  border: 1px solid red;
+} */

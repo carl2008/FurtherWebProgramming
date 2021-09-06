@@ -3,6 +3,7 @@ import { Result, Skeleton, List, Button, Popconfirm, ConfigProvider } from 'antd
 import moment from 'moment';
 import './Article.css';
 
+
 import ArticleComment from './ArticleComment';
 
 function ArticlePost(props) {
@@ -18,6 +19,10 @@ function ArticlePost(props) {
     const [error, setError] = useState(null)
     const [errorCmt, setErrorCmt] = useState(null)
     const endPoint = "http://localhost:9000"
+
+    function createMarkup(val) {
+        return { __html: val };
+    }
 
     //get data from api
     const load = () => {
@@ -205,7 +210,7 @@ function ArticlePost(props) {
                                 <div className="post-entry card shadow mb-5">
                                     <div className="card-body">
                                         <Skeleton active loading={loadingArticle}>
-                                            <h5 className="entry-category mb-4">Covid-19</h5>
+                                            <h5 className="entry-category mb-4">{article.category}</h5>
                                             <h2 className="entry-title"><a href="# ">{article.title}</a></h2>
                                             <div className="entry-meta">
                                                 <ul>
@@ -215,7 +220,7 @@ function ArticlePost(props) {
                                                 </ul>
                                             </div>
                                             <div className="entry-content">
-
+                                                <div dangerouslySetInnerHTML={createMarkup(article.content)} />
                                             </div>
                                             <div class="entry-footer">
                                                 {liked ? <>

@@ -44,7 +44,8 @@ function Articles() {
     }
 
     const displayText = (text, count) => {
-        return text.slice(0, count) + (text.length > count ? "..." : "");
+        var stripedHtml = text.replace(/<[^>]+>/g, ' ');
+        return stripedHtml.slice(0, count) + (stripedHtml.length > count ? "..." : "");
     }
 
     const results = (list) => {
@@ -83,7 +84,7 @@ function Articles() {
     return (
         <div className="article-container" id="article">
             {/* articles container */}
-            <div className="container pt-3">
+            <div className="container">
                 <div className="row">
                     <div className="col-md-3 col-12"></div>
                     <div className="col-md-8 col-12">
@@ -110,6 +111,9 @@ function Articles() {
                             <div className="card sidebar-container shadow mb-3">
                                 <div className="card-body">
                                     <div className="sidebar-item">
+                                    <Link to='/Articles/create'><button className="btn btn-custom btn-block" type="button"><i className="fa fa-plus"></i> New Article</button></Link>
+                                    </div>
+                                    <div className="sidebar-item mt-4">
                                         <h4 className="mb-3 d-none d-md-block">Search</h4>
                                         <div class="input-group mb-3">
                                             <input type="text" class="form-control" placeholder="Enter keyword" value={searchKeyword} onChange={(e) => setSearchKeyword(e.target.value)} />

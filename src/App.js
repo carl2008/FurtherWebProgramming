@@ -8,6 +8,7 @@ import NavigationBar from './component/Navbar/NavigationBar';
 import AboutUs from './component/AboutUs/AboutUs';
 import Articles from './component/Articles/Articles';
 import ArticlePost from './component/Articles/ArticlePost';
+import ArticleForm from './component/Articles/ArticleForm'
 import DiscussionList from './component/Discussion/DiscussionList';
 import Home from './component/CovidAPI/Home';
 import Footer from './component/Navbar/Footer';
@@ -29,6 +30,7 @@ function App() {
           <Route exact path="/Discussion"><DiscussionList /></Route>
           <Route exact path="/Articles"><Articles /></Route>
           <Route exact path="/Article/:id" component={ArticlePost} />
+          <Route exact path="/Articles/create" component={ArticleForm} />
           <Route exact path="/Login" component={LogInForm} />
           <Route exact path="/Register" component={RegisterForm} />
         </Switch>
