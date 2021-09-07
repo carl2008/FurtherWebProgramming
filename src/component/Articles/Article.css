@@ -116,11 +116,20 @@
   color: #3438A3;
   font-weight: bold;
 }
+.post-entry .entry-title a, .text-preview .entry-title a {
+  font-size: 40px;
+}
 .single_post .post-title a, .post-entry .entry-category, .text-preview .entry-category  {
   font-weight: bold;
   color: #556270;
 }
-
+.post-entry .entry-category, .text-preview .entry-category {
+  text-transform: uppercase;
+}
+.sidebar-item .categories li a.category-active{
+  color: #3438A3;
+  font-weight: bold;
+}
 .single_post .post-title a:hover, .sidebar-item .categories li a:hover, .post-entry .entry-title a:hover {
   color: #3438A3;
   text-decoration: none;
@@ -194,12 +203,12 @@ h6.author-title{
 }
 
 /* Post entry */
-.post-entry .entry-meta {
-  margin-bottom: 15px;
+.post-entry .entry-meta, .text-preview .entry-meta{
+  margin-bottom: 25px;
   color: #b7b7b7;
 }
 
-.post-entry .entry-meta ul {
+.post-entry .entry-meta ul, .text-preview .entry-meta ul {
   display: flex;
   flex-wrap: wrap;
   list-style: none;
@@ -208,17 +217,17 @@ h6.author-title{
   margin: 0;
 }
 
-.post-entry .entry-meta ul li + li {
+.post-entry .entry-meta ul li + li, .text-preview .entry-meta ul li + li {
   padding-left: 20px;
 }
 
-.post-entry .entry-meta i {
+.post-entry .entry-meta i, .text-preview .entry-meta i {
   font-size: 16px;
   margin-right: 8px;
   line-height: 0;
 }
 
-.post-entry .entry-meta a {
+.post-entry .entry-meta a, .text-preview .entry-meta a {
   color: #b7b7b7;
   font-size: 14px;
   display: inline-block;
@@ -279,13 +288,29 @@ h6.author-title{
   color: #697790;
 }
 
-/* div.ant-popover-inner-content{
-  padding: 0;
+/* Edit/ Delete post button */
+.post-entry .btn-detail{
+  font-size: 12px;
+  color: #b7b7b7;
 }
-.popover-details{
-  padding: 6px 0;
-  font-size: 14px
-} */
+.post-entry .btn-detail:hover{
+  font-size: 12px;
+  color: #697790;
+}
+
+.popover-content div{
+  min-width: 60px;
+}
+.popover-content a{
+  font-size: 15px;
+  padding: 10 5;
+  color: #000;
+  text-decoration: none;
+}
+.popover-content a:hover{
+  color: #3438A3;
+}
+
 
 .post-comments .comment .comment-img img, .reply-form .comment-img img  {
   width: 60px;

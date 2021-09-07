@@ -1,14 +1,17 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Result, Skeleton, List, Button, Popconfirm, ConfigProvider } from 'antd';
+import { Result, Skeleton, List, Button, Popconfirm, ConfigProvider, Popover } from 'antd';
 import moment from 'moment';
 import './Article.css';
-
+import { useHistory } from 'react-router';
+import { Redirect } from 'react-router-dom';
 
 import ArticleComment from './ArticleComment';
 
 function ArticlePost(props) {
+    const history = useHistory();
     // temp user id, will change to logged in user id later
     const USER_ID = "612b8998a60dea66123c3835"
+
     const [article, setarticle] = useState('')
     const [loadingArticle, setloadingArticle] = useState(false)
     const [comments, setComments] = useState([])
@@ -18,6 +21,7 @@ function ArticlePost(props) {
 
     const [error, setError] = useState(null)
     const [errorCmt, setErrorCmt] = useState(null)
+    const [redirect, setRedirect] = useState(false)
     const endPoint = "http://localhost:9000"
 
     function createMarkup(val) {
@@ -41,6 +45,7 @@ function ArticlePost(props) {
                     category: data.category,
                     title: data.title,
                     content: data.content,
+                    authorId: data.author._id,
                     author: `${data.author.firstName} ${data.author.lastName}`,
                     createdAt: data.created_at,
                 }
@@ -98,6 +103,29 @@ function ArticlePost(props) {
             })
     }
 
+    const handleEdit = () => {
+        setRedirect(true)
+        // history.push(`/articles/create`,{
+        //     id: article.id,
+        //     category: article.category,
+        //     title: article.title,
+        //     content: article.content,
+        // });
+    }
+
+    const handleDelete = (id) => {
+        let result = window.confirm(`Are you sure you want to delete this article?`);
+        if (result) {
+            fetch(endPoint + `/articles/${id}`, {
+                method: 'DELETE'
+            })
+                .then((res) => {
+                    history.push(`/Articles`);
+                })
+                .catch((err) => console.log(err))
+        }
+    }
+
     const handleLike = () => {
         let id = props.match.params.id
         fetch(endPoint + `/articles/${id}/likes`, {
@@ -151,6 +179,19 @@ function ArticlePost(props) {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.match.params.id])
+
+    if (redirect) {
+        return <Redirect
+            to={{
+                pathname: "/articles/create",
+                id: article.id,
+                category: article.category,
+                title: article.title,
+                content: article.content
+            }}
+        />;
+    }
+
     return (
         <>
             <div className="article-container" id="article">
@@ -167,7 +208,7 @@ function ArticlePost(props) {
                             <div className="col-lg-3 col-12"></div>
                             <div className="col-lg-9 col-12">
                                 <div className="panel-sort d-flex justify-content-between pb-3">
-                                    <div className="d-inline-block"><h2>Article</h2></div>
+                                    <div className="d-inline-block"><h2>Health Article</h2></div>
                                 </div>
                             </div>
                         </div>
@@ -210,7 +251,38 @@ function ArticlePost(props) {
                                 <div className="post-entry card shadow mb-5">
                                     <div className="card-body">
                                         <Skeleton active loading={loadingArticle}>
-                                            <h5 className="entry-category mb-4">{article.category}</h5>
+                                            <div className="d-flex justify-content-between">
+                                                <h5 className="entry-category mb-3">{article.category}</h5>
+                                                {/* Only show edit button if this post wrtten by this user */}
+                                                {(article.authorId === USER_ID) &&
+                                                    <Popover
+                                                        placement="leftTop"
+                                                        trigger="click"
+                                                        content={
+                                                            <div className="popover-content">
+                                                                <div className="w-100"><a href="# "
+                                                                    onClick={(e) => {
+                                                                        e.preventDefault();
+                                                                        handleEdit()
+                                                                    }}
+                                                                >Edit</a> </div>
+                                                                <div className="w-100"><a href="# "
+                                                                    onClick={(e) => {
+                                                                        e.preventDefault();
+                                                                        handleDelete(article.id)
+                                                                    }}
+                                                                >Delete</a></div>
+                                                            </div>
+                                                        }>
+                                                        <a className="btn-detail" href="/#" id="actionDropdown" role="button">
+                                                            <span className="fa-stack">
+                                                                <i className="fa fa-circle fa-stack-2x"></i>
+                                                                <i className="fas fa-ellipsis-h fa-stack-1x fa-inverse"></i>
+                                                            </span>
+                                                        </a>
+                                                    </Popover>
+                                                }
+                                            </div>
                                             <h2 className="entry-title"><a href="# ">{article.title}</a></h2>
                                             <div className="entry-meta">
                                                 <ul>
