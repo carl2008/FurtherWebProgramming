@@ -166,3 +166,7 @@ ul.pagination::after, .add-smallreply-section::after{
 #inner-sidebar {
     transition: all 0.3s;
 }
+
+.thumbs-icon{
+    margin-left: -10px;
+}

@@ -15,6 +15,8 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import LogInForm from './component/RegisterForm/LogInForm';
 import UpdateForm from './component/RegisterForm/UpdateForm';
 import UpdateFormDoctors from './component/RegisterForm/UpdateFormDoctors';
+import DiscussionForm from './component/Discussion/DiscussionForm';
+import DiscussionPost from './component/Discussion/DiscussionPost';
 
 function App() {
   return (
@@ -27,6 +29,8 @@ function App() {
           <Route exact path="/"><Home /></Route>
           <Route exact path="/AboutUs"><AboutUs /></Route>
           <Route exact path="/Discussion"><DiscussionList /></Route>
+          <Route exact path="/Discussion/new" component={DiscussionForm} />
+          <Route exact path="/Discussion/:id" component={DiscussionPost} />
           <Route exact path="/Articles"><Articles /></Route>
           <Route exact path="/Article/:id" component={ArticlePost} />
           <Route exact path="/Login" component={LogInForm} />

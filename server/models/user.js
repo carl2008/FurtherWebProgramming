@@ -9,6 +9,10 @@ const UserSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Article"
     }],
+    DiscussionPosts: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Discussion"
+    }]
 })
 
 module.exports = mongoose.model('User', UserSchema)

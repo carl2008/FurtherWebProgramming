@@ -1,39 +1,55 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect } from "react";
+import { useHistory } from 'react-router';
 import './DiscussionList.css';
 import 'jquery/dist/jquery.min.js';
 import 'bootstrap/dist/js/bootstrap.min.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import SmallReply from "./SmallReply";
+import ThumbsVote from "./ThumbsVote";
 
-export default function Reply({ id, reset }) {
+export default function Reply({ id, reset, replyNumber }) {
+    const history = useHistory()
     const [replies, setReplies] = useState([])
     const [sortReply, setSortReply] = useState('latest')
     const [activeReplyID, setActiveReplyID] = useState('')
     const [replyName, setReplyName] = useState('')
-    const [replyValue, setReplyValue] = useState('')
+    const [smallReplyValue, setSmallReplyValue] = useState('')
     const [reload, setReload] = useState(false)
-    //const [smallRepNum, setSmallRepNum] = useState(0)
-    //const [numOfReplies, setNumOfReplies] = useState(0)
-    const endPoint = 'https://611fc518c772030017424085.mockapi.io/api/v1/topics/' + id + '/replies'
+    const endPoint = 'http://localhost:9000/'
+
+    const USER_ID = "6138efaf983a412d88bf236d"
 
     const loadReplies = () => {
-        fetch(endPoint)
+        let tempList = []
+        fetch(`${endPoint}discussions/${id}/replies`)
             .then(response => response.json())
-            .then(data => setReplies(data))
+            .then(data => {
+                for(let i = 0; i< data.length; i++){
+                    tempList.push({
+                        id: data[i]._id,
+                        content: data[i].content,
+                        author: `${data[i].author.firstName} ${data[i].author.lastName}`,
+                        createdAt: data[i].created_at,
+                        thumbsup: data[i].thumbsups.length,
+                        thumbsdown: data[i].thumbsdowns.length
+                    })
+                }
+                setReplies(tempList)
+            })
     }
 
     useEffect(() => {
         loadReplies()
         sortReplies()
-    }, [])
+    }, [reload])
 
     useEffect(() => {
         setActiveReplyID('')
-        setReplyValue('')
+        setSmallReplyValue('')
     }, [reset])
 
     useEffect(() => {
-        setReplyValue("@"+replyName+" ")
+        setSmallReplyValue("@"+replyName+" ")
     }, [activeReplyID])
 
     const sortReplies = () => {
@@ -45,37 +61,48 @@ export default function Reply({ id, reset }) {
             case "oldest":
                 results.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
                 break;
-            case "mostheart":
-                results.sort((a, b) => b.hearts - a.hearts)
+            case "mostvotes":
+                results.sort((a, b) => b.thumbsup - a.thumbsup || a.thumbsdown - b.thumbsdown)
                 break;
         }
         return results
     }
 
-    const handleLike = () => {
-        alert('You liked a reply!')
-    }
-
     const changeReply = (name) => {
-        setReplyValue("@" + name + " " + replyValue)
+        setSmallReplyValue("@" + name + " " + smallReplyValue)
     }
 
-    const sendSmallReply = () => {
-        alert(replyValue)
+    const postSmallReply = (replyId) => {
+        fetch(`${endPoint}replies/${replyId}/smallreplies`, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                content: smallReplyValue,
+                author: USER_ID
+            })
+        }).then(res => {
+            setSmallReplyValue('')
+            history.push(`/Discussion/${id}`)
+            history.go(0)
+        })
+        .catch((err) => console.log(err))
     }
 
     const resetReply = (newId) => {
         if(newId!==activeReplyID){
-            setReplyValue('')
+            setSmallReplyValue('')
         }
     }
 
     return (
-        <div><b>{replies.length+" replies "}</b>
-            <select className="custom-select custom-select-sm w-auto mr-1 mb-2" value={sortReply} onChange={(e) => { setSortReply(e.target.value); setReload(!reload); sortReplies(); }}>
+        <div><b>{replyNumber+" replies "}</b>
+            <select className="custom-select custom-select-sm w-auto mr-1 mb-2" value={sortReply} onChange={(e) => { setSortReply(e.target.value); setReload(!reload); }}>
                 <option value="latest">Sort replies: Latest</option>
                 <option value="oldest">Sort replies: Oldest</option>
-                <option value="mostheart">Sort replies: Most likes</option>
+                <option value="mostvotes">Sort replies: Most votes</option>
             </select>
             {sortReplies().map((reply, i) => {
                 return (
@@ -84,22 +111,22 @@ export default function Reply({ id, reset }) {
                             <div className="card-body">
                                 <div className="media forum-item">
                                     <a href="javascript:void(0)" className="card-link">
-                                        <img src={reply.avatar} className="rounded-circle" width="50" alt="User" />
+                                        <img src="https://www.markuptag.com/images/user-icon.jpg" className="rounded-circle" width="50" alt="User" />
                                         <small className="d-block text-center text-muted">Doctor</small>
                                     </a>
                                     <div className="media-body ml-3">
-                                        <a href="javascript:void(0)" className="text-secondary">{reply.name}</a>
+                                        <a href="javascript:void(0)" className="text-secondary">{reply.author}</a>
                                         <small className="text-muted ml-2">{(new Date(reply.createdAt)).toLocaleDateString('default', { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' })}</small>
                                         <div className="mt-3 font-size-sm">
                                             <p>{reply.content}</p>
                                         </div>
-                                        <button className="btn btn-xs text-muted has-icon mb-1"><i className="fa fa-heart" aria-hidden="true" onClick={handleLike}></i> {reply.hearts} </button>
-                                        <a href={"#add-smallreply-"+reply.id} className="text-muted" onClick={() => {resetReply(reply.id); setReplyName(reply.name); setActiveReplyID(reply.id); changeReply(reply.name)}}> Reply </a>
+                                        <ThumbsVote repID={reply.id} repType="replies" load={reload} key={reply.id}/>
+                                        <a href={"#add-smallreply-"+reply.id} className="text-muted" onClick={() => {resetReply(reply.id); setReplyName(reply.author); setActiveReplyID(reply.id); changeReply(reply.author)}}> Reply </a>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <SmallReply topicId={id} replyId={reply.id} setName={name => {setReplyName(name); changeReply(name); setActiveReplyID(reply.id)}} load={reload}/>
+                        <SmallReply replyId={reply.id} setName={name => {setReplyName(name); changeReply(name); setActiveReplyID(reply.id)}} load={reload} key={reply.id}/>
                         <div className="card mt-3 mb-3 ml-5 add-smallreply-section" id={"add-smallreply-"+reply.id} style={(activeReplyID===reply.id) ? { display: "block" } : { display: "none" }}>
                             <div className="card-body">
                                 <p className="ml-2" style={{ fontSize: '1em' }}><b>Add a reply</b></p>
@@ -109,10 +136,10 @@ export default function Reply({ id, reset }) {
                                         <small className="d-block text-center text-muted">User</small>
                                     </a>
                                     <div className="media-body ml-3">
-                                        <textarea placeholder="Add a new reply" className="add-reply-input" value={replyValue} onChange={(e) => setReplyValue(e.target.value)}></textarea>
+                                        <textarea placeholder="Add a new reply" className="add-reply-input" value={smallReplyValue} onChange={(e) => setSmallReplyValue(e.target.value)}></textarea>
                                     </div>
                                 </div>
-                                <button className="btn btn-primary btn-sm float-right" type="button" onClick={sendSmallReply}>REPLY</button>
+                                <button className="btn btn-primary btn-sm float-right" type="button" onClick={() => postSmallReply(reply.id)}>REPLY</button>
                                 <br/>
                             </div>
                         </div>
