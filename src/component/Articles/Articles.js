@@ -5,6 +5,8 @@ import { Link } from "react-router-dom";
 import './Article.css'
 
 function Articles() {
+    const USER_ROLE = 'doctor';
+
     const [articleList, setArticleList] = useState([])
     const [loading, setLoading] = useState(false)
     const endPoint = "http://localhost:9000/articles"
@@ -136,9 +138,11 @@ function Articles() {
                         <div className="article-sidebar">
                             <div className="card sidebar-container shadow mb-3">
                                 <div className="card-body">
-                                    <div className="sidebar-item">
-                                        <Link to='/Articles/create'><button className="btn btn-custom btn-block" type="button"><i className="fa fa-plus"></i> New Article</button></Link>
-                                    </div>
+                                    {((USER_ROLE === "doctor") || (USER_ROLE === "admin")) &&
+                                        <div className="sidebar-item">
+                                            <Link to='/Articles/create'><button className="btn btn-custom btn-block" type="button"><i className="fa fa-plus"></i> New Article</button></Link>
+                                        </div>
+                                    }
                                     <Skeleton active loading={loading}>
                                         <div className="sidebar-item mt-4">
                                             <h4 className="mb-3 d-none d-md-block">Search</h4>
@@ -226,8 +230,8 @@ function Articles() {
                             <div className="panel-list">
                                 <ConfigProvider renderEmpty={() => (
                                     <div style={{ textAlign: 'center' }}>
-                                        <i class="fas fa-box-open" style={{ fontSize: "40px"}}></i>
-                                        <p style={{ fontSize: "20px"}}>There are no posts yet.</p>
+                                        <i class="fas fa-box-open" style={{ fontSize: "40px" }}></i>
+                                        <p style={{ fontSize: "20px" }}>There are no posts yet.</p>
                                     </div>)}>
                                     <List
                                         loading={loading}
@@ -244,7 +248,7 @@ function Articles() {
                                                     <div className="card-body">
                                                         <h5 className="post-category mb-4">{articleData.category}</h5>
                                                         <h3 className="post-title"><a href={`/article/${articleData.id}`}>{articleData.title}</a></h3>
-                                                        <small className="text-muted">By <a className="text-muted" href="# "><strong> {articleData.author}</strong></a> |  Post on {moment(articleData.createdAt).format("MMM DD, YYYY")} </small>
+                                                        <small className="text-muted">By <a className="text-muted" href={`/article/${articleData.id}`}><strong> {articleData.author}</strong></a> |  Post on {moment(articleData.createdAt).format("MMM DD, YYYY")} </small>
                                                         <p className="post-summary">{displayText(articleData.content, 250)}</p>
                                                         <div className="footer">
                                                             <div className="d-inline-block">

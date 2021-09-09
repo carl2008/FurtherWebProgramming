@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 
 const Article = require('../models/article')
-const Like = require("../models/Like")
+const Like = require("../models/like")
 
 const handlePageError = (res, e) => res.status(500).send(e.message)
 

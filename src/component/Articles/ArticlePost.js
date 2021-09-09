@@ -1,27 +1,33 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { Result, Skeleton, List, Button, Popconfirm, ConfigProvider, Popover } from 'antd';
-import moment from 'moment';
-import './Article.css';
+import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router';
 import { Redirect } from 'react-router-dom';
+import moment from 'moment';
+import { Result, Skeleton, List, Button, Popconfirm, ConfigProvider, Popover, Modal, Spin } from 'antd';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
+import './Article.css';
 
 import ArticleComment from './ArticleComment';
+
+const { confirm } = Modal;
 
 function ArticlePost(props) {
     const history = useHistory();
     // temp user id, will change to logged in user id later
     const USER_ID = "612b8998a60dea66123c3835"
+    const USER_ROLE = "doctor"
 
     const [article, setarticle] = useState('')
     const [loadingArticle, setloadingArticle] = useState(false)
-    const [comments, setComments] = useState([])
 
+    const [comments, setComments] = useState([])
     const [likeCount, setLikeCount] = useState(0)
     const [liked, setLiked] = useState(null)
 
     const [error, setError] = useState(null)
     const [errorCmt, setErrorCmt] = useState(null)
+    const [proccessing, setProccessing] = useState(false)
     const [redirect, setRedirect] = useState(false)
+
     const endPoint = "http://localhost:9000"
 
     function createMarkup(val) {
@@ -104,28 +110,31 @@ function ArticlePost(props) {
     }
 
     const handleEdit = () => {
+        setProccessing(true)
         setRedirect(true)
-        // history.push(`/articles/create`,{
-        //     id: article.id,
-        //     category: article.category,
-        //     title: article.title,
-        //     content: article.content,
-        // });
     }
 
     const handleDelete = (id) => {
-        let result = window.confirm(`Are you sure you want to delete this article?`);
-        if (result) {
-            fetch(endPoint + `/articles/${id}`, {
-                method: 'DELETE'
+        setProccessing(true)
+        fetch(endPoint + `/articles/${id}`, {
+            method: 'DELETE'
+        })
+            .then((res) => {
+                setProccessing(false)
+                history.push(`/Articles`);
             })
-                .then((res) => {
-                    history.push(`/Articles`);
-                })
-                .catch((err) => console.log(err))
-        }
-    }
+            .catch((err) => console.log(err))
 
+    }
+    function showConfirm(id) {
+        confirm({
+            title: 'Are you sure you want to delete this article?',
+            icon: <ExclamationCircleOutlined />,
+            onOk() {
+                handleDelete(id)
+            }
+        });
+    }
     const handleLike = () => {
         let id = props.match.params.id
         fetch(endPoint + `/articles/${id}/likes`, {
@@ -192,6 +201,8 @@ function ArticlePost(props) {
         />;
     }
 
+
+
     return (
         <>
             <div className="article-container" id="article">
@@ -250,11 +261,12 @@ function ArticlePost(props) {
                             <div className="col-lg-9 col-12">
                                 <div className="post-entry card shadow mb-5">
                                     <div className="card-body">
+                                        <Spin spinning={proccessing} tip="Proccessing...">
                                         <Skeleton active loading={loadingArticle}>
                                             <div className="d-flex justify-content-between">
                                                 <h5 className="entry-category mb-3">{article.category}</h5>
                                                 {/* Only show edit button if this post wrtten by this user */}
-                                                {(article.authorId === USER_ID) &&
+                                                {(article.authorId === USER_ID || USER_ROLE === "admin") &&
                                                     <Popover
                                                         placement="leftTop"
                                                         trigger="click"
@@ -269,7 +281,8 @@ function ArticlePost(props) {
                                                                 <div className="w-100"><a href="# "
                                                                     onClick={(e) => {
                                                                         e.preventDefault();
-                                                                        handleDelete(article.id)
+                                                                        showConfirm(article.id);
+                                                                        // handleDelete(article.id)
                                                                     }}
                                                                 >Delete</a></div>
                                                             </div>
@@ -288,7 +301,11 @@ function ArticlePost(props) {
                                                 <ul>
                                                     <li className="d-flex align-items-center"><i className="fa fa-clock"></i> <a href="# ">{moment(article.createdAt).format("MMM DD, YYYY")}</a></li>
                                                     <li className="d-flex align-items-center"><i className="fa fa-comment"></i> <a href="# ">{comments.length} {comments.length <= 1 ? `Comment` : `Comments`} </a></li>
-                                                    <li className="d-flex align-items-center"><i className="fa fa-heart"></i> <a href="# ">{likeCount} {(likeCount <= 1) ? `Like` : `Likes`}</a></li>
+                                                    {liked ? <>
+                                                        <li className="d-flex align-items-center liked" onClick={handleUnlike}><i className="fa fa-heart"></i> <a href="# ">{likeCount} {(likeCount <= 1) ? `Like` : `Likes`}</a></li>
+                                                    </> : <>
+                                                        <li className="d-flex align-items-center unliked" onClick={handleLike}><i className="fa fa-heart"></i> <a href="# ">{likeCount} {(likeCount <= 1) ? `Like` : `Likes`}</a></li>
+                                                    </>}
                                                 </ul>
                                             </div>
                                             <div className="entry-content">
@@ -302,6 +319,7 @@ function ArticlePost(props) {
                                                 </>}
                                             </div>
                                         </Skeleton>
+                                        </Spin>
                                     </div>
                                 </div>
                                 <div class="post-comments">
@@ -334,7 +352,7 @@ function ArticlePost(props) {
                                                                         <small className="text-muted">{moment(cmt.createdAt).format("MMM DD, YYYY")}</small>
                                                                         <p>{cmt.content}</p>
                                                                     </div>
-                                                                    {(cmt.authorId === USER_ID) &&
+                                                                    {(cmt.authorId === USER_ID || USER_ID === "admin") &&
                                                                         <div className="d-inline-block">
                                                                             <Popconfirm title="Are you sure you want to delete？" okText="Yes" cancelText="No"
                                                                                 onConfirm={(e) => { e.preventDefault(); handleDeleteCmt(cmt.id) }}>
