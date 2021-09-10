@@ -170,3 +170,6 @@ ul.pagination::after, .add-smallreply-section::after{
 .thumbs-icon{
     margin-left: -10px;
 }
+.trashcan-icon {
+    font-size: 1.2em;
+}

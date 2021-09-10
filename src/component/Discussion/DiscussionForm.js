@@ -8,7 +8,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 export default function DiscussionForm(props) {
     const history = useHistory()
     const USER_ID = "6138dd80d8bb3e4ab8e48fe4"
-    const USER_NAME = "John Doe"
+    
     const endPoint = "http://localhost:9000"
 
     const [id, setId] = useState(null)
