@@ -273,7 +273,112 @@ h6.author-title{
   color: #b7b7b7;
   cursor: pointer;
 }
+.like-btn i {
+  font-size: 18px;
+  cursor:pointer;
+  /* padding:10px; */
+  /* background:#b7b7b7; */
+  /* border-radius:50%; */
+  display:inline-block;
+  color:#b7b7b7;
+  transition: transform .2s; /* Animation */
+}
 
+.like-btn i:hover {
+  color:#666;
+  /* font-size: 22px; */
+  /* transition: 1s; */
+  transform: scale(1.5)
+}
+
+.like-btn div {
+  position: absolute;
+  bottom:20px;
+  left:0;
+  right:0;
+  visibility: hidden;
+  transition:.6s;
+  z-index:-2;
+  font-size:4px;
+  color:transparent;
+  font-weight:400;
+}
+
+.like-btn div.press {
+  bottom:60px;
+  left:0;
+  right:0;
+  font-size:25px;
+  visibility:visible;
+  animation: fade 2s;
+}
+
+.like-btn i.press {
+  animation: .5s linear burst;
+  color:#dc3545;
+}
+
+.like-btn i.unpress {
+  animation: .5s linear burst2;
+  color:#b7b7b7;
+}
+
+@keyframes fade {
+  0% {color:transparent;}
+  50% {color:#dc3545; }
+  100% {color:transparent;}
+}
+
+
+@keyframes burst{
+  0%,10%{
+      transform: scale(.1);
+      opacity: .5;
+      color:lavender;
+  }
+  45%{
+      transform: scale(.3);
+      opacity: .75;
+  }
+  50%{
+      transform: scale(.5) rotate(-180deg);
+      opacity: 1;
+      color: #dc3545;
+      text-shadow: 2px 2px 6px rgba(235, 9, 9, 0.5);
+  }
+  90%,95%{
+      transform: scale(1.5) ;
+      text-shadow: none;
+  }
+  100% {
+      transform: scale(1) ;
+  }
+}
+
+@keyframes burst2{
+  0%,10%{
+      transform: scale(.1);
+      opacity: .5;
+      color:lavender;
+  }
+  45%{
+      transform: scale(.2);
+      opacity: .75;
+  }
+  50%{
+      transform: scale(0.5) rotate(180deg);
+      opacity: 1;
+      color: #b7b7b7;
+      text-shadow: 2px 2px 6px #b7b7b794;
+  }
+  90%,95%{
+      transform: scale(1.5) ;
+      text-shadow: none;
+  }
+  100% {
+      transform: scale(1) ;
+  }
+}
 /* Post comment */
 .post-comments {
   margin-bottom: 30px;
@@ -415,7 +520,3 @@ h6.author-title{
   padding-bottom: 1em;
 }
 
-
-/* .card-container .quill .ql-editor{
-  border: 1px solid red;
-} */

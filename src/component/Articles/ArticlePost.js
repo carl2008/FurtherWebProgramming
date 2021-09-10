@@ -4,6 +4,8 @@ import { Redirect } from 'react-router-dom';
 import moment from 'moment';
 import { Result, Skeleton, List, Button, Popconfirm, ConfigProvider, Popover, Modal, Spin } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
+import { FacebookShareButton, TwitterShareButton, EmailShareButton } from "react-share";
+import { FacebookIcon, TwitterIcon, EmailIcon } from "react-share";
 import './Article.css';
 
 import ArticleComment from './ArticleComment';
@@ -137,6 +139,7 @@ function ArticlePost(props) {
     }
     const handleLike = () => {
         let id = props.match.params.id
+        setLiked("temp")
         fetch(endPoint + `/articles/${id}/likes`, {
             method: 'POST',
             headers: {
@@ -159,11 +162,11 @@ function ArticlePost(props) {
     }
 
     const handleUnlike = () => {
+        setLiked(null)
         fetch(endPoint + `/likes/${liked}`, {
             method: 'DELETE'
         })
             .then((res) => {
-                setLiked(null)
                 loadLike()
             })
             .catch((err) => console.log(err))
@@ -182,6 +185,7 @@ function ArticlePost(props) {
     // Useffect: Fetch data 
     useEffect(() => {
         if (props.match.params.id) {
+            console.log(window.location.href)
             load()
             loadCmt()
             loadLike()
@@ -262,63 +266,102 @@ function ArticlePost(props) {
                                 <div className="post-entry card shadow mb-5">
                                     <div className="card-body">
                                         <Spin spinning={proccessing} tip="Proccessing...">
-                                        <Skeleton active loading={loadingArticle}>
-                                            <div className="d-flex justify-content-between">
-                                                <h5 className="entry-category mb-3">{article.category}</h5>
-                                                {/* Only show edit button if this post wrtten by this user */}
-                                                {(article.authorId === USER_ID || USER_ROLE === "admin") &&
-                                                    <Popover
-                                                        placement="leftTop"
-                                                        trigger="click"
-                                                        content={
-                                                            <div className="popover-content">
-                                                                <div className="w-100"><a href="# "
-                                                                    onClick={(e) => {
-                                                                        e.preventDefault();
-                                                                        handleEdit()
-                                                                    }}
-                                                                >Edit</a> </div>
-                                                                <div className="w-100"><a href="# "
-                                                                    onClick={(e) => {
-                                                                        e.preventDefault();
-                                                                        showConfirm(article.id);
-                                                                        // handleDelete(article.id)
-                                                                    }}
-                                                                >Delete</a></div>
+                                            <Skeleton active loading={loadingArticle}>
+                                                <div className="d-flex justify-content-between">
+                                                    <h5 className="entry-category mb-3">{article.category}</h5>
+                                                    {/* Only show edit button if this post wrtten by this user */}
+                                                    {(article.authorId === USER_ID || USER_ROLE === "admin") &&
+                                                        <Popover
+                                                            placement="leftTop"
+                                                            trigger="click"
+                                                            content={
+                                                                <div className="popover-content">
+                                                                    <div className="w-100"><a href="# "
+                                                                        onClick={(e) => {
+                                                                            e.preventDefault();
+                                                                            handleEdit()
+                                                                        }}
+                                                                    >Edit</a> </div>
+                                                                    <div className="w-100"><a href="# "
+                                                                        onClick={(e) => {
+                                                                            e.preventDefault();
+                                                                            showConfirm(article.id);
+                                                                            // handleDelete(article.id)
+                                                                        }}
+                                                                    >Delete</a></div>
+                                                                </div>
+                                                            }>
+                                                            <a className="btn-detail" href="/#" id="actionDropdown" role="button">
+                                                                <span className="fa-stack">
+                                                                    <i className="fa fa-circle fa-stack-2x"></i>
+                                                                    <i className="fas fa-ellipsis-h fa-stack-1x fa-inverse"></i>
+                                                                </span>
+                                                            </a>
+                                                        </Popover>
+                                                    }
+                                                </div>
+                                                <h2 className="entry-title"><a href="# ">{article.title}</a></h2>
+                                                <div className="entry-meta">
+                                                    <ul>
+                                                        <li className="d-flex align-items-center"><i className="fa fa-clock"></i> <a href="# ">{moment(article.createdAt).format("MMM DD, YYYY")}</a></li>
+                                                        <li className="d-flex align-items-center"><i className="fa fa-comment"></i> <a href="# ">{comments.length} {comments.length <= 1 ? `Comment` : `Comments`} </a></li>
+                                                        {liked ? <>
+                                                            <li className="d-flex align-items-center liked" onClick={handleUnlike}><i className="fa fa-heart"></i> <a href="# ">{likeCount} {(likeCount <= 1) ? `Like` : `Likes`}</a></li>
+                                                        </> : <>
+                                                            <li className="d-flex align-items-center unliked" onClick={handleLike}><i className="fa fa-heart"></i> <a href="# ">{likeCount} {(likeCount <= 1) ? `Like` : `Likes`}</a></li>
+                                                        </>}
+                                                    </ul>
+                                                </div>
+                                                <div className="entry-content">
+                                                    <div dangerouslySetInnerHTML={createMarkup(article.content)} />
+                                                </div>
+                                                <div class="entry-footer">
+                                                    <div className="d-flex justify-content-between flex-row w-100">
+                                                        {liked ? <>
+                                                            <div className="like-btn" onClick={handleUnlike}>
+                                                                <i className="fa fa-heart press"></i>
+                                                                <div className="press fa fa-heart"></div>
+                                                                <small className="pl-2">{likeCount} {(likeCount <= 1) ? `user` : `users`} like this.</small>
                                                             </div>
-                                                        }>
-                                                        <a className="btn-detail" href="/#" id="actionDropdown" role="button">
-                                                            <span className="fa-stack">
-                                                                <i className="fa fa-circle fa-stack-2x"></i>
-                                                                <i className="fas fa-ellipsis-h fa-stack-1x fa-inverse"></i>
-                                                            </span>
-                                                        </a>
-                                                    </Popover>
-                                                }
-                                            </div>
-                                            <h2 className="entry-title"><a href="# ">{article.title}</a></h2>
-                                            <div className="entry-meta">
-                                                <ul>
-                                                    <li className="d-flex align-items-center"><i className="fa fa-clock"></i> <a href="# ">{moment(article.createdAt).format("MMM DD, YYYY")}</a></li>
-                                                    <li className="d-flex align-items-center"><i className="fa fa-comment"></i> <a href="# ">{comments.length} {comments.length <= 1 ? `Comment` : `Comments`} </a></li>
-                                                    {liked ? <>
-                                                        <li className="d-flex align-items-center liked" onClick={handleUnlike}><i className="fa fa-heart"></i> <a href="# ">{likeCount} {(likeCount <= 1) ? `Like` : `Likes`}</a></li>
-                                                    </> : <>
-                                                        <li className="d-flex align-items-center unliked" onClick={handleLike}><i className="fa fa-heart"></i> <a href="# ">{likeCount} {(likeCount <= 1) ? `Like` : `Likes`}</a></li>
-                                                    </>}
-                                                </ul>
-                                            </div>
-                                            <div className="entry-content">
-                                                <div dangerouslySetInnerHTML={createMarkup(article.content)} />
-                                            </div>
-                                            <div class="entry-footer">
-                                                {liked ? <>
-                                                    <small><i className="fa fa-heart pr-1 liked" onClick={handleUnlike}></i> {likeCount} {(likeCount <= 1) ? `user` : `users`} like this.</small>
-                                                </> : <>
-                                                    <small><i className="fa fa-heart pr-1 unliked" onClick={handleLike}></i> {likeCount} {(likeCount <= 1) ? `user` : `users`} like this.</small>
-                                                </>}
-                                            </div>
-                                        </Skeleton>
+                                                        </> : <>
+                                                            <div className="like-btn" onClick={handleLike}>
+                                                                <i className="fa fa-heart unpress"></i>
+                                                                <div className="fa fa-heart unpress"></div>
+                                                                <small className="pl-2">{likeCount} {(likeCount <= 1) ? `user` : `users`} like this.</small>
+                                                            </div>
+                                                        </>}
+                                                        <div>
+                                                            <small>Share this post: </small>
+                                                            <FacebookShareButton
+                                                                url={`https://www.facebook.com`}
+                                                                quote={`Check out new health blog from R-MED: ${article.title}`}
+                                                                description={`${article.title}`}
+                                                                hashtag={"#R_MED"}
+                                                                className="pr-1"
+                                                            >
+                                                                <FacebookIcon size={25} round />
+                                                            </FacebookShareButton>
+                                                            <TwitterShareButton
+                                                                url={`https://www.facebook.com`}
+                                                                quote={`Check out new health blog from R-MED: ${article.title}`}
+                                                                description={`${article.title}`}
+                                                                hashtag={"R_MED"}
+                                                                className="pr-1"
+                                                            >
+                                                                <TwitterIcon size={25} round />
+                                                            </TwitterShareButton>
+                                                            <EmailShareButton
+                                                                subject={`Check out new health blog from R-MED: ${article.title}`}
+                                                                body={`${article.title}: `}
+                                                                url={`https://www.facebook.com`}
+                                                            >
+                                                                <EmailIcon size={25} round />
+                                                            </EmailShareButton>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </Skeleton>
                                         </Spin>
                                     </div>
                                 </div>
@@ -349,7 +392,7 @@ function ArticlePost(props) {
                                                                     <div class="comment-img mr-3"><img src="https://i.ibb.co/N6SXWfm/Price-Co-1.png" alt="" /></div>
                                                                     <div className="d-inline-block" style={{ width: "90%" }}>
                                                                         <h6>{cmt.author}</h6>
-                                                                        <small className="text-muted">{moment(cmt.createdAt).format("MMM DD, YYYY")}</small>
+                                                                        <small className="text-muted">{moment(cmt.createdAt).format("MMM DD, YYYY, HH:MM:SS")}</small>
                                                                         <p>{cmt.content}</p>
                                                                     </div>
                                                                     {(cmt.authorId === USER_ID || USER_ID === "admin") &&
