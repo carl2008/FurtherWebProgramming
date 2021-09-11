@@ -172,4 +172,5 @@ ul.pagination::after, .add-smallreply-section::after{
 }
 .trashcan-icon {
     font-size: 1.2em;
+    cursor: pointer;
 }

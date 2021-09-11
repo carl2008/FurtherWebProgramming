@@ -3,6 +3,9 @@ const router = express.Router()
 
 const Discussion = require('../models/discussion')
 const Reply = require("../models/reply")
+const SmallReply = require("../models/smallreply")
+const ThumbsUp = require("../models/thumbsup")
+const ThumbsDown = require("../models/thumbsdown")
 
 const handlePageError = (res, e) => res.status(500).send(e.message)
 
@@ -58,6 +61,14 @@ router.post('/discussions/:id/replies', async (req, res) => {
 router.delete('/replies/:id', async (req, res) => {
     try {
         const id_reply = req.params.id
+        const smallreplies = await SmallReply.find({ reply: id_reply })
+        for(let i = 0; i<smallreplies.length;i++){
+            await ThumbsUp.deleteMany({ smallreply: smallreplies[i]._id })
+            await ThumbsDown.deleteMany({ smallreply: smallreplies[i]._id })
+        }
+        await SmallReply.deleteMany({ reply: id_reply })
+        await ThumbsUp.deleteMany({ reply: id_reply })
+        await ThumbsDown.deleteMany({ reply: id_reply })
         await Discussion.findOneAndUpdate(
             { replies: id_reply },
             { $pull: { replies: id_reply } },

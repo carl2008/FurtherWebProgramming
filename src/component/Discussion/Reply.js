@@ -18,16 +18,18 @@ export default function Reply({ id, reset, replyNumber }) {
     const endPoint = 'http://localhost:9000/'
 
     const USER_ID = "6138efaf983a412d88bf236d"
+    const USER_ID2 = "6138e0cdd8bb3e4ab8e49005"
 
     const loadReplies = () => {
         let tempList = []
         fetch(`${endPoint}discussions/${id}/replies`)
             .then(response => response.json())
             .then(data => {
-                for(let i = 0; i< data.length; i++){
+                for (let i = 0; i < data.length; i++) {
                     tempList.push({
                         id: data[i]._id,
                         content: data[i].content,
+                        authorId: data[i].author._id,
                         author: `${data[i].author.firstName} ${data[i].author.lastName}`,
                         createdAt: data[i].created_at,
                         thumbsup: data[i].thumbsups.length,
@@ -49,7 +51,7 @@ export default function Reply({ id, reset, replyNumber }) {
     }, [reset])
 
     useEffect(() => {
-        setSmallReplyValue("@"+replyName+" ")
+        setSmallReplyValue("@" + replyName + " ")
     }, [activeReplyID])
 
     const sortReplies = () => {
@@ -81,6 +83,7 @@ export default function Reply({ id, reset, replyNumber }) {
             },
             body: JSON.stringify({
                 content: smallReplyValue,
+                discussion: id,
                 author: USER_ID
             })
         }).then(res => {
@@ -88,17 +91,29 @@ export default function Reply({ id, reset, replyNumber }) {
             history.push(`/Discussion/${id}`)
             history.go(0)
         })
-        .catch((err) => console.log(err))
+            .catch((err) => console.log(err))
     }
 
     const resetReply = (newId) => {
-        if(newId!==activeReplyID){
+        if (newId !== activeReplyID) {
             setSmallReplyValue('')
         }
     }
 
+    const handleDeleteReply = (replyId) => {
+        let deleteConfirm = window.confirm("Are you sure you want to delete this reply?")
+        if(deleteConfirm){
+            fetch(`${endPoint}replies/${replyId}`, {
+                method: 'DELETE'
+            }).then(res => {
+                history.push(`/Discussion/${id}`)
+                history.go(0)
+            }).catch((err) => console.log(err))
+        }
+    }
+
     return (
-        <div><b>{replyNumber+" replies "}</b>
+        <div><b>{replyNumber + (replyNumber>1 ? " replies " : " reply ")}</b>
             <select className="custom-select custom-select-sm w-auto mr-1 mb-2" value={sortReply} onChange={(e) => { setSortReply(e.target.value); setReload(!reload); }}>
                 <option value="latest">Sort replies: Latest</option>
                 <option value="oldest">Sort replies: Oldest</option>
@@ -120,14 +135,17 @@ export default function Reply({ id, reset, replyNumber }) {
                                         <div className="mt-3 font-size-sm">
                                             <p>{reply.content}</p>
                                         </div>
-                                        <ThumbsVote repID={reply.id} repType="replies" load={reload} key={reply.id}/>
-                                        <a href={"#add-smallreply-"+reply.id} className="text-muted" onClick={() => {resetReply(reply.id); setReplyName(reply.author); setActiveReplyID(reply.id); changeReply(reply.author)}}> Reply </a>
+                                        <ThumbsVote repID={reply.id} repType="replies" load={reload} key={reply.id} />
+                                        <a href={"#add-smallreply-" + reply.id} className="text-muted" onClick={() => { resetReply(reply.id); setReplyName(reply.author); setActiveReplyID(reply.id); changeReply(reply.author) }}> Reply </a>
+                                    </div>
+                                    <div className="text-muted text-center">
+                                        {(reply.authorId === USER_ID2) && <i className="far fa-trash-alt trashcan-icon" title="Delete Reply" onClick={() => handleDeleteReply(reply.id)}></i>}
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <SmallReply replyId={reply.id} setName={name => {setReplyName(name); changeReply(name); setActiveReplyID(reply.id)}} load={reload} key={reply.id}/>
-                        <div className="card mt-3 mb-3 ml-5 add-smallreply-section" id={"add-smallreply-"+reply.id} style={(activeReplyID===reply.id) ? { display: "block" } : { display: "none" }}>
+                        <SmallReply topicId={id} replyId={reply.id} setName={name => { setReplyName(name); changeReply(name); setActiveReplyID(reply.id) }} load={reload} key={reply.id} />
+                        <div className="card mt-3 mb-3 ml-5 add-smallreply-section" id={"add-smallreply-" + reply.id} style={(activeReplyID === reply.id) ? { display: "block" } : { display: "none" }}>
                             <div className="card-body">
                                 <p className="ml-2" style={{ fontSize: '1em' }}><b>Add a reply</b></p>
                                 <div className="media forum-item">
@@ -140,7 +158,7 @@ export default function Reply({ id, reset, replyNumber }) {
                                     </div>
                                 </div>
                                 <button className="btn btn-primary btn-sm float-right" type="button" onClick={() => postSmallReply(reply.id)}>REPLY</button>
-                                <br/>
+                                <br />
                             </div>
                         </div>
                     </div>

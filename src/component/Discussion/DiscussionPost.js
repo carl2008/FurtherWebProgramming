@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useHistory } from 'react-router';
-import { useParams } from "react-router-dom";
+import { useParams, Redirect, Link } from "react-router-dom";
 import Reply from "./Reply";
 import './DiscussionList.css';
 import 'jquery/dist/jquery.min.js';
@@ -15,6 +15,7 @@ export default function DiscussionPost() {
     const [discussionPost, setDiscussionPost] = useState({})
     const [resetRepValue, setResetRepValue] = useState(false)
     const [showSideBar, setShowSideBar] = useState(false)
+    const [redirect, setRedirect] = useState(false)
     const endPoint = "http://localhost:9000/discussions/" + id
 
     const USER_ID = "6138e0cdd8bb3e4ab8e49005"
@@ -41,6 +42,7 @@ export default function DiscussionPost() {
                     authorId: data.author._id,
                     author: `${data.author.firstName} ${data.author.lastName}`,
                     createdAt: data.created_at,
+                    updatedAt: data.updated_at,
                     totalReplyCount: Number(data.replies.length) + smallNum
                 }
                 setDiscussionPost(discussion)
@@ -78,6 +80,33 @@ export default function DiscussionPost() {
             history.go(0)
         })
             .catch((err) => console.log(err))
+    }
+
+    const handleDeletePost = () => {
+        let deleteConfirm = window.confirm("Are you sure you want to delete this post?")
+        if (deleteConfirm) {
+            fetch(endPoint, {
+                method: 'DELETE'
+            }).then(res => {
+                history.push(`/Discussion`)
+                history.go(0)
+            }).catch((err) => console.log(err))
+        }
+    }
+
+    const handleEditPost = () => {
+        setRedirect(true)
+    }
+
+    if(redirect){
+        return <Redirect
+            to={{
+                pathname: "/Discussion/new",
+                id: discussionPost.id,
+                title: discussionPost.title,
+                content: discussionPost.content
+            }}
+        />;
     }
 
     return (
@@ -141,6 +170,7 @@ export default function DiscussionPost() {
                                             <div className="media-body ml-3">
                                                 <a href="javascript:void(0)" className="text-secondary">{discussionPost.author}</a>
                                                 <small className="text-muted ml-2">- {(new Date(discussionPost.createdAt)).toLocaleString('default', { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' })}</small>
+                                                {discussionPost.createdAt !== discussionPost.updatedAt && <small className="text-muted ml-1">- <i>Last edited: {(new Date(discussionPost.updatedAt)).toLocaleString('default', { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' })}</i></small>}
                                                 <h5 className="mt-1">{discussionPost.title}</h5>
                                                 <div className="mt-3 font-size-sm">
                                                     <p>{discussionPost.content}</p>
@@ -148,9 +178,8 @@ export default function DiscussionPost() {
                                                 <a href={"#add-reply-" + id} className="text-muted" onClick={() => changeReply(discussionPost.author)}>Reply</a>
                                             </div>
                                             <div className="text-muted text-center">
-                                                {(discussionPost.authorId === USER_ID2) && <i className="far fa-trash-alt trashcan-icon" title="Delete Post"></i>}
-                                                <br/><br/><br/><br/>
-                                                <span><i className="far fa-comment ml-2"></i> {discussionPost.totalReplyCount}</span>
+                                                {(discussionPost.authorId === USER_ID2) && <><i className="far fa-edit trashcan-icon ml-1 mb-3" title="Edit Post" onClick={handleEditPost}></i><br/></>}
+                                                {(discussionPost.authorId === USER_ID2) && <i className="far fa-trash-alt trashcan-icon" title="Delete Post" onClick={handleDeletePost}></i>}
                                             </div>
                                         </div>
                                     </div>

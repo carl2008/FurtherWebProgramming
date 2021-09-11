@@ -1,8 +1,11 @@
 const express = require('express')
 const router = express.Router()
 
+const Discussion = require('../models/discussion')
 const SmallReply = require('../models/smallreply')
 const Reply = require("../models/reply")
+const ThumbsUp = require("../models/thumbsup")
+const ThumbsDown = require("../models/thumbsdown")
 
 const handlePageError = (res, e) => res.status(500).send(e.message)
 
@@ -37,11 +40,18 @@ router.post('/replies/:id/smallreplies', async (req, res) => {
         const smallreply = await SmallReply.create({
             content: req.body.content,
             author: req.body.author,
+            discussion: req.body.discussion,
             reply: id_reply
         })
         // find out reply and push small reply
         await Reply.findByIdAndUpdate(
             id_reply,
+            { $push: { smallreplies: smallreply._id} },
+            {new: true, useFindAndModify: false }
+        );
+        // find out discussion and push small reply
+        await Discussion.findByIdAndUpdate(
+            req.body.discussion,
             { $push: { smallreplies: smallreply._id} },
             {new: true, useFindAndModify: false }
         );
@@ -55,7 +65,14 @@ router.post('/replies/:id/smallreplies', async (req, res) => {
 router.delete('/smallreplies/:id', async (req, res) => {
     try {
         const id_reply = req.params.id
+        await ThumbsUp.deleteMany({ smallreply: id_reply })
+        await ThumbsDown.deleteMany({ smallreply: id_reply })
         await Reply.findOneAndUpdate(
+            { smallreplies: id_reply },
+            { $pull: { smallreplies: id_reply } },
+            { multi: true }
+        );
+        await Discussion.findOneAndUpdate(
             { smallreplies: id_reply },
             { $pull: { smallreplies: id_reply } },
             { multi: true }

@@ -8,6 +8,10 @@ const SmallReplySchema = new Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User"
   },
+  discussion: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Discussion'
+  },
   reply: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Reply'

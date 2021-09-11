@@ -12,10 +12,15 @@ const DiscussionSchema = new Schema({
   replies: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: "Reply"
+  }],
+  smallreplies: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "SmallReply"
   }]
 }, {
   timestamps: {
-    createdAt: 'created_at'
+    createdAt: 'created_at',
+    updatedAt: 'updated_at'
   }
 })
 

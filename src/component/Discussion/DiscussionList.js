@@ -108,10 +108,6 @@ export default function DiscussionList() {
                                                     <div className="simplebar-content" style={{ padding: '16px' }}>
                                                         <nav className="nav nav-pills nav-gap-y-1 flex-column">
                                                             <a href="javascript:void(0)" className="nav-link nav-link-faded has-icon active">All Threads</a>
-                                                            <a href="javascript:void(0)" className="nav-link nav-link-faded has-icon">Popular</a>
-                                                            <a href="javascript:void(0)" className="nav-link nav-link-faded has-icon">Solved</a>
-                                                            <a href="javascript:void(0)" className="nav-link nav-link-faded has-icon">Unsolved</a>
-                                                            <a href="javascript:void(0)" className="nav-link nav-link-faded has-icon">No replies yet</a>
                                                         </nav>
                                                     </div>
                                                 </div>
