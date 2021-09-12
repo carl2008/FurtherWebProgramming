@@ -14,23 +14,33 @@ import Footer from './component/Navbar/Footer';
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import LogInForm from './component/RegisterForm/LogInForm';
 import UpdateForm from './component/RegisterForm/UpdateForm';
-import UpdateFormDoctors from './component/RegisterForm/UpdateFormDoctors';
+// import UpdateFormDoctors from './component/RegisterForm/UpdateFormDoctors';
 
 function App() {
   return (
     <div className="App">
       <Router>
-        <NavigationBar />
-        <br />
-
+        
         <Switch>
-          <Route exact path="/"><Home /></Route>
-          <Route exact path="/AboutUs"><AboutUs /></Route>
-          <Route exact path="/Discussion"><DiscussionList /></Route>
-          <Route exact path="/Articles"><Articles /></Route>
+          <Route exact path="/"><NavigationBar /><br/><Home /></Route>
+          <Route exact path="/AboutUs"><NavigationBar /><br/><AboutUs /></Route>
+          <Route exact path="/Discussion"><NavigationBar /><br/><DiscussionList /></Route>
+          <Route exact path="/Discussion/new" component={DiscussionForm} />
+          <Route exact path="/Discussion/:id" component={DiscussionPost} />
+          <Route exact path="/Articles"><NavigationBar /><br/><Articles /></Route>
           <Route exact path="/Article/:id" component={ArticlePost} />
-          <Route exact path="/Login" component={LogInForm} />
-          <Route exact path="/Register" component={RegisterForm} />
+          <Route exact path="/LoginForm"><NavigationBar /><br/><LogInForm/></Route>
+          <Route exact path="/Register"><NavigationBar /><br/><RegisterForm/></Route>
+
+          <Route exact path="/user"><NavbarLogin/><br/><Home /></Route>
+          <Route exact path="/user/AboutUs"><NavbarLogin /><br/><AboutUs /></Route>
+          <Route exact path="/user/Discussion"><NavbarLogin /><br/><DiscussionList /></Route>
+          <Route exact path="/user/Discussion/new" component={DiscussionForm} />
+          <Route exact path="/user/Discussion/:id" component={DiscussionPost} />
+          <Route exact path="/user/Articles"><NavbarLogin /><br/><Articles /></Route>
+          <Route exact path="/user/Article/:id" component={ArticlePost} />
+          <Route exact path="/user/LoginForm"><NavbarLogin /><br/><LogInForm/></Route>
+          <Route exact path="/user/Profile"><NavbarLogin /><br/><UpdateForm/></Route>
         </Switch>
 
         <br />
