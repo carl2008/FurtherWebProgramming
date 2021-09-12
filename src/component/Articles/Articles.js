@@ -1,7 +1,9 @@
+import { API_URL } from '../../constants'
 import React, { useState, useEffect } from 'react';
-import { List, Skeleton, ConfigProvider } from 'antd';
 import moment from 'moment';
 import { Link } from "react-router-dom";
+
+import { List, Skeleton, ConfigProvider } from 'antd';
 import './Article.css'
 
 function Articles() {
@@ -9,7 +11,7 @@ function Articles() {
 
     const [articleList, setArticleList] = useState([])
     const [loading, setLoading] = useState(false)
-    const endPoint = "http://localhost:9000/articles"
+    const endPoint = `${API_URL}/articles`
     const [categoryCount, setCategoryCount] = useState(null)
 
     const displayText = (text, count) => {
@@ -19,10 +21,13 @@ function Articles() {
     //get data from api
     const load = () => {
         let listData = []
-        let general = 0, covid = 0, healthy = 0, heart = 0, disease = 0, mind = 0, other = 0
+        let covid = 0, healthy = 0, heart = 0, disease = 0, mind = 0, other = 0
         setLoading(true)
         fetch(endPoint)
-            .then(response => response.json())
+            .then((response) => {
+                if (!response.ok) throw new Error(response.status);
+                else return response.json();
+            })
             .then(data => {
                 console.log("Loaded")
                 console.log(data)

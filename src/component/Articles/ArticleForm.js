@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { Result, Skeleton, List, Button, Tabs, Spin } from 'antd';
+import { API_URL } from '../../constants'
+import React, { useState, useEffect } from 'react';
 import moment from 'moment';
 import { useHistory } from 'react-router';
 
+import { Tabs, Spin } from 'antd';
 import './Article.css'
 import TextEditor from "./TextEditor";
 
@@ -13,7 +14,7 @@ function ArticleForm(props) {
     // temp user id, will change to logged in user id later
     const USER_ID = "612b8998a60dea66123c3835"
     const USER_NAME = "Linh Nguyen"
-    const endPoint = `http://localhost:9000`
+    const endPoint = `${API_URL}`
 
     const [id, setId] = useState(null)
     const [category, setCategory] = useState('')
@@ -108,6 +109,7 @@ function ArticleForm(props) {
             setContent(props.location.content)
             setCategory(props.location.category)
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.location.id])
 
     return (

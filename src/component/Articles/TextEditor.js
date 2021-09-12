@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import ReactQuill from 'react-quill';
 import './Article.css'
 import 'react-quill/dist/quill.snow.css';

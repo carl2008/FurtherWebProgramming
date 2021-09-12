@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { Result, Skeleton, List, Button } from 'antd';
-import moment from 'moment';
+import { API_URL } from '../../constants'
+import React, { useState} from 'react';
 import './Article.css'
 
 function ArticleComment(props) {
@@ -8,7 +7,7 @@ function ArticleComment(props) {
     const USER_ID = "612b8998a60dea66123c3835"
     const USER_NAME = "Linh Nguyen"
     const [cmtContent, setCmtContent] = useState('')
-    const endPoint = `http://localhost:9000/articles/${props.id}/comments`
+    const endPoint = `${API_URL}/articles/${props.id}/comments`
 
     const handleLeaveComment = () => {
         fetch(endPoint, {
@@ -32,14 +31,6 @@ function ArticleComment(props) {
         console.log(cmtContent)
         handleLeaveComment()
     }
-    // useEffect(() => {
-        // window.addEventListener("beforeunload", (ev) => {
-        //     ev.preventDefault();
-
-        //         return ev.returnValue = 'Are you sure you want to close?';
-
-        // });
-    // })
 
     return (
         <>

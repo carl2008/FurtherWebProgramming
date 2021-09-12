@@ -16,7 +16,7 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import LogInForm from './component/RegisterForm/LogInForm';
 import UpdateForm from './component/RegisterForm/UpdateForm';
 import UpdateFormDoctors from './component/RegisterForm/UpdateFormDoctors';
-
+import PageNotFound from './component/ErrorHandling/PageNotFound';
 function App() {
   return (
     <div className="App">
@@ -33,6 +33,7 @@ function App() {
           <Route exact path="/Articles/create" component={ArticleForm} />
           <Route exact path="/Login" component={LogInForm} />
           <Route exact path="/Register" component={RegisterForm} />
+          <Route component={PageNotFound} />
         </Switch>
 
         <br />

@@ -1,7 +1,9 @@
+import { API_URL } from '../../constants'
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router';
 import { Redirect } from 'react-router-dom';
 import moment from 'moment';
+
 import { Result, Skeleton, List, Button, Popconfirm, ConfigProvider, Popover, Modal, Spin } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { FacebookShareButton, TwitterShareButton, EmailShareButton } from "react-share";
@@ -30,7 +32,7 @@ function ArticlePost(props) {
     const [proccessing, setProccessing] = useState(false)
     const [redirect, setRedirect] = useState(false)
 
-    const endPoint = "http://localhost:9000"
+    const endPoint = `${API_URL}`
 
     function createMarkup(val) {
         return { __html: val };
@@ -43,7 +45,7 @@ function ArticlePost(props) {
         setloadingArticle(true)
         fetch(endPoint + `/articles/${id}`)
             .then((response) => {
-                if (!response.ok) throw new Error(response.statusText);
+                if (!response.ok) throw new Error(response.status);
                 else return response.json();
             })
             .then(data => {
@@ -70,7 +72,7 @@ function ArticlePost(props) {
         let comments = []
         fetch(endPoint + `/articles/${id}/comments`)
             .then((response) => {
-                if (!response.ok) throw new Error(response.statusText);
+                if (!response.ok) throw new Error(response.status);
                 else return response.json();
             })
             .then(data => {
@@ -94,7 +96,7 @@ function ArticlePost(props) {
         let id = props.match.params.id
         fetch(endPoint + `/articles/${id}/likes`)
             .then((response) => {
-                if (!response.ok) throw new Error(response.statusText);
+                if (!response.ok) throw new Error(response.status);
                 else return response.json();
             })
             .then(data => {
@@ -151,7 +153,7 @@ function ArticlePost(props) {
             })
         })
             .then((response) => {
-                if (!response.ok) throw new Error(response.statusText);
+                if (!response.ok) throw new Error(response.status);
                 else return response.json();
             })
             .then((data) => {
@@ -366,6 +368,7 @@ function ArticlePost(props) {
                                     </div>
                                 </div>
                                 <div class="post-comments">
+                                    {errorCmt && <div>Something went wrong with comment section. Sorry for this inconvenience.</div>}
                                     {loadingArticle && <>
                                         <Skeleton avatar={{ shape: "square" }} active></Skeleton>
                                         <Skeleton avatar={{ shape: "square" }} active></Skeleton>

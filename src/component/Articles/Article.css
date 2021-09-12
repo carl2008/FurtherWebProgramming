@@ -366,7 +366,7 @@ h6.author-title{
       opacity: .75;
   }
   50%{
-      transform: scale(0.5) rotate(180deg);
+      transform: scale(0.5) rotate(180deg) ;
       opacity: 1;
       color: #b7b7b7;
       text-shadow: 2px 2px 6px #b7b7b794;
