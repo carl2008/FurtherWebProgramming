@@ -32,6 +32,7 @@ function ArticlePost(props) {
     const [proccessing, setProccessing] = useState(false)
     const [redirect, setRedirect] = useState(false)
 
+    const currentURL = `${window.location.href}`
     const endPoint = `${API_URL}`
 
     function createMarkup(val) {
@@ -187,7 +188,6 @@ function ArticlePost(props) {
     // Useffect: Fetch data 
     useEffect(() => {
         if (props.match.params.id) {
-            console.log(window.location.href)
             load()
             loadCmt()
             loadLike()
@@ -335,7 +335,7 @@ function ArticlePost(props) {
                                                         <div>
                                                             <small>Share this post: </small>
                                                             <FacebookShareButton
-                                                                url={`https://www.facebook.com`}
+                                                                url={currentURL}
                                                                 quote={`Check out new health blog from R-MED: ${article.title}`}
                                                                 description={`${article.title}`}
                                                                 hashtag={"#R_MED"}
@@ -344,7 +344,7 @@ function ArticlePost(props) {
                                                                 <FacebookIcon size={25} round />
                                                             </FacebookShareButton>
                                                             <TwitterShareButton
-                                                                url={`https://www.facebook.com`}
+                                                                url={currentURL}
                                                                 quote={`Check out new health blog from R-MED: ${article.title}`}
                                                                 description={`${article.title}`}
                                                                 hashtag={"R_MED"}
@@ -355,7 +355,7 @@ function ArticlePost(props) {
                                                             <EmailShareButton
                                                                 subject={`Check out new health blog from R-MED: ${article.title}`}
                                                                 body={`${article.title}: `}
-                                                                url={`https://www.facebook.com`}
+                                                                url={currentURL}
                                                             >
                                                                 <EmailIcon size={25} round />
                                                             </EmailShareButton>
