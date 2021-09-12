@@ -47,6 +47,7 @@ export default function LogInForm() {
             setLoading(false);
         } catch (error) {
             setError(error.response.data.message);
+            setLoading(false);
         }
     };
  
