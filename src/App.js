@@ -17,6 +17,7 @@ import UpdateForm from './component/RegisterForm/UpdateForm';
 import UpdateFormDoctors from './component/RegisterForm/UpdateFormDoctors';
 import DiscussionForm from './component/Discussion/DiscussionForm';
 import DiscussionPost from './component/Discussion/DiscussionPost';
+import ChatbotComponent from './component/Discussion/ChatbotComponent';
 
 function App() {
   return (
@@ -38,6 +39,7 @@ function App() {
         </Switch>
 
         <br />
+        <ChatbotComponent />
         <Footer />
       </Router>
     </div>

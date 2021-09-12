@@ -21,7 +21,7 @@ export default function DiscussionForm(props) {
 
     const formValidate = () => {
         setError('')
-        if (!content || !title) {
+        if (!content.trim() || !title.trim()) {
             setError('Please fill out both the title and content of the discussion before submitting.')
             setSubmitted(false)
             return false
