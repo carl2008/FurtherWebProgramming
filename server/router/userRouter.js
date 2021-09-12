@@ -1,5 +1,5 @@
 const express = require('express')
-const { registerUser } = require('../controllers/userController')
+const { registerUser, authUser } = require('../controllers/userController')
 const router = express.Router()
 
 // const User = require("../models/user")
@@ -7,6 +7,7 @@ const router = express.Router()
 // const handlePageError = (res, e) => res.setStatus(500).send(e.message)
 
 router.route('/').post(registerUser);
+router.route("/login").post(authUser);
 
 // // Get all users
 // router.get('/users', async (req, res) => {
