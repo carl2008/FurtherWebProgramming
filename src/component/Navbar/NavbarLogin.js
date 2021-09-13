@@ -27,12 +27,12 @@ export default function NavbarLogin() {
 
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Navbar.Collapse id="responsive-navbar-nav">
-            <Nav className="me-auto">
+            <Nav className="mr-auto">
               <Nav.Link href="/AboutUs">About Us</Nav.Link>
               <Nav.Link href="/Discussion">Discussion</Nav.Link>
               <Nav.Link href="/Articles">Articles</Nav.Link>
             </Nav>
-            <Nav className="login-register">
+            <Nav>
               <Nav.Link
                 onClick={() => {
                   localStorage.clear();
