@@ -8,48 +8,46 @@ import Navbar from "react-bootstrap/Navbar";
 import { useHistory } from "react-router-dom";
 
 export default function NavbarLogin() {
+  const history = useHistory();
 
-     NavbarLogin = () => {
-      const history = useHistory();
-    
+  return (
+    <div className="removing-space">
+      <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+        <Container>
+          <Navbar.Brand href="/">
+            <img
+              src={logo}
+              width="35"
+              height="30"
+              className="d-inline-block align-top"
+              alt="R-MED logo"
+            />
+          </Navbar.Brand>
+          <Navbar.Brand href="/">R-MED</Navbar.Brand>
 
-    return (
-      <div className="removing-space">
-        <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
-          <Container>
-            <Navbar.Brand href="/user">
-              <img
-                src={logo}
-                width="35"
-                height="30"
-                className="d-inline-block align-top"
-                alt="R-MED logo"
-              />
-            </Navbar.Brand>
-            <Navbar.Brand href="/user">R-MED</Navbar.Brand>
+          <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+          <Navbar.Collapse id="responsive-navbar-nav">
+            <Nav className="me-auto">
+              <Nav.Link href="/AboutUs">About Us</Nav.Link>
+              <Nav.Link href="/Discussion">Discussion</Nav.Link>
+              <Nav.Link href="/Articles">Articles</Nav.Link>
+            </Nav>
+            <Nav className="login-register">
+              <Nav.Link
+                onClick={() => {
+                  localStorage.clear();
+                  history.push(`/`);
+                  history.go(0)
+                }}
+              >
+                Log out
+              </Nav.Link>
+              <Nav.Link href="/Profile">Profile</Nav.Link>
+            </Nav>
+          </Navbar.Collapse>
+        </Container>
+      </Navbar>
+    </div>
+  );
 
-            <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-            <Navbar.Collapse id="responsive-navbar-nav">
-              <Nav className="me-auto">
-                <Nav.Link href="/user/AboutUs">About Us</Nav.Link>
-                <Nav.Link href="/user/Discussion">Discussion</Nav.Link>
-                <Nav.Link href="/user/Articles">Articles</Nav.Link>
-              </Nav>
-              <Nav className="login-register">
-                <Nav.Link
-                  onClick={() => {
-                    localStorage.removeItem("userInfo");
-                    history.push("/");
-                  }}
-                >
-                  Log out
-                </Nav.Link>
-                <Nav.Link href="/user/Profile">Profile</Nav.Link>
-              </Nav>
-            </Navbar.Collapse>
-          </Container>
-        </Navbar>
-      </div>
-    );
-}
 }

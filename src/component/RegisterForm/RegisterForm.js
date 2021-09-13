@@ -1,3 +1,4 @@
+import { USER_INFO } from '../../constants'
 import "./RegisterForm.css";
 import React, { useState } from "react";
 import "./Bootstrap.css";
@@ -43,7 +44,7 @@ export default function RegisterForm() {
             );
 
             setLoading(false);
-            localStorage.setItem("userInfo", JSON.stringify(data));
+            localStorage.setItem(USER_INFO, JSON.stringify(data));
         } catch (error) {
             setError(error.response.data.message);
         }

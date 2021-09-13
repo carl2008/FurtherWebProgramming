@@ -1,3 +1,4 @@
+import { USER_INFO, USER_NAME, USER_TOKEN, USER_ROLE } from '../../constants'
 import "./RegisterForm.css";
 import React, { useState, useEffect } from "react";
 import "./Bootstrap.css";
@@ -6,23 +7,15 @@ import Loading from "./Loading";
 import ErrorMessage from "./ErrorMessage";
 import { useHistory } from "react-router-dom";
 
-export default function LogInForm({history}) {
+export default function LogInForm() {
     //use useState hook for input handlings React form
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState(false);
     const [loading, setLoading] = useState(false);
-   const history2 = useHistory();
 
-    useEffect(() => {
-        const userInfo = JSON.parse(localStorage.getItem("userInfo"));
-        console.log("user is directed");
-        console.log(userInfo);
-        if(userInfo ){
-           history2.push("/user");
-           console.log('directed');
-      }
-   }, [history]);
+    const [redirect, setRedirect] = useState(false);
+    const history = useHistory();
 
     // const handleLogin = () => {
     //     const userInfo = localStorage.getItem("userInfo");
@@ -31,7 +24,7 @@ export default function LogInForm({history}) {
     //        history.push("/user");
     //   }
     // }
-    
+
     const submitHandler = async (e) => {
         e.preventDefault();
 
@@ -42,7 +35,7 @@ export default function LogInForm({history}) {
                 }
             }
 
-            setLoading(true); 
+            setLoading(true);
 
             const { data } = await axios.post(
                 "http://localhost:9000/api/users/login",
@@ -52,23 +45,34 @@ export default function LogInForm({history}) {
                 },
                 config
             );
-            
-            localStorage.setItem("userInfo", JSON.stringify(data));
+
+            localStorage.setItem(USER_INFO, JSON.stringify(data));
+            localStorage.setItem(USER_NAME, data.username);
+            localStorage.setItem(USER_TOKEN, data.token);
+            localStorage.setItem(USER_ROLE, data.role);
             setLoading(false);
+            setRedirect(true)
         } catch (error) {
             setError(error.response.data.message);
             setLoading(false);
         }
     };
- 
+
+    if (redirect) {
+        console.log("user is directed");
+        history.push("/");
+        history.go(0)
+        console.log('directed');
+    }
+
     return (
 
         <div>
-            
+
 
             <div className='container' id="formBorder">
-            {error && <ErrorMessage variant="danger">{error}</ErrorMessage>}
-            {loading && <Loading />}
+                {error && <ErrorMessage variant="danger">{error}</ErrorMessage>}
+                {loading && <Loading />}
                 <form className="row g-3" id="form-styling1" onSubmit={submitHandler}>
                     <div className="col-md-12">
                         <h1 id="form-title">Login</h1>
