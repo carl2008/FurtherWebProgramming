@@ -1,24 +1,32 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect } from "react";
+import { useHistory } from 'react-router';
 import './DiscussionList.css';
 import 'jquery/dist/jquery.min.js';
 import 'bootstrap/dist/js/bootstrap.min.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import ThumbsVote from "./ThumbsVote";
 
 export default function SmallReply({ topicId, replyId, setName, load }) {
+    const history = useHistory()
     const [smallRep, setSmallRep] = useState([])
-    const endPoint = 'https://611fc518c772030017424085.mockapi.io/api/v1/topics/' + topicId + '/replies/' + replyId + '/smallreplies'
+    const endPoint = 'http://localhost:9000/replies/' + replyId + '/smallreplies'
+    const USER_ID = "6138efaf983a412d88bf236d"
 
     const loadSmallReplies = () => {
+        let tempList = []
         fetch(endPoint)
-            .then(response => response.text())
+            .then(response => response.json())
             .then(data => {
-                try{
-                    const repData = JSON.parse(data)
-                    setSmallRep(repData)
+                for (let i = 0; i < data.length; i++) {
+                    tempList.push({
+                        id: data[i]._id,
+                        content: data[i].content,
+                        authorId: data[i].author._id,
+                        author: `${data[i].author.firstName} ${data[i].author.lastName}`,
+                        createdAt: data[i].created_at
+                    })
                 }
-                catch(err){
-                    setSmallRep([])
-                }
+                setSmallRep(tempList)
             })
     }
 
@@ -26,9 +34,17 @@ export default function SmallReply({ topicId, replyId, setName, load }) {
         loadSmallReplies()
     }, [load])
 
-    const handleLike = () => {
-        alert('You liked a small reply!')
-    }
+    const handleDeleteReply = (replyId) => {
+        let deleteConfirm = window.confirm("Are you sure you want to delete this reply?")
+        if(deleteConfirm){
+            fetch(`http://localhost:9000/smallreplies/${replyId}`, {
+                method: 'DELETE'
+            }).then(res => {
+                history.push(`/Discussion/${topicId}`)
+                history.go(0)
+            }).catch((err) => console.log(err))
+        }
+    } 
 
     return (
         smallRep.map((reply, i) => {
@@ -37,17 +53,20 @@ export default function SmallReply({ topicId, replyId, setName, load }) {
                     <div className="card-body">
                         <div className="media forum-item">
                             <a href="javascript:void(0)" className="card-link">
-                                <img src={reply.avatar} className="rounded-circle" width="50" alt="User" />
+                                <img src="https://www.markuptag.com/images/user-icon.jpg" className="rounded-circle" width="50" alt="User" />
                                 <small className="d-block text-center text-muted">Doctor</small>
                             </a>
                             <div className="media-body ml-3">
-                                <a href="javascript:void(0)" className="text-secondary">{reply.name}</a>
+                                <a href="javascript:void(0)" className="text-secondary">{reply.author}</a>
                                 <small className="text-muted ml-2">{(new Date(reply.createdAt)).toLocaleDateString('default', { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' })}</small>
                                 <div className="mt-3 font-size-sm">
                                     <p>{reply.content}</p>
                                 </div>
-                                <button className="btn btn-xs text-muted has-icon mb-1"><i className="fa fa-heart" aria-hidden="true" onClick={handleLike}></i> {reply.hearts} </button>
-                                <a href={"#add-smallreply-" + replyId} className="text-muted" onClick={() => setName(reply.name)}> Reply </a>
+                                <ThumbsVote repID={reply.id} repType="smallreplies" load={load} key={reply.id} />
+                                <a href={"#add-smallreply-" + replyId} className="text-muted" onClick={() => setName(reply.author)}> Reply </a>
+                            </div>
+                            <div className="text-muted text-center">
+                                {(reply.authorId === USER_ID) && <i className="far fa-trash-alt trashcan-icon" title="Delete Reply" onClick={() => handleDeleteReply(reply.id)}></i>}
                             </div>
                         </div>
                     </div>

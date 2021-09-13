@@ -20,6 +20,16 @@ const likes = require('./router/likeRouter')
 app.use('/', likes)
 const comments = require('./router/commentRouter');
 app.use('/', comments)
+const discussions = require('./router/discussionRouter')
+app.use('/',discussions)
+const replies = require('./router/replyRouter')
+app.use('/',replies)
+const smallreplies = require('./router/smallReplyRouter')
+app.use('/',smallreplies)
+const thumbsup = require('./router/thumbsUpRouter')
+app.use('/',thumbsup)
+const thumbsdown = require('./router/thumbsDownRouter')
+app.use('/',thumbsdown)
 
 const { notFound, errorHandler } = require("./middlewares/errorMiddleware");
 app.use(notFound);
