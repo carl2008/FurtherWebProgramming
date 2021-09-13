@@ -1,64 +1,89 @@
 import "./RegisterForm.css";
-import React, { useState , useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import "./Bootstrap.css";
+import axios from "axios";
+import Loading from "./Loading";
+import ErrorMessage from "./ErrorMessage";
 
 export default function LogInForm() {
     //use useState hook for input handlings React form
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    const [error, setError] = useState(false);
+    const [loading, setLoading] = useState(false);
     
+   // useEffect(() => {
+     //   const userInfo = localStorage.getItem("userInfo");
 
-    const [username, setUsername] = useState([]);
-    const [password, setPassword] = useState([]);
+   //     if(userInfo){
 
-    //store data in our website database --We haven't decide our database yet so I just use localhost
-    const endPoint = "localhost:3000";
+  //          history.push("/mynotes");
+   //     }
 
-    function LogIn() {
-        fetch(endPoint, {
-            method: "POST",
-            headers: {
-                "Content-type": "application/json",
-            },
-            body: JSON.stringify({  username: username, password: password}),
-        }).then((data) => {
-            fetch(endPoint).then((response) =>
-                response.json().then((data) => setUsername(data),setPassword(data))
+  //  }, [history]);
+
+    const submitHandler = async (e) => {
+        e.preventDefault();
+
+        try {
+            const config = {
+                header: {
+                    "Content-type": "application/json"
+                }
+
+            }
+            setLoading(true); 
+
+            const { data } = await axios.post(
+                "/api/users/login",
+                {
+                    username,
+                    password,
+                },
+                config
             );
-
-            data.json();
-        });
+            
+            localStorage.setItem("userInfo", JSON.stringify(data));
+            setLoading(false);
+        } catch (error) {
+            setError(error.response.data.message);
+            setLoading(false);
+        }
     };
-
+ 
     return (
 
-        <div className='container' id="formBorder">
+        <div>
+            {error && <ErrorMessage variant="danger">{error}</ErrorMessage>}
+            {loading && <Loading />}
 
-            
-            <form className="row g-3" id="form-styling1">
-            <div className="col-md-12">
-                <h1 id="form-title">Login</h1>
-            </div>
-            
-            <div className="col-md-12">
-                <input type="text" class="form-control" id="inputUsername" placeholder="Username" 
-                value={username} onChange={(e) => setUsername(e.target.value)}/>
-                <br></br>
-            </div>
+            <div className='container' id="formBorder">
+                <form className="row g-3" id="form-styling1" onSubmit={submitHandler}>
+                    <div className="col-md-12">
+                        <h1 id="form-title">Login</h1>
+                    </div>
 
-            <div className="col-md-12">
-                <input type="password" class="form-control" id="inputPassword" placeholder="Create Password" 
-                value={password} onChange={(e) => setPassword(e.target.value)}/>
-                <br></br>
-            </div>
-            
-            <div className="col-md-12">
-                <button className="btn btn-primary col-3 mx-auto"  id="button-form" onClick={() => LogIn()}>
-                    Log In
-                </button>
-            </div>
-            </form>
+                    <div className="col-md-12">
+                        <input type="text" class="form-control" id="inputUsername" placeholder="Username"
+                            value={username} onChange={(e) => setUsername(e.target.value)} />
+                        <br></br>
+                    </div>
 
+                    <div className="col-md-12">
+                        <input type="password" class="form-control" id="inputPassword" placeholder="Create Password"
+                            value={password} onChange={(e) => setPassword(e.target.value)} />
+                        <br></br>
+                    </div>
+
+                    <div className="col-md-12">
+                        <button className="btn btn-primary col-3 mx-auto" id="button-form">
+                            Log In
+                        </button>
+                    </div>
+                </form>
+
+            </div>
         </div>
-    
 
     );
 }

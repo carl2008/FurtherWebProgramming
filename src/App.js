@@ -13,8 +13,8 @@ import Home from './component/CovidAPI/Home';
 import Footer from './component/Navbar/Footer';
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import LogInForm from './component/RegisterForm/LogInForm';
-import UpdateForm from './component/RegisterForm/UpdateForm';
-import UpdateFormDoctors from './component/RegisterForm/UpdateFormDoctors';
+// import UpdateForm from './component/RegisterForm/UpdateForm';
+// import UpdateFormDoctors from './component/RegisterForm/UpdateFormDoctors';
 
 function App() {
   return (
