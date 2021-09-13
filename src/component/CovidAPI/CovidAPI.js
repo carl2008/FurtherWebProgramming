@@ -53,7 +53,7 @@ export default function CovidAPI() {
 
     useEffect(() => {
         if(userInfo){
-            console.log(userInfo)
+            console.log(JSON.parse(userInfo))
         }
     })
     return (

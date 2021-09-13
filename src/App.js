@@ -29,10 +29,10 @@ function App() {
   return (
     <div className="App">
       <Router>
-        {userName ? 
-        <NavbarLogin /> :
-        <NavigationBar />
-}
+        {userName ?
+          <NavbarLogin /> :
+          <NavigationBar />
+        }
 
 
         <br />
