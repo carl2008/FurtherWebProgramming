@@ -2,22 +2,21 @@ const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema
 
-const ArticleSchema = new Schema({
+const DiscussionSchema = new Schema({
   title: { type: String, required: true },
-  content: { type: String, default: null },
-  category: { type: String, required: true },
+  content: { type: String, require: true },
   author: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User"
   },
-  likes: [{
+  replies: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Like"
+    ref: "Reply"
   }],
-  comments: [{
+  smallreplies: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Comment"
-  }],
+    ref: "SmallReply"
+  }]
 }, {
   timestamps: {
     createdAt: 'created_at',
@@ -25,4 +24,4 @@ const ArticleSchema = new Schema({
   }
 })
 
-module.exports = mongoose.model('Article', ArticleSchema)
+module.exports = mongoose.model('Discussion', DiscussionSchema)
