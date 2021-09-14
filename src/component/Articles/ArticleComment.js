@@ -1,11 +1,13 @@
+import { USER_NAME, USER_ID, USER_ROLE } from '../../constants'
 import { API_URL } from '../../constants'
 import React, { useState} from 'react';
 import './Article.css'
 
 function ArticleComment(props) {
     // temp user id, will change to logged in user id later
-    const USER_ID = "612b8998a60dea66123c3835"
-    const USER_NAME = "Linh Nguyen"
+    const userID = localStorage.getItem(USER_ID).toString()
+    const userName = localStorage.getItem(USER_NAME).toString()
+
     const [cmtContent, setCmtContent] = useState('')
     const endPoint = `${API_URL}/articles/${props.id}/comments`
 
@@ -17,7 +19,7 @@ function ArticleComment(props) {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                author: USER_ID,
+                author: userID,
                 content: cmtContent,
             })
         }).then(res => {
@@ -46,7 +48,7 @@ function ArticleComment(props) {
                             ></textarea>
                         </div>
                         <div className="d-flex justify-content-between">
-                            <p>Signed in as <b>{USER_NAME}</b></p>
+                            <p>Signed in as <b>{userName}</b></p>
                             <button type="submit" class="btn btn-custom">Post Comment</button>
                         </div>
                     </form>

@@ -5,8 +5,10 @@ import "./Bootstrap.css";
 import axios from "axios";
 import Loading from "./Loading";
 import ErrorMessage from "./ErrorMessage";
+import { useHistory } from "react-router-dom";
 
 export default function RegisterForm() {
+    const history = useHistory();
     //use useState hook for input handlings React form
 
     const [firstName, setFirstName] = useState("");
@@ -22,6 +24,7 @@ export default function RegisterForm() {
     const [picMessage, setPicMessage] = useState(null);
     const [error, setError] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [redirect, setRedirect] = useState(false);
 
     const submitHandler = async (e) => {
         e.preventDefault();
@@ -42,14 +45,17 @@ export default function RegisterForm() {
                 { firstName, lastName, emailAddress, username, password },
                 config
             );
-
             setLoading(false);
-            localStorage.setItem(USER_INFO, JSON.stringify(data));
+            setRedirect(true)
         } catch (error) {
             setError(error.response.data.message);
         }
-
         console.log(username);
+    }
+
+    if (redirect) {
+        history.push("/login");
+        history.go(0)
     }
 
     return (

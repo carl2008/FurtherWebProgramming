@@ -1,4 +1,4 @@
-import { API_URL } from '../../constants'
+import { USER_NAME, USER_ID, USER_ROLE, API_URL } from '../../constants'
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router';
 import { Redirect } from 'react-router-dom';
@@ -17,8 +17,9 @@ const { confirm } = Modal;
 function ArticlePost(props) {
     const history = useHistory();
     // temp user id, will change to logged in user id later
-    const USER_ID = "612b8998a60dea66123c3835"
-    const USER_ROLE = "doctor"
+    const userID = localStorage.getItem(USER_ID)
+    const userName = localStorage.getItem(USER_NAME)
+    const userRole = localStorage.getItem(USER_ROLE)
 
     const [article, setarticle] = useState('')
     const [loadingArticle, setloadingArticle] = useState(false)
@@ -102,7 +103,7 @@ function ArticlePost(props) {
             })
             .then(data => {
                 for (let i = 0; i < data.length; i++) {
-                    if (data[i].author._id === USER_ID) {
+                    if (data[i].author._id === userID) {
                         setLiked(data[i]._id)
                         console.log(data[i]._id)
                     }
@@ -150,7 +151,7 @@ function ArticlePost(props) {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                author: USER_ID,
+                author: userID,
             })
         })
             .then((response) => {
@@ -272,7 +273,7 @@ function ArticlePost(props) {
                                                 <div className="d-flex justify-content-between">
                                                     <h5 className="entry-category mb-3">{article.category}</h5>
                                                     {/* Only show edit button if this post wrtten by this user */}
-                                                    {(article.authorId === USER_ID || USER_ROLE === "admin") &&
+                                                    {(article.authorId === userID || userRole === "admin") &&
                                                         <Popover
                                                             placement="leftTop"
                                                             trigger="click"
@@ -398,7 +399,7 @@ function ArticlePost(props) {
                                                                         <small className="text-muted">{moment(cmt.createdAt).format("MMM DD, YYYY, HH:MM:SS")}</small>
                                                                         <p>{cmt.content}</p>
                                                                     </div>
-                                                                    {(cmt.authorId === USER_ID || USER_ID === "admin") &&
+                                                                    {(cmt.authorId === userID || userRole === "admin") &&
                                                                         <div className="d-inline-block">
                                                                             <Popconfirm title="Are you sure you want to delete？" okText="Yes" cancelText="No"
                                                                                 onConfirm={(e) => { e.preventDefault(); handleDeleteCmt(cmt.id) }}>
