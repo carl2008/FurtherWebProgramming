@@ -1,10 +1,10 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import './DiscussionList.css';
 import 'jquery/dist/jquery.min.js';
 import 'bootstrap/dist/js/bootstrap.min.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Reply from "./Reply";
 import { List } from 'antd';
+import { Link } from "react-router-dom";
 
 export default function DiscussionList() {
     const [discussions, setDiscussions] = useState([])
@@ -13,38 +13,35 @@ export default function DiscussionList() {
     const [pagination, setPagination] = useState(true);
     const [loading, setLoading] = useState(false)
     const [activeID, setActiveID] = useState('')
-    const [replyValue, setReplyValue] = useState('')
     const [showSideBar, setShowSideBar] = useState(false)
     const [resetRepValue, setResetRepValue] = useState(false)
-    const postTitle = useRef(null)
-    const postContent = useRef(null)
 
-    const endPoint = 'https://611fc518c772030017424085.mockapi.io/api/v1/topics'
+    const endPoint = 'http://localhost:9000/discussions'
 
     const loadDiscussions = () => {
         setLoading(true)
-        let obj = {}
+        let tempList = []
         fetch(endPoint)
             .then(response => response.json())
-            .then(data => setDiscussions(data))
-            .then(() => {
-                for (let i = 0; i < discussions.length; i++) {
-                    fetch(endPoint + `/${discussions[i].id}/replies`)
-                        .then(res => res.text())
-                        .then(repliesData => {
-                            try {
-                                const rep = JSON.parse(repliesData)
-                                obj[discussions[i].id] = rep.length
-                            }
-                            catch (err) {
-                                obj[discussions[i].id] = 0
-                            }
-                        })
+            .then(data => {
+                for(let i = 0; i< data.length; i++){
+                    let allReplies = data[i].replies
+                    let smallNum = 0
+                    for(let i = 0; i<allReplies.length;i++){
+                        smallNum = Number(smallNum) + Number(allReplies[i].smallreplies.length)
+                    }
+                    tempList.push({
+                        id: data[i]._id,
+                        title: data[i].title,
+                        content: data[i].content,
+                        author: `${data[i].author.firstName} ${data[i].author.lastName}`,
+                        createdAt: data[i].created_at,
+                        totalReplyCount: Number(data[i].replies.length)+smallNum
+                    })
                 }
-                setReplies(obj)
+                setDiscussions(tempList)
                 setLoading(false)
             })
-        console.log(obj)
     }
 
     const [sortValue, setSortValue] = useState('latest')
@@ -68,25 +65,13 @@ export default function DiscussionList() {
                 list.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
                 break;
             case "mostrep":
-                list.sort((a, b) => replies[b.id] - replies[a.id])
+                list.sort((a, b) => b.totalReplyCount - a.totalReplyCount)
                 break;
             case "leastrep":
-                list.sort((a, b) => replies[a.id] - replies[b.id])
+                list.sort((a, b) => a.totalReplyCount - b.totalReplyCount)
                 break;
         }
         return results
-    }
-
-    const changeReply = (replyName) => {
-        setReplyValue("@" + replyName + " " + replyValue)
-    }
-
-    const postReply = () => {
-        alert(replyValue)
-    }
-
-    const postDiscussion = () => {
-        alert("Your title is: "+postTitle.current.value+"\nYour content is: "+postContent.current.value)
     }
 
     return (
@@ -99,13 +84,15 @@ export default function DiscussionList() {
                         <div className={showSideBar ? "inner-sidebar active" : "inner-sidebar"} id="inner-sidebar">
                             {/*Inner sidebar header*/}
                             <div className="inner-sidebar-header justify-content-center">
-                                <button className="btn btn-primary has-icon btn-block" type="button" data-toggle="modal" data-target="#threadModal" id="new-discussion-btn">
+                            <Link to='/Discussion/new'>
+                                <button className="btn btn-primary has-icon btn-block" type="button" id="new-discussion-btn">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="feather feather-plus mr-2">
                                         <line x1="12" y1="5" x2="12" y2="19"></line>
                                         <line x1="5" y1="12" x2="19" y2="12"></line>
                                     </svg>
                                     NEW DISCUSSION
                                 </button>
+                                </Link>
                                 <a className="nav-link nav-icon rounded-circle nav-link-faded mr-3 d-md-none" href="#" onClick={() => setShowSideBar(!showSideBar)}><i className="fas fa-bars"></i></a>
                             </div>
                             {/*Inner sidebar header*/}
@@ -121,10 +108,6 @@ export default function DiscussionList() {
                                                     <div className="simplebar-content" style={{ padding: '16px' }}>
                                                         <nav className="nav nav-pills nav-gap-y-1 flex-column">
                                                             <a href="javascript:void(0)" className="nav-link nav-link-faded has-icon active">All Threads</a>
-                                                            <a href="javascript:void(0)" className="nav-link nav-link-faded has-icon">Popular</a>
-                                                            <a href="javascript:void(0)" className="nav-link nav-link-faded has-icon">Solved</a>
-                                                            <a href="javascript:void(0)" className="nav-link nav-link-faded has-icon">Unsolved</a>
-                                                            <a href="javascript:void(0)" className="nav-link nav-link-faded has-icon">No replies yet</a>
                                                         </nav>
                                                     </div>
                                                 </div>
@@ -165,78 +148,34 @@ export default function DiscussionList() {
                                         gutter: 1,
                                         column: 1,
                                     }}
-                                    pagination={show ? { pageSize: 5, showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} results` } : false}
+                                    pagination={{ pageSize: 5, showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} results` }}
                                     dataSource={results(discussions)}
                                     renderItem={discussionPost => (
                                         <List.Item key={discussionPost.id}>
-                                            <div className="card mb-2" style={show ? { display: "block" } : { display: 'none' }}>
+                                            <div className="card mb-2" style={{ display: "block" }}>
                                                 <div className="card-body p-2 p-sm-3">
                                                     <div className="media forum-item">
-                                                        <a href="#" data-toggle="collapse"><img src={discussionPost.avatar} className="mr-3 rounded-circle" width="50" alt="User" /></a>
+                                                        <a href="#"><img src="https://i.stack.imgur.com/l60Hf.png" className="mr-3 rounded-circle" width="50" alt="User" /></a>
                                                         <div className="media-body">
-                                                            <h6><a href={`/Discussion/${discussionPost.id}`} data-toggle="collapse" data-target={`#discussion-${discussionPost.id}`} className="text-body" onClick={() => { setShow(!show); setPagination(!pagination); setActiveID(discussionPost.id); setResetRepValue(false) }}>{discussionPost.title}</a></h6>
+                                                            <h6><a href={`/Discussion/${discussionPost.id}`} className="text-body">{discussionPost.title}</a></h6>
                                                             <p className="text-secondary">
                                                                 {discussionPost.content}
                                                             </p>
-                                                            <p className="text-muted">Asked by <a href="javascript:void(0)">{discussionPost.name} </a>
+                                                            <p className="text-muted">Asked by <a href="javascript:void(0)">{discussionPost.author} </a>
                                                                 <span className="text-secondary font-weight-bold">
                                                                     - {(new Date(discussionPost.createdAt)).toLocaleDateString('default', { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' })}
                                                                 </span>
                                                             </p>
                                                         </div>
                                                         <div className="text-muted text-center align-self-center">
-                                                            <span><i className="far fa-comment ml-5"></i> {replies[discussionPost.id]}</span>
+                                                            <span><i className="far fa-comment ml-5"></i> {discussionPost.totalReplyCount}</span>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            {/*Forum Detail*/}
-                                            <div className="inner-main-body p-2 p-sm-3 collapse forum-content" id={`discussion-${discussionPost.id}`} style={(pagination) ? { display: "none" } : (activeID === discussionPost.id && !pagination) ? { display: 'block' } : { display: 'none' }}>
-                                                <a href="#" className="btn btn-light btn-sm mb-3 has-icon" data-toggle="collapse" data-target={`#discussion-${discussionPost.id}`} onClick={() => { setShow(!show); setPagination(!pagination); setReplyValue(''); setResetRepValue(true) }}><i className="fa fa-arrow-left mr-2"></i>Back</a>
-                                                <div className="card mb-2 discussion-question">
-                                                    <div className="card-body">
-                                                        <div className="media forum-item">
-                                                            <a href="javascript:void(0)" className="card-link">
-                                                                <img src={discussionPost.avatar} className="rounded-circle" width="50" alt="User" />
-                                                                <small className="d-block text-center text-muted">Patient</small>
-                                                            </a>
-                                                            <div className="media-body ml-3">
-                                                                <a href="javascript:void(0)" className="text-secondary">{discussionPost.name}</a>
-                                                                <small className="text-muted ml-2">- {(new Date(discussionPost.createdAt)).toLocaleString('default', { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' })}</small>
-                                                                <h5 className="mt-1">{discussionPost.title}</h5>
-                                                                <div className="mt-3 font-size-sm">
-                                                                    <p>{discussionPost.content}</p>
-                                                                </div>
-                                                                <a href={"#add-reply-" + discussionPost.id} className="text-muted" onClick={() => changeReply(discussionPost.name)}>Reply</a>
-                                                            </div>
-                                                            <div className="text-muted text-center">
-                                                                <span><i className="far fa-comment ml-2"></i> {replies[discussionPost.id]}</span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div className="card mt-3 mb-3" id={"add-reply-" + discussionPost.id}>
-                                                    <div className="card-body">
-                                                        <p className="ml-2" style={{fontSize: '1.2em'}}><b>Join the discussion</b></p>
-                                                        <div className="media forum-item">
-                                                            <a href="javascript:void(0)" className="card-link">
-                                                                <img src="https://www.markuptag.com/images/user-icon.jpg" className="rounded-circle" width="50" alt="User" />
-                                                                <small className="d-block text-center text-muted">User</small>
-                                                            </a>
-                                                            <div className="media-body ml-3">
-                                                                <textarea placeholder="Add a new reply" className="add-reply-input" value={replyValue} onChange={(e) => setReplyValue(e.target.value)}></textarea>
-                                                            </div>
-                                                        </div>
-                                                        <button className="btn btn-primary btn-sm float-right" type="button" onClick={() => postReply()}>REPLY</button>
-                                                    </div>
-                                                </div>
-                                                {/*Replies section*/}
-                                                <Reply id={discussionPost.id} reset={resetRepValue}/>
                                             </div>
                                         </List.Item>
                                     )}
                                 />
-
                             </div>
                             {/*Forum List*/}
                         </div>
@@ -244,7 +183,7 @@ export default function DiscussionList() {
                     </div>
 
                     {/*New Thread Modal*/}
-                    <div className="modal fade" id="threadModal" tabindex="-1" role="dialog" aria-labelledby="threadModalLabel" aria-hidden="true">
+                    {/*<div className="modal fade" id="threadModal" tabindex="-1" role="dialog" aria-labelledby="threadModalLabel" aria-hidden="true">
                         <div className="modal-dialog modal-lg" role="document">
                             <div className="modal-content">
                                 <form>
@@ -276,7 +215,7 @@ export default function DiscussionList() {
                                 </form>
                             </div>
                         </div>
-                    </div>
+                    </div>*/}
                 </div>
             </div>
 
