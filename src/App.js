@@ -1,3 +1,4 @@
+import { USER_NAME } from './constants';
 import './App.css';
 import 'antd/dist/antd.css';
 import './index.css'
@@ -5,6 +6,7 @@ import './index.css'
 import React from 'react';
 import RegisterForm from './component/RegisterForm/RegisterForm';
 import NavigationBar from './component/Navbar/NavigationBar';
+import NavbarLogin from './component/Navbar/NavbarLogin';
 import AboutUs from './component/AboutUs/AboutUs';
 import Articles from './component/Articles/Articles';
 import ArticlePost from './component/Articles/ArticlePost';
@@ -22,10 +24,17 @@ import DiscussionPost from './component/Discussion/DiscussionPost';
 import ChatbotComponent from './component/Discussion/ChatbotComponent';
 
 function App() {
+  const userName = localStorage.getItem(USER_NAME)
+
   return (
     <div className="App">
       <Router>
-        <NavigationBar />
+        {userName ?
+          <NavbarLogin /> :
+          <NavigationBar />
+        }
+
+
         <br />
 
         <Switch>
