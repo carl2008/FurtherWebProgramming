@@ -1,9 +1,11 @@
+import { USER_INFO, USER_NAME, USER_TOKEN, USER_ROLE } from '../../constants'
 import "./RegisterForm.css";
 import React, { useState, useEffect } from "react";
 import "./Bootstrap.css";
 import axios from "axios";
 import Loading from "./Loading";
 import ErrorMessage from "./ErrorMessage";
+import { useHistory } from "react-router-dom";
 
 export default function LogInForm() {
     //use useState hook for input handlings React form
@@ -11,16 +13,17 @@ export default function LogInForm() {
     const [password, setPassword] = useState("");
     const [error, setError] = useState(false);
     const [loading, setLoading] = useState(false);
-    
-   // useEffect(() => {
-     //   const userInfo = localStorage.getItem("userInfo");
 
-   //     if(userInfo){
+    const [redirect, setRedirect] = useState(false);
+    const history = useHistory();
 
-  //          history.push("/mynotes");
-   //     }
+    // const handleLogin = () => {
+    //     const userInfo = localStorage.getItem("userInfo");
 
-  //  }, [history]);
+    //     if(userInfo){
+    //        history.push("/user");
+    //   }
+    // }
 
     const submitHandler = async (e) => {
         e.preventDefault();
@@ -30,53 +33,66 @@ export default function LogInForm() {
                 header: {
                     "Content-type": "application/json"
                 }
-
             }
-            setLoading(true); 
+
+            setLoading(true);
 
             const { data } = await axios.post(
-                "/api/users/login",
+                "http://localhost:9000/api/users/login",
                 {
                     username,
                     password,
                 },
                 config
             );
-            
-            localStorage.setItem("userInfo", JSON.stringify(data));
+
+            localStorage.setItem(USER_INFO, JSON.stringify(data));
+            localStorage.setItem(USER_NAME, data.username);
+            localStorage.setItem(USER_TOKEN, data.token);
+            localStorage.setItem(USER_ROLE, data.role);
             setLoading(false);
+            setRedirect(true)
         } catch (error) {
             setError(error.response.data.message);
             setLoading(false);
         }
     };
- 
+
+    if (redirect) {
+        console.log("user is directed");
+        history.push("/");
+        history.go(0)
+        console.log('directed');
+    }
+
     return (
 
         <div>
-            {error && <ErrorMessage variant="danger">{error}</ErrorMessage>}
-            {loading && <Loading />}
+
 
             <div className='container' id="formBorder">
+                {error && <ErrorMessage variant="danger">{error}</ErrorMessage>}
+                {loading && <Loading />}
                 <form className="row g-3" id="form-styling1" onSubmit={submitHandler}>
                     <div className="col-md-12">
                         <h1 id="form-title">Login</h1>
                     </div>
 
                     <div className="col-md-12">
-                        <input type="text" class="form-control" id="inputUsername" placeholder="Username"
+                        <input type="text" className="form-control" id="inputUsername" placeholder="Username"
                             value={username} onChange={(e) => setUsername(e.target.value)} />
                         <br></br>
                     </div>
 
                     <div className="col-md-12">
-                        <input type="password" class="form-control" id="inputPassword" placeholder="Create Password"
+                        <input type="password" className="form-control" id="inputPassword" placeholder="Create Password"
                             value={password} onChange={(e) => setPassword(e.target.value)} />
                         <br></br>
                     </div>
 
                     <div className="col-md-12">
-                        <button className="btn btn-primary col-3 mx-auto" id="button-form">
+                        <button className="btn btn-primary col-3 mx-auto" id="button-form" >
+                            {/* onClick={() => handleLogin()} */}
                             Log In
                         </button>
                     </div>
