@@ -1,26 +1,35 @@
 import { useState, useEffect } from "react";
+import { API_URL, USER_INFO } from '../../constants';
 import './DiscussionList.css';
 import 'jquery/dist/jquery.min.js';
 import 'bootstrap/dist/js/bootstrap.min.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 export default function ThumbsVote({repID, repType, load}){
+    const [user, setUser] = useState({})
     const [upNumber, setUpNumber] = useState(0)
     const [downNumber, setDownNumber] = useState(0)
     const [upID, setUpID] = useState('')
     const [downID, setDownID] = useState('')
     const [upped, setUpped] = useState(false)
     const [downed, setDowned] = useState(false)
-    const endPoint = 'http://localhost:9000/'
-    const USER_ID = "61390c39a7523845fca27baf"
+    const endPoint = `${API_URL}`
+    
+    const userInfo = localStorage.getItem(USER_INFO)
+
+    useEffect(() => {
+        if(userInfo){
+            setUser(JSON.parse(userInfo))
+        }
+    },[])
 
     const loadUp = () => {
         setUpped(false)
-        fetch(`${endPoint}${repType}/${repID}/thumbsup`)
+        fetch(`${endPoint}/${repType}/${repID}/thumbsup`)
             .then(response => response.json())
             .then(data => {
                 for(let i = 0; i<data.length;i++){
-                    if(data[i].author._id === USER_ID){
+                    if(data[i].author._id === user._id){
                         setUpID(data[i]._id)
                         setUpped(true)
                     }
@@ -31,11 +40,11 @@ export default function ThumbsVote({repID, repType, load}){
 
     const loadDown = () => {
         setDowned(false)
-        fetch(`${endPoint}${repType}/${repID}/thumbsdown`)
+        fetch(`${endPoint}/${repType}/${repID}/thumbsdown`)
             .then(response => response.json())
             .then(data => {
                 for(let i = 0; i<data.length;i++){
-                    if(data[i].author._id === USER_ID){
+                    if(data[i].author._id === user._id){
                         setDownID(data[i]._id)
                         setDowned(true)
                     }
@@ -47,18 +56,22 @@ export default function ThumbsVote({repID, repType, load}){
     useEffect(() => {
         loadUp()
         loadDown()
-    }, [load])
+    }, [load, user])
 
     const handleThumbsUp = () => {
+        if(!userInfo){
+            alert("You must log in to vote!")
+            return;
+        }
         if(!upped){
-            fetch(`${endPoint}${repType}/${repID}/thumbsup`, {
+            fetch(`${endPoint}/${repType}/${repID}/thumbsup`, {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    author: USER_ID
+                    author: user._id
                 })
             }).then(res => {
                 loadUp()
@@ -66,7 +79,7 @@ export default function ThumbsVote({repID, repType, load}){
             .catch((err) => console.log(err))
 
         }else{
-            fetch(`${endPoint}thumbsup/${upID}`, {
+            fetch(`${endPoint}/thumbsup/${upID}`, {
                 method: 'DELETE'
             }).then(res => {
                 setUpID('')
@@ -75,7 +88,7 @@ export default function ThumbsVote({repID, repType, load}){
             .catch((err) => console.log(err))
         }
         if(downed){
-            fetch(`${endPoint}thumbsdown/${downID}`, {
+            fetch(`${endPoint}/thumbsdown/${downID}`, {
                 method: 'DELETE'
             }).then(res => {
                 setDownID('')
@@ -86,15 +99,19 @@ export default function ThumbsVote({repID, repType, load}){
     }
 
     const handleThumbsDown = () => {
+        if(!userInfo){
+            alert("You must log in to vote!")
+            return;
+        }
         if(!downed){
-            fetch(`${endPoint}${repType}/${repID}/thumbsdown`, {
+            fetch(`${endPoint}/${repType}/${repID}/thumbsdown`, {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    author: USER_ID
+                    author: user._id
                 })
             }).then(res => {
                 loadDown()
@@ -102,7 +119,7 @@ export default function ThumbsVote({repID, repType, load}){
             .catch((err) => console.log(err))
 
         }else{
-            fetch(`${endPoint}thumbsdown/${downID}`, {
+            fetch(`${endPoint}/thumbsdown/${downID}`, {
                 method: 'DELETE'
             }).then(res => {
                 setDownID('')
@@ -111,7 +128,7 @@ export default function ThumbsVote({repID, repType, load}){
             .catch((err) => console.log(err))
         }
         if(upped){
-            fetch(`${endPoint}thumbsup/${upID}`, {
+            fetch(`${endPoint}/thumbsup/${upID}`, {
                 method: 'DELETE'
             }).then(res => {
                 setUpID('')

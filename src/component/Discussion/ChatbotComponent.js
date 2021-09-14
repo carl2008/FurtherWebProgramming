@@ -8,10 +8,10 @@ export default function ChatbotComponent() {
     // all available props
     const theme = {
         background: '#f5f8fb',
-        fontFamily: 'Helvetica Neue',
+        fontFamily: 'Open Sans',
         headerBgColor: '#0097ef',
         headerFontColor: '#fff',
-        headerFontSize: '15px',
+        headerFontSize: '1em',
         botBubbleColor: '#0097ef',
         botFontColor: '#fff',
         userBubbleColor: '#fff',
@@ -21,7 +21,12 @@ export default function ChatbotComponent() {
     const steps = [
         {
             id: '1',
-            message: 'Hello! What is your name?',
+            message: 'Hello! I am a simple bot here to guide you. I may not be as good as my human friends, but I will try my best to help!',
+            trigger: '2',
+        },
+        {
+            id: '2',
+            message: 'First, please tell me your name!',
             trigger: 'name',
         },
         {
@@ -191,7 +196,7 @@ export default function ChatbotComponent() {
     ];
 
     return (
-        <ThemeProvider theme={theme}><ChatBot floating={true}
+        <ThemeProvider theme={theme}><ChatBot floating={true} headerTitle="R-Med Chatbot"
             steps={steps}
         /></ThemeProvider>
     )
