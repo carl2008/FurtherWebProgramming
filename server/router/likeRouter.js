@@ -2,13 +2,12 @@ const express = require('express')
 const router = express.Router()
 
 const Article = require('../models/article')
-const User = require("../models/user")
 const Like = require("../models/like")
 
-const handlePageError = (res, e) => res.setStatus(500).send(e.message)
+const handlePageError = (res, e) => res.status(500).send(e.message)
 
-// Get all likes
-router.get('/articles/:id/likes', async (req, res) => {
+// Get likes 
+router.get('/likes', async (req, res) => {
     try {
         const likes = await Like.find({})
         return res.send(likes)
@@ -17,44 +16,51 @@ router.get('/articles/:id/likes', async (req, res) => {
     }
 })
 
-// Like an article
-router.post('/users/:user_id/articles/:art_id/like', async (req, res) => {
+// Get all likes by article id
+router.get('/articles/:id/likes', async (req, res) => {
     try {
-        // user id
-        const id_user = req.params.user_id
-        const id_article = req.params.art_id
-        // create article
-        const like = await Like.create({
-            author: id_user,
-            article: id_article
-        })
-        // find out user and push new article
-        const user = await User.findByIdAndUpdate(
-            id,
-            { $push: { articleLikes: like._id } },
-            { new: true, useFindAndModify: false }
-        );
-        const article = await Article.findByIdAndUpdate(
-            id,
-            { $push: { articleLikes: like._id} },
-            {new: true, useFindAndModify: false }
-        );
-        return res.send(user), res.send(article)
+        // get id
+        const id_article = req.params.id
+        const likes = await Like.find({article: id_article }).populate("author", "-articlePosts -__v")
+        return res.send(likes)
     } catch (e) {
         return handlePageError(res, e)
     }
 })
 
-// Unlike an article
-router.delete('/articles/:id/likes/:like_id', async (req, res) => {
+// Like on an article
+router.post('/articles/:id/likes', async (req, res) => {
     try {
-        const id_like = req.params.like_id
-        await User.findOneAndUpdate(
-            { articleLikes: id_like },
-            { $pull: { articleLikes: id_like } },
+        // get id
+        const id_article = req.params.id
+        // create article
+        const like = await Like.create({
+            author: req.body.author,
+            article: id_article
+        })
+        // find out article and push Like
+        await Article.findByIdAndUpdate(
+            id_article,
+            { $push: { likes: like._id} },
+            {new: true, useFindAndModify: false }
+        );
+        return res.send(like)
+    } catch (e) {
+        return handlePageError(res, e)
+    }
+})
+
+// Delete a Like
+router.delete('/likes/:id', async (req, res) => {
+    try {
+        const id_like = req.params.id
+        await Article.findOneAndUpdate(
+            { likes: id_like },
+            { $pull: { likes: id_like } },
             { multi: true }
         );
         await Like.deleteOne({ _id: id_like })
+        return res.json({ message: `Deleted Like ${id_like} successfully.` })
     } catch (e) {
         return handlePageError(res, e)
     }

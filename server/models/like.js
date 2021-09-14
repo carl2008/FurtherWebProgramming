@@ -5,7 +5,7 @@ const Schema = mongoose.Schema
 const LikeSchema = new Schema({
   author: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User"
+    ref: 'User'
   },
   article: {
     type: mongoose.Schema.Types.ObjectId,
