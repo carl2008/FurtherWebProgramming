@@ -31,9 +31,9 @@ function App() {
       <Router>
         {userName ?
           <NavbarLogin /> :
-          <NavigationBar />
+          <NavigationBar /> 
+          // : <NavbarAdmin />
         }
-
 
         <br />
 
@@ -48,6 +48,8 @@ function App() {
           <Route exact path="/Articles/create" component={ArticleForm} />
           <Route exact path="/Login" component={LogInForm} />
           <Route exact path="/Register" component={RegisterForm} />
+          <Route exact path="/UserProfile" component={UpdateForm}/>
+          <Route exact path="/DoctorProfile" component={UpdateFormDoctors}/>
           <Route component={PageNotFound} />
         </Switch>
 
