@@ -325,6 +325,11 @@ export default function ChatbotComponent() {
         {
             id: '11',
             message: 'Thank you for visiting. We hope our website can be useful for you! Please take care of yourself and stay safe :)',
+            trigger:'12'
+        },
+        {
+            id: '12',
+            message: 'If you want to start a new chat with me, please reload the page. Then we can start over again :)',
             end: true
         }
     ];
