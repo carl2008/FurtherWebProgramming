@@ -1,4 +1,4 @@
-import { API_URL } from '../../constants'
+import { USER_NAME, USER_ID, USER_ROLE, API_URL } from '../../constants'
 import React, { useState, useEffect } from 'react';
 import moment from 'moment';
 import { useHistory } from 'react-router';
@@ -12,8 +12,9 @@ const { TabPane } = Tabs;
 function ArticleForm(props) {
     const history = useHistory();
     // temp user id, will change to logged in user id later
-    const USER_ID = "612b8998a60dea66123c3835"
-    const USER_NAME = "Linh Nguyen"
+    const userID = localStorage.getItem(USER_ID).toString()
+    const userName = localStorage.getItem(USER_NAME).toString()
+
     const endPoint = `${API_URL}`
 
     const [id, setId] = useState(null)
@@ -45,7 +46,7 @@ function ArticleForm(props) {
     const handlePostArticle = () => {
         if (id === null) {
             setLoading(true)
-            fetch(endPoint + `/users/${USER_ID}/article`, {
+            fetch(endPoint + `/users/${userID}/article`, {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
@@ -109,21 +110,21 @@ function ArticleForm(props) {
             setContent(props.location.content)
             setCategory(props.location.category)
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.location.id])
 
     return (
         <>
             <div className="article-container" id="article">
                 <div className="container">
-                <div className="row">
-                            <div className="col-lg-3 col-12"></div>
-                            <div className="col-lg-9 col-12">
-                                <div className="panel-sort d-flex justify-content-between pb-3">
-                                    <div className="d-inline-block"><h2>{id ? "Edit article" : "Add new article"}</h2></div>
-                                </div>
+                    <div className="row">
+                        <div className="col-lg-3 col-12"></div>
+                        <div className="col-lg-9 col-12">
+                            <div className="panel-sort d-flex justify-content-between pb-3">
+                                <div className="d-inline-block"><h2>{id ? "Edit article" : "Add new article"}</h2></div>
                             </div>
                         </div>
+                    </div>
                     <div className="row">
                         <div className="col-lg-3 col-12">
                             {/* author for normal to medium scaled screen */}
@@ -135,7 +136,7 @@ function ArticleForm(props) {
                                         <div className="img-wrapper my-4 rounded-circle shadow">
                                             <a href="# "><img src="https://i.ibb.co/hCyPJWx/PriceCo.png" className="" alt="" /></a>
                                         </div>
-                                        <h4 className="author-name">Dr. {USER_NAME}</h4>
+                                        <h4 className="author-name">Dr. {userName}</h4>
                                         <h6 className="author-title">Neurologist</h6>
                                         <p>Itaque quidem optio quia voluptatibus dolorem dolor. Modi eum sed possimus accusantium. Quas repellat voluptatem officia numquam sint aspernatur voluptas. Esse et accusantium ut unde voluptas.</p>
                                         {/* </Skeleton> */}
@@ -149,7 +150,7 @@ function ArticleForm(props) {
                                         {/* <Skeleton active loading={loadingArticle}> */}
                                         <a href="# "><img src="https://i.ibb.co/hCyPJWx/PriceCo.png" className="rounded-circle float-left shadow" alt="" /></a>
                                         <div className="ml-2">
-                                            <h4 className="author-name mb-1">Dr. {USER_NAME}</h4>
+                                            <h4 className="author-name mb-1">Dr. {userName}</h4>
                                             <h6 className="author-title mb-1">Neurologist</h6>
                                             <p>Itaque quidem optio quia voluptatibus dolorem dolor. Modi eum sed possimus accusantium. Quas repellat voluptatem officia numquam sint aspernatur voluptas. Esse et accusantium ut unde voluptas.</p>
                                         </div>

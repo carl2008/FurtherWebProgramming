@@ -1,4 +1,4 @@
-import { API_URL } from '../../constants'
+import { API_URL, USER_ROLE } from '../../constants'
 import React, { useState, useEffect } from 'react';
 import moment from 'moment';
 import { Link } from "react-router-dom";
@@ -7,7 +7,7 @@ import { List, Skeleton, ConfigProvider } from 'antd';
 import './Article.css'
 
 function Articles() {
-    const USER_ROLE = 'doctor';
+    const userRole = localStorage.getItem(USER_ROLE)
 
     const [articleList, setArticleList] = useState([])
     const [loading, setLoading] = useState(false)
@@ -143,7 +143,7 @@ function Articles() {
                         <div className="article-sidebar">
                             <div className="card sidebar-container shadow mb-3">
                                 <div className="card-body">
-                                    {((USER_ROLE === "doctor") || (USER_ROLE === "admin")) &&
+                                    {((userRole === "doctor") || (userRole === "admin")) &&
                                         <div className="sidebar-item">
                                             <Link to='/Articles/create'><button className="btn btn-custom btn-block" type="button"><i className="fa fa-plus"></i> New Article</button></Link>
                                         </div>
