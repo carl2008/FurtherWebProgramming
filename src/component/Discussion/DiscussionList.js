@@ -32,6 +32,7 @@ export default function DiscussionList() {
                         id: data[i]._id,
                         title: data[i].title,
                         content: data[i].content,
+                        authorRole: data[i].author.role.charAt(0).toUpperCase()+data[i].author.role.slice(1),
                         authorpic: data[i].author.pic,
                         author: `${data[i].author.firstName} ${data[i].author.lastName}`,
                         createdAt: data[i].created_at,
@@ -154,7 +155,7 @@ export default function DiscussionList() {
                                             <div className="card mb-2" style={{ display: "block" }}>
                                                 <div className="card-body p-2 p-sm-3">
                                                     <div className="media forum-item">
-                                                        <a href="#"><img src={discussionPost.authorpic} className="mr-3 rounded-circle" width="50" alt="User" /></a>
+                                                        <a href="#"><img src={discussionPost.authorRole === "Doctor" ? "https://i.imgur.com/irK1Y0P.jpg" : discussionPost.authorpic} className="mr-3 rounded-circle" width="50" alt="User" /></a>
                                                         <div className="media-body">
                                                             <h6><a href={`/Discussion/${discussionPost.id}`} className="text-body">{discussionPost.title}</a></h6>
                                                             <p className="text-secondary">
