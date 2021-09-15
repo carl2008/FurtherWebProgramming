@@ -17,7 +17,6 @@ import Footer from './component/Navbar/Footer';
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import LogInForm from './component/RegisterForm/LogInForm';
 import UpdateForm from './component/RegisterForm/UpdateForm';
-import UpdateFormDoctors from './component/RegisterForm/UpdateFormDoctors';
 import PageNotFound from './component/ErrorHandling/PageNotFound';
 import DiscussionForm from './component/Discussion/DiscussionForm';
 import DiscussionPost from './component/Discussion/DiscussionPost';
@@ -31,9 +30,8 @@ function App() {
       <Router>
         {userName ?
           <NavbarLogin /> :
-          <NavigationBar />
+          <NavigationBar /> 
         }
-
 
         <br />
 
@@ -48,6 +46,7 @@ function App() {
           <Route exact path="/Articles/create" component={ArticleForm} />
           <Route exact path="/Login" component={LogInForm} />
           <Route exact path="/Register" component={RegisterForm} />
+          <Route exact path="/UserProfile" component={UpdateForm}/>
           <Route component={PageNotFound} />
         </Switch>
 

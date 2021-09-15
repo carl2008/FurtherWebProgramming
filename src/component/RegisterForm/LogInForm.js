@@ -1,4 +1,4 @@
-import { USER_INFO, USER_NAME, USER_TOKEN, USER_ROLE } from '../../constants'
+import { USER_INFO, USER_NAME, USER_TOKEN, USER_ROLE, USER_ID } from '../../constants'
 import "./RegisterForm.css";
 import React, { useState, useEffect } from "react";
 import "./Bootstrap.css";
@@ -16,14 +16,6 @@ export default function LogInForm() {
 
     const [redirect, setRedirect] = useState(false);
     const history = useHistory();
-
-    // const handleLogin = () => {
-    //     const userInfo = localStorage.getItem("userInfo");
-
-    //     if(userInfo){
-    //        history.push("/user");
-    //   }
-    // }
 
     const submitHandler = async (e) => {
         e.preventDefault();
@@ -50,6 +42,7 @@ export default function LogInForm() {
             localStorage.setItem(USER_NAME, data.username);
             localStorage.setItem(USER_TOKEN, data.token);
             localStorage.setItem(USER_ROLE, data.role);
+            localStorage.setItem(USER_ID, data._id);
             setLoading(false);
             setRedirect(true)
         } catch (error) {
