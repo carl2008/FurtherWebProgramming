@@ -45,7 +45,7 @@ export default function Reply({ id, reset, reloadReply }) {
                         content: data[i].content,
                         authorId: data[i].author._id,
                         authorpic: data[i].author.pic,
-                        authorRole: data[i].author.role.charAt(0).toUpperCase()+data[i].author.role.slice(1),
+                        authorRole: data[i].author.role.charAt(0).toUpperCase() + data[i].author.role.slice(1),
                         author: `${data[i].author.firstName} ${data[i].author.lastName}`,
                         createdAt: data[i].created_at,
                         thumbsup: data[i].thumbsups.length,
@@ -73,7 +73,7 @@ export default function Reply({ id, reset, reloadReply }) {
     useEffect(() => {
         loadReplies()
         sortReplies()
-    }, [reload,reloadReply])
+    }, [reload, reloadReply])
 
     useEffect(() => {
         setActiveReplyID('')
@@ -164,8 +164,8 @@ export default function Reply({ id, reset, reloadReply }) {
                                     <div className="card-body">
                                         <div className="media forum-item">
                                             <a href="javascript:void(0)" className="card-link">
-                                                <img src={reply.authorpic} className="rounded-circle" width="50" alt="User" />
-                                                <small className="d-block text-center text-muted">{reply.authorRole}</small>
+                                                <img src={reply.authorRole === "Doctor" ? "https://i.imgur.com/irK1Y0P.jpg" : reply.authorpic} className="rounded-circle" width="50" alt="User" />
+                                                <small className="d-block text-center" style={reply.authorRole === "Admin" ? { color: "red" } : { color: "#676767" }}>{reply.authorRole}</small>
                                             </a>
                                             <div className="media-body ml-3">
                                                 <a href="javascript:void(0)" className="text-secondary">{reply.author}</a>
@@ -177,7 +177,7 @@ export default function Reply({ id, reset, reloadReply }) {
                                                 {userInfo && <a href={"#add-smallreply-" + reply.id} className="text-muted" onClick={() => { resetReply(reply.id); setReplyName(reply.author); setActiveReplyID(reply.id); changeReply(reply.author) }}> Reply </a>}
                                             </div>
                                             <div className="text-muted text-center">
-                                                {(reply.authorId === user._id) && <i className="far fa-trash-alt trashcan-icon" title="Delete Reply" onClick={() => handleDeleteReply(reply.id)}></i>}
+                                                {(reply.authorId === user._id || user.role === "admin") && <i className="far fa-trash-alt trashcan-icon" title="Delete Reply" onClick={() => handleDeleteReply(reply.id)}></i>}
                                             </div>
                                         </div>
                                     </div>
@@ -188,10 +188,10 @@ export default function Reply({ id, reset, reloadReply }) {
                                         <p className="ml-2" style={{ fontSize: '1em' }}><b>Add a reply</b></p>
                                         <p className="ml-2 reply-error-msg" style={userInfo ? { display: "none" } : { display: "block" }}>You must log in to post a reply!</p>
                                         <div className="media forum-item">
-                                            <a href="javascript:void(0)" className="card-link">
-                                                <img src={userInfo ? user.pic : "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg"} className="rounded-circle" width="50" alt="User" />
+                                            <div className="reply-avt"><a href="javascript:void(0)" className="card-link col-1">
+                                                <img src={userInfo ? user.role === "doctor" ? "https://i.imgur.com/irK1Y0P.jpg" : user.pic : "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg"} className="rounded-circle" width="50" alt="User" />
                                                 <small className="d-block text-center text-muted">{userInfo ? `${user.firstName} ${user.lastName}` : `User`}</small>
-                                            </a>
+                                            </a></div>
                                             <div className="media-body ml-3">
                                                 <textarea placeholder="Add a new reply" className="add-reply-input" value={smallReplyValue} onChange={(e) => setSmallReplyValue(e.target.value)} disabled={!userInfo}></textarea>
                                             </div>

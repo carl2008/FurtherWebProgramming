@@ -5,6 +5,7 @@ const Schema = mongoose.Schema
 const DiscussionSchema = new Schema({
   title: { type: String, required: true },
   content: { type: String, require: true },
+  lastUpdated: Date,
   author: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User"

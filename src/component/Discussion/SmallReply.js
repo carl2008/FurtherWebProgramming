@@ -79,8 +79,8 @@ export default function SmallReply({ topicId, replyId, setName, load, changeNum 
                             <div className="card-body">
                                 <div className="media forum-item">
                                     <a href="javascript:void(0)" className="card-link">
-                                        <img src={reply.authorpic} className="rounded-circle" width="50" alt="User" />
-                                        <small className="d-block text-center text-muted">{reply.authorRole}</small>
+                                        <img src={reply.authorRole === "Doctor" ? "https://i.imgur.com/irK1Y0P.jpg" : reply.authorpic} className="rounded-circle" width="50" alt="User" />
+                                        <small className="d-block text-center" style={reply.authorRole === "Admin" ? {color:"red"} : {color:"#676767"}}>{reply.authorRole}</small>
                                     </a>
                                     <div className="media-body ml-3">
                                         <a href="javascript:void(0)" className="text-secondary">{reply.author}</a>
@@ -92,7 +92,7 @@ export default function SmallReply({ topicId, replyId, setName, load, changeNum 
                                         {userInfo && <a href={"#add-smallreply-" + replyId} className="text-muted" onClick={() => setName(reply.author)}> Reply </a>}
                                     </div>
                                     <div className="text-muted text-center">
-                                        {(reply.authorId === user._id) && <i className="far fa-trash-alt trashcan-icon" title="Delete Reply" onClick={() => handleDeleteReply(reply.id)}></i>}
+                                        {(reply.authorId === user._id || user.role === "admin") && <i className="far fa-trash-alt trashcan-icon" title="Delete Reply" onClick={() => handleDeleteReply(reply.id)}></i>}
                                     </div>
                                 </div>
                             </div>

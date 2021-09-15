@@ -60,7 +60,7 @@ export default function DiscussionPost() {
                     authorRole: data.author.role.charAt(0).toUpperCase() + data.author.role.slice(1),
                     authorpic: data.author.pic,
                     createdAt: data.created_at,
-                    updatedAt: data.updated_at,
+                    updatedAt: data.lastUpdated,
                     totalReplyCount: Number(data.replies.length) + Number(data.smallreplies.length)
                 }
                 setDiscussionPost(discussion)
@@ -193,13 +193,13 @@ export default function DiscussionPost() {
                                                 <div className="card-body">
                                                     <div className="media forum-item">
                                                         <a href="javascript:void(0)" className="card-link">
-                                                            <img src={discussionPost.authorpic} className="rounded-circle" width="50" alt="User" />
-                                                            <small className="d-block text-center text-muted">{discussionPost.authorRole}</small>
+                                                            <img src={discussionPost.authorRole === "Doctor" ? "https://i.imgur.com/irK1Y0P.jpg" : discussionPost.authorpic} className="rounded-circle" width="50" alt="User" />
+                                                            <small className="d-block text-center" style={discussionPost.authorRole === "Admin" ? {color:"red"} : {color:"#676767"}}>{discussionPost.authorRole}</small>
                                                         </a>
                                                         <div className="media-body ml-3">
                                                             <a href="javascript:void(0)" className="text-secondary">{discussionPost.author}</a>
                                                             <small className="text-muted ml-2">- {(new Date(discussionPost.createdAt)).toLocaleString('default', { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' })}</small>
-                                                            {discussionPost.createdAt !== discussionPost.updatedAt && <small className="text-muted ml-1">- <i>Last edited: {(new Date(discussionPost.updatedAt)).toLocaleString('default', { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' })}</i></small>}
+                                                            {discussionPost.updatedAt && <small className="text-muted ml-1">- <i>Last edited: {(new Date(discussionPost.updatedAt)).toLocaleString('default', { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' })}</i></small>}
                                                             <h5 className="mt-1">{discussionPost.title}</h5>
                                                             <div className="mt-3 font-size-sm">
                                                                 <p>{discussionPost.content}</p>
@@ -207,8 +207,8 @@ export default function DiscussionPost() {
                                                             {userInfo && <a href={"#add-reply-" + id} className="text-muted" onClick={() => changeReply(discussionPost.author)}>Reply</a>}
                                                         </div>
                                                         <div className="text-muted text-center">
-                                                            {(discussionPost.authorId === user._id) && <><i className="far fa-edit trashcan-icon ml-1 mb-3" title="Edit Post" onClick={handleEditPost}></i><br /></>}
-                                                            {(discussionPost.authorId === user._id) && <i className="far fa-trash-alt trashcan-icon" title="Delete Post" onClick={handleDeletePost}></i>}
+                                                            {(discussionPost.authorId === user._id || user.role === "admin") && <><i className="far fa-edit trashcan-icon ml-1 mb-3" title="Edit Post" onClick={handleEditPost}></i><br /></>}
+                                                            {(discussionPost.authorId === user._id || user.role === "admin") && <i className="far fa-trash-alt trashcan-icon" title="Delete Post" onClick={handleDeletePost}></i>}
                                                         </div>
                                                     </div>
                                                 </div>
@@ -219,7 +219,7 @@ export default function DiscussionPost() {
                                                     <p className="ml-2 discussion-error" style={userInfo ? { display: "none" } : { display: "block" }}>You must <Link to="/Login">log in</Link> to post a reply!</p>
                                                     <div className="media forum-item">
                                                         <div className="reply-avt"><a href="javascript:void(0)" className="card-link col-1">
-                                                            <img src={userInfo ? user.pic : "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg"} className="rounded-circle" width="50" alt="User" />
+                                                            <img src={userInfo ? user.role === "doctor" ? "https://i.imgur.com/irK1Y0P.jpg" : user.pic : "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg"} className="rounded-circle" width="50" alt="User" />
                                                             <small className="d-block text-center text-muted">{userInfo ? `${user.firstName} ${user.lastName}` : `User`}</small>
                                                         </a></div>
                                                         <div className="media-body ml-3">

@@ -50,7 +50,7 @@ export default function DiscussionForm(props) {
                 },
                 body: JSON.stringify({
                     title: title,
-                    content: content,
+                    content: content
                 })
             })
                 .then(response => response.json())
@@ -71,6 +71,7 @@ export default function DiscussionForm(props) {
                 body: JSON.stringify({
                     title: title,
                     content: content,
+                    lastUpdated: new Date(Date.now())
                 })
             })
                 .then(response => response.json())
@@ -112,6 +113,7 @@ export default function DiscussionForm(props) {
                     <Spin spinning={loading} tip="Proccessing...">
                         {id ? <h3>Edit your discussion</h3> : <h3>Post a new discussion</h3>}
                         {error && <p style={{ color: "red" }}>{error}</p>}
+                        <p><i>You are posting as {`${user.role} ${user.firstName} ${user.lastName}`}</i></p>
                         <form onSubmit={handleSubmit}>
                             <div className="form-group">
                                 <label for="threadTitle"><b>Title</b></label>
