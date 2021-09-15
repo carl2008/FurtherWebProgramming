@@ -17,14 +17,6 @@ export default function LogInForm() {
     const [redirect, setRedirect] = useState(false);
     const history = useHistory();
 
-    // const handleLogin = () => {
-    //     const userInfo = localStorage.getItem("userInfo");
-
-    //     if(userInfo){
-    //        history.push("/user");
-    //   }
-    // }
-
     const submitHandler = async (e) => {
         e.preventDefault();
 
