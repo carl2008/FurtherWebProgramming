@@ -17,17 +17,7 @@ router.get('/getUsers', async (req, res) => {
 })
 
 router.route('/userUpdate/:id').put(async(req, res, next) => {
-    User.findById(req.params.id, async (error, data) => {
-        if (error){
-            return next(error)
-        }
-        else{
-            console.log(data.password)
-            if(data.password !== req.body.password){
-                req.body.password = await bcrypt.hash(req.body.password, 8)
-            }
-        }
-    })
+    req.body.password = await bcrypt.hash(req.body.password, 8)
     await User.findByIdAndUpdate(req.params.id, {
         $set: req.body
     }, (error, data) => {
