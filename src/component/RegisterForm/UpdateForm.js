@@ -15,7 +15,7 @@ export default class UpdateForm extends Component {
         this.onChangeEmailAddress = this.onChangeEmailAddress.bind(this);
         this.onChangeUsername = this.onChangeUsername.bind(this);
         this.onChangePassword = this.onChangePassword.bind(this);
-        this.onChangeSpecialities = this.onChangeSpecialities.bind(this);
+        this.onChangeSpecialties = this.onChangeSpecialties.bind(this);
         this.onChangeIntroduction = this.onChangeIntroduction.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
 
@@ -26,7 +26,7 @@ export default class UpdateForm extends Component {
             emailAddress: '',
             username: '',
             password: '',
-            specialities: '',
+            specialties: '',
             introduction: '',
             role: ''
         }
@@ -45,7 +45,7 @@ export default class UpdateForm extends Component {
                     emailAddress: data.emailAddress,
                     username: data.username,
                     password: data.password,
-                    specialities: data.specialties,
+                    specialties: data.specialties,
                     introduction: data.introduction,
                     role: data.role
                 })
@@ -72,8 +72,8 @@ export default class UpdateForm extends Component {
     onChangePassword(e) {
         this.setState({ password: e.target.value })
     }
-    onChangeSpecialities(e) {
-        this.setState({ specialities: e.target.value })
+    onChangeSpecialties(e) {
+        this.setState({ specialties: e.target.value })
     }
     onChangeIntroduction(e) {
         this.setState({ introduction: e.target.value })
@@ -82,13 +82,14 @@ export default class UpdateForm extends Component {
     onSubmit(e) {
         e.preventDefault()
         let id = localStorage.getItem(USER_ID)
+        
         const userObject = {
             firstName: this.state.firstName,
             lastName: this.state.lastName,
             emailAddress: this.state.emailAddress,
             username: this.state.username,
             password: this.state.password,
-            specialities: this.state.specialties,
+            specialties: this.state.specialties,
             introduction: this.state.introduction
         };
 
@@ -147,14 +148,14 @@ export default class UpdateForm extends Component {
 
                     <div className="col-md-12">
                         <input type="password" className="form-control" id="inputPassword" placeholder="Change Password"
-                            onChange={this.onChangePassword} />
+                            value={this.state.password} onChange={this.onChangePassword} />
                         <br></br>
                     </div>
                     {this.state.role === 'doctor' ? (
                         <>
                             <div className="col-md-12" >
                                 <input type="text" className="form-control" id="newInputSpecialty" placeholder="Specialties"
-                                    value={this.state.specialities} onChange={this.onChangeSpecialities} />
+                                    value={this.state.specialties} onChange={this.onChangeSpecialties} />
                                 <br></br>
                             </div>
                             <div className="col-md-12" >

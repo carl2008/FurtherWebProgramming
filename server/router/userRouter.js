@@ -1,7 +1,8 @@
 const express = require('express')
 const { registerUser, authUser } = require('../controllers/userController')
 const User = require('../models/user');
-const router = express.Router()
+const router = express.Router();
+const bcrypt = require('bcryptjs');
 
 router.route('/').post(registerUser);
 router.route("/login").post(authUser);
@@ -15,8 +16,9 @@ router.get('/getUsers', async (req, res) => {
     }
 })
 
-router.route('/userUpdate/:id').put((req, res, next) => {
-    User.findByIdAndUpdate(req.params.id, {
+router.route('/userUpdate/:id').put(async(req, res, next) => {
+    req.body.password = await bcrypt.hash(req.body.password, 8)
+    await User.findByIdAndUpdate(req.params.id, {
         $set: req.body
     }, (error, data) => {
         if (error) {
