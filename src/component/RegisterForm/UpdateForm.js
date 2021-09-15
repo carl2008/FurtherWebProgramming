@@ -1,3 +1,4 @@
+import { USER_ID } from "../../constants";
 import "./RegisterForm.css";
 import React, { Component } from "react";
 import "./Bootstrap.css";
@@ -42,7 +43,7 @@ export default class UpdateForm extends Component {
     }
 
     onChangeFirstName(e) {
-        this.setState({ fisrtName: e.target.value })
+        this.setState({ firstName: e.target.value })
     }
 
     onChangeLastName(e) {
@@ -63,7 +64,7 @@ export default class UpdateForm extends Component {
 
     onSubmit(e) {
         e.preventDefault()
-    
+        let id = localStorage.getItem(USER_ID)
         const userObject = {
           firstName: this.state.firstName,
           lastName: this.state.lastName,
@@ -72,7 +73,7 @@ export default class UpdateForm extends Component {
           password: this.state.password,
         };
     
-        axios.put('http://localhost:9000/api/users/userUpdate/:id' + this.props.match.params.id, userObject)
+        axios.put(`http://localhost:9000/api/users/userUpdate/${id}`, userObject)
           .then((res) => {
             console.log(res.data)
             console.log('User successfully updated')

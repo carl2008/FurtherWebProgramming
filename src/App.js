@@ -50,6 +50,7 @@ function App() {
           <Route exact path="/Register" component={RegisterForm} />
           <Route exact path="/UserProfile" component={UpdateForm}/>
           <Route exact path="/DoctorProfile" component={UpdateFormDoctors}/>
+          {/* <Route exact path="/Profile" component={userRole === "doctor" ? UpdateFormDoctors : UpdateForm }/> */}
           <Route component={PageNotFound} />
         </Switch>
 
