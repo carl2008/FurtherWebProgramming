@@ -67,7 +67,7 @@ export default class UpdateForm extends Component {
     onChangeUsername(e) {
         this.setState({ username: e.target.value })
     }
-    
+
     onChangePassword(e) {
         this.setState({ password: e.target.value })
     }
@@ -81,7 +81,7 @@ export default class UpdateForm extends Component {
     onSubmit(e) {
         e.preventDefault()
         let id = localStorage.getItem(USER_ID)
-        
+
         const userObject = {
             firstName: this.state.firstName,
             lastName: this.state.lastName,
@@ -96,6 +96,10 @@ export default class UpdateForm extends Component {
             .then((res) => {
                 console.log(res.data)
                 console.log('User successfully updated')
+                // clear localstorage, log out (WORKS)
+                localStorage.clear();
+                this.props.history.push(`/`);
+                this.props.history.go(0)
             }).catch((error) => {
                 console.log(error)
             })
@@ -105,13 +109,8 @@ export default class UpdateForm extends Component {
 
         // Redirect to Student List 
         // this.props.history.push('/')
-
-        // clear localstorage, log out (WORKS)
-        localStorage.clear();
-        this.props.history.push(`/`);
-        this.props.history.go(0)
     }
-    
+
     render() {
         return (
 
@@ -119,7 +118,7 @@ export default class UpdateForm extends Component {
 
                 <form className="row g-5" id="form-styling1" onSubmit={this.onSubmit}>
                     <div className="col-md-12">
-                        <h1 id="form-title">Update</h1><br/><br/>
+                        <h1 id="form-title">Update</h1><br /><br />
                         <p>NOTE: After updating, you will be automatically logged out and will need to log in again.</p>
                     </div>
                     <div className="col-md-6">
