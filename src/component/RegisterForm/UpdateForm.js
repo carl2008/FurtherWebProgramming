@@ -104,11 +104,11 @@ export default class UpdateForm extends Component {
     onChangePassword(e) {
         this.setState({ password: e.target.value })
     }
-    onChangeSpecialities(e){
-        this.setState({specialities : e.target.value})
+    onChangeSpecialities(e) {
+        this.setState({ specialities: e.target.value })
     }
-    onChangeIntroduction(e){
-        this.setState({introduction : e.target.value})
+    onChangeIntroduction(e) {
+        this.setState({ introduction: e.target.value })
     }
     onSubmit(e) {
         e.preventDefault()
@@ -136,7 +136,7 @@ export default class UpdateForm extends Component {
 
         // Redirect to Student List 
         // this.props.history.push('/')
-        
+
         // clear localstorag, log out (WORKS)
         localStorage.clear();
         this.props.history.push(`/`);
@@ -214,17 +214,17 @@ export default class UpdateForm extends Component {
                     </div>
                     {this.state.role === 'doctor' ? (
                         <>
-                    <div className="col-md-12" >
-                    <input type="text" className="form-control" id="inputSpecialty" placeholder="Specialties" 
-                        value={this.state.specialities} onChange={this.onChangeSpecialities}/>
-                        <br></br>
-                    </div>
-                    <div className="col-md-12" >
-                    <input type="text" class="form-control" id="inputIntroduction" placeholder="Introduction" 
-                        value={this.state.introduction} onChange={this.onChangeIntroduction}/>
-                        <br></br>
-                    </div>
-                    </>
+                            <div className="col-md-12" >
+                                <input type="text" className="form-control" id="newInputSpecialty" placeholder="Specialties"
+                                    value={this.state.specialities} onChange={this.onChangeSpecialities} />
+                                <br></br>
+                            </div>
+                            <div className="col-md-12" >
+                                <input type="text" class="form-control" id="newInputIntroduction" placeholder="Introduction"
+                                    value={this.state.introduction} onChange={this.onChangeIntroduction} />
+                                <br></br>
+                            </div>
+                        </>
                     ) : ""}
                     <div className="col-md-12">
                         <button className="btn btn-primary col-3 mx-auto" id="button-form">
