@@ -21,6 +21,7 @@ import PageNotFound from './component/ErrorHandling/PageNotFound';
 import DiscussionForm from './component/Discussion/DiscussionForm';
 import DiscussionPost from './component/Discussion/DiscussionPost';
 import ChatbotComponent from './component/Discussion/ChatbotComponent';
+import ViewAllUsers from './component/RegisterForm/ViewAllUsers';
 
 function App() {
   const userName = localStorage.getItem(USER_NAME)
@@ -47,6 +48,7 @@ function App() {
           <Route exact path="/Login" component={LogInForm} />
           <Route exact path="/Register" component={RegisterForm} />
           <Route exact path="/UserProfile" component={UpdateForm}/>
+          <Route exact path="/Admin/view-users" component={ViewAllUsers} />
           <Route component={PageNotFound} />
         </Switch>
 

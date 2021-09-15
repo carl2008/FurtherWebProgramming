@@ -47,6 +47,19 @@ router.route('/userUpdate/:id').put(async(req, res, next) => {
     // })
 });
 
+router.route('/userUpdateRole/:id').put(async(req, res, next) => {
+    try {
+        const result = await User.findByIdAndUpdate({ _id: req.params.id }, {
+            $set: {role: req.body.role}           
+        }, {
+            new: true, useFindAndModify: false
+        })
+        return res.send(result)
+    } catch (e) {
+        return next(e)
+    }
+});
+
 router.route('/getOneUser/:id').get((req, res, next) => {
     User.findById(req.params.id, (error, data) => {
         if (error) {

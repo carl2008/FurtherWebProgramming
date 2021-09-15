@@ -116,6 +116,7 @@ export default class UpdateForm extends Component {
         return (
 
             <div className='container' id="formBorder">
+                <p>NOTE: After updating, you will be automatically logged out and will need to log in again.</p>
 
                 <form className="row g-5" id="form-styling1" onSubmit={this.onSubmit}>
                     <div className="col-md-12">

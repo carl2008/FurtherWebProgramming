@@ -17,6 +17,8 @@ export default function LogInForm() {
     const [redirect, setRedirect] = useState(false);
     const history = useHistory();
 
+    const userInfo = localStorage.getItem(USER_INFO)
+
     const submitHandler = async (e) => {
         e.preventDefault();
 
@@ -51,11 +53,9 @@ export default function LogInForm() {
         }
     };
 
-    if (redirect) {
-        console.log("user is directed");
+    if (redirect || userInfo) {
         history.push("/");
-        history.go(0)
-        console.log('directed');
+        history.go(0);
     }
 
     return (
