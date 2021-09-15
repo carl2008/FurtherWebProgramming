@@ -68,7 +68,8 @@ router.put('/discussions/:id', async (req, res) => {
     try {
         const result = await Discussion.findOneAndUpdate({ _id: req.params.id }, {
             title: req.body.title,
-            content: req.body.content
+            content: req.body.content,
+            lastUpdated: req.body.lastUpdated
         }, {
             new: true, useFindAndModify: false
         })
@@ -90,7 +91,7 @@ router.post('/users/:id/discussions', async (req, res) => {
         const discussion = await Discussion.create({
             title: req.body.title,
             content: req.body.content,
-            author: id,
+            author: id
         })
         // find out user and push new discussion
         await User.findByIdAndUpdate(

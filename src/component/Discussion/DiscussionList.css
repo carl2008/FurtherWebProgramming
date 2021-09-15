@@ -174,3 +174,11 @@ ul.pagination::after, .add-smallreply-section::after{
     font-size: 1.2em;
     cursor: pointer;
 }
+.discussion-error{
+    font-size: 1em;
+    color: red;
+}
+.reply-error-msg{
+    font-size: 0.9em;
+    color: red;
+}

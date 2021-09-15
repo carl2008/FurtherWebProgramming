@@ -17,11 +17,11 @@ import Footer from './component/Navbar/Footer';
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import LogInForm from './component/RegisterForm/LogInForm';
 import UpdateForm from './component/RegisterForm/UpdateForm';
-import UpdateFormDoctors from './component/RegisterForm/UpdateFormDoctors';
 import PageNotFound from './component/ErrorHandling/PageNotFound';
 import DiscussionForm from './component/Discussion/DiscussionForm';
 import DiscussionPost from './component/Discussion/DiscussionPost';
 import ChatbotComponent from './component/Discussion/ChatbotComponent';
+import ViewAllUsers from './component/RegisterForm/ViewAllUsers';
 
 function App() {
   const userName = localStorage.getItem(USER_NAME)
@@ -31,9 +31,8 @@ function App() {
       <Router>
         {userName ?
           <NavbarLogin /> :
-          <NavigationBar />
+          <NavigationBar /> 
         }
-
 
         <br />
 
@@ -48,6 +47,8 @@ function App() {
           <Route exact path="/Articles/create" component={ArticleForm} />
           <Route exact path="/Login" component={LogInForm} />
           <Route exact path="/Register" component={RegisterForm} />
+          <Route exact path="/UserProfile" component={UpdateForm}/>
+          <Route exact path="/Admin/view-users" component={ViewAllUsers} />
           <Route component={PageNotFound} />
         </Switch>
 

@@ -1,6 +1,7 @@
 import { USER_INFO } from '../../constants'
 import "./RegisterForm.css";
 import React, { useState } from "react";
+import { Redirect } from "react-router-dom";
 import "./Bootstrap.css";
 import axios from "axios";
 import Loading from "./Loading";
@@ -24,7 +25,10 @@ export default function RegisterForm() {
     const [picMessage, setPicMessage] = useState(null);
     const [error, setError] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [redirect, setRedirect] = useState(false);
+    const [redirect, setRedirect] = useState(false)
+
+    const userInfo = localStorage.getItem(USER_INFO)
+
 
     const submitHandler = async (e) => {
         e.preventDefault();
@@ -46,17 +50,26 @@ export default function RegisterForm() {
                 config
             );
             setLoading(false);
+            setFirstName('')
+            setLastName('')
+            setEmailAddress('')
+            setUsername('')
+            setPassword('')
+            alert('Account registration successful! Please log in with your new account.')
             setRedirect(true)
         } catch (error) {
             setError(error.response.data.message);
         }
-        console.log(username);
     }
 
-    if (redirect) {
-        history.push("/login");
-        history.go(0)
+    if(redirect){
+        return <Redirect to="/Login"/>
     }
+
+    if(userInfo){
+        return <Redirect to="/"/>
+    }
+
 
     return (
         <div>

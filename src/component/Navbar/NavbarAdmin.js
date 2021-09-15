@@ -42,7 +42,7 @@ export default function NavbarLogin() {
               >
                 Log out
               </Nav.Link>
-              <Nav.Link href="/UserProfile">Profile</Nav.Link>
+              <Nav.Link href="/CustomerList">Customer List</Nav.Link>
             </Nav>
           </Navbar.Collapse>
         </Container>
