@@ -44,7 +44,6 @@ export default class UpdateForm extends Component {
                     lastName: data.lastName,
                     emailAddress: data.emailAddress,
                     username: data.username,
-                    password: data.password,
                     specialties: data.specialties,
                     introduction: data.introduction,
                     role: data.role
@@ -107,7 +106,7 @@ export default class UpdateForm extends Component {
         // Redirect to Student List 
         // this.props.history.push('/')
 
-        // clear localstorag, log out (WORKS)
+        // clear localstorage, log out (WORKS)
         localStorage.clear();
         this.props.history.push(`/`);
         this.props.history.go(0)
