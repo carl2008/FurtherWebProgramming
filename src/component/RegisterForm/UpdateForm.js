@@ -15,7 +15,7 @@ export default class UpdateForm extends Component {
         this.onChangeEmailAddress = this.onChangeEmailAddress.bind(this);
         this.onChangeUsername = this.onChangeUsername.bind(this);
         this.onChangePassword = this.onChangePassword.bind(this);
-        this.onChangeSpecialties = this.onChangeSpecialties.bind(this);
+        this.onChangeSpecialities = this.onChangeSpecialities.bind(this);
         this.onChangeIntroduction = this.onChangeIntroduction.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
 
@@ -26,7 +26,7 @@ export default class UpdateForm extends Component {
             emailAddress: '',
             username: '',
             password: '',
-            specialties: '',
+            specialities: '',
             introduction: '',
             role: ''
         }
@@ -45,7 +45,7 @@ export default class UpdateForm extends Component {
                     emailAddress: data.emailAddress,
                     username: data.username,
                     password: data.password,
-                    specialties: data.specialties,
+                    specialities: data.specialties,
                     introduction: data.introduction,
                     role: data.role
                 })
@@ -88,7 +88,7 @@ export default class UpdateForm extends Component {
             emailAddress: this.state.emailAddress,
             username: this.state.username,
             password: this.state.password,
-            specialties: this.state.specialties,
+            specialities: this.state.specialties,
             introduction: this.state.introduction
         };
 
