@@ -24,12 +24,21 @@ export default function DiscussionPost() {
     const [reload, setReload] = useState(false)
 
     const endPoint = `${API_URL}/discussions/${id}`
+    const endPoint2 = `${API_URL}`
 
     const userInfo = localStorage.getItem(USER_INFO)
 
     useEffect(() => {
         if (userInfo) {
-            setUser(JSON.parse(userInfo))
+            let json = JSON.parse(userInfo)
+            fetch(`${endPoint2}/api/users/getOneUser/${json._id}`)
+                .then((response) => {
+                    if (!response.ok) throw new Error(response.status);
+                    else return response.json();
+                })
+                .then(data => {
+                    setUser(data)
+                })
         }
     }, [])
 

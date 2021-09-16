@@ -26,7 +26,15 @@ export default function DiscussionForm(props) {
 
     useEffect(() => {
         if (userInfo) {
-            setUser(JSON.parse(userInfo))
+            let json = JSON.parse(userInfo)
+            fetch(`${endPoint}/api/users/getOneUser/${json._id}`)
+                .then((response) => {
+                    if (!response.ok) throw new Error(response.status);
+                    else return response.json();
+                })
+                .then(data => {
+                    setUser(data)
+                })
         }
     }, [])
 
