@@ -110,7 +110,7 @@ export default function ViewAllUsers() {
                         <tbody>
                             {userList.map((aUser, index) => {
                                 return (<tr>
-                                    <th scope="row">{index}</th>
+                                    <th scope="row">{index+1}</th>
                                     <td>{aUser.firstName}</td>
                                     <td>{aUser.lastName}</td>
                                     <td>{aUser.emailAddress}</td>
