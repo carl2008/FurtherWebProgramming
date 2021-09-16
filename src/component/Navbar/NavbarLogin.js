@@ -54,7 +54,6 @@ export default function NavbarLogin() {
               <Nav.Link href="/UserProfile">
                 <span class="btn rounded-pill me-2" href="# " role="button" style={{ color: 'white', backgroundColor: '#4FB0B9' }}><span class="mx-2">Profile</span></span>
               </Nav.Link>
-              {user.role === "admin" ? <Nav.Link href="/Admin/view-users">Admin Panel</Nav.Link> : ''}
             </Nav>
           </Navbar.Collapse>
         </Container>

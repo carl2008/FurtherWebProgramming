@@ -31,6 +31,7 @@ export default function NavbarLogin() {
               <Nav.Link href="/AboutUs">About Us</Nav.Link>
               <Nav.Link href="/Discussion">Discussion</Nav.Link>
               <Nav.Link href="/Articles">Articles</Nav.Link>
+              <Nav.Link href="/CustomerList">Admin Panel</Nav.Link>
             </Nav>
             <Nav>
               <Nav.Link
@@ -42,8 +43,8 @@ export default function NavbarLogin() {
               >
                 <span class="btn rounded-pill me-2" href="# " role="button" style={{ color: '#4FB0B9', border: '3px solid #4FB0B9' }}><span class="mx-2">Log out</span></span>
               </Nav.Link>
-              <Nav.Link href="/CustomerList">
-                <span class="btn rounded-pill me-2" href="# " role="button" style={{ color: 'white', backgroundColor: '#4FB0B9' }}><span class="mx-2">Customer List</span></span>
+              <Nav.Link href="/UserProfile">
+                <span class="btn rounded-pill me-2" href="# " role="button" style={{ color: 'white', backgroundColor: '#4FB0B9' }}><span class="mx-2">Profile</span></span>
               </Nav.Link>
             </Nav>
           </Navbar.Collapse>
