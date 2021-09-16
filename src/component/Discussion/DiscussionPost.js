@@ -24,12 +24,21 @@ export default function DiscussionPost() {
     const [reload, setReload] = useState(false)
 
     const endPoint = `${API_URL}/discussions/${id}`
+    const endPoint2 = `${API_URL}`
 
     const userInfo = localStorage.getItem(USER_INFO)
 
     useEffect(() => {
         if (userInfo) {
-            setUser(JSON.parse(userInfo))
+            let json = JSON.parse(userInfo)
+            fetch(`${endPoint2}/api/users/getOneUser/${json._id}`)
+                .then((response) => {
+                    if (!response.ok) throw new Error(response.status);
+                    else return response.json();
+                })
+                .then(data => {
+                    setUser(data)
+                })
         }
     }, [])
 
@@ -197,7 +206,7 @@ export default function DiscussionPost() {
                                                             <small className="d-block text-center" style={discussionPost.authorRole === "Admin" ? {color:"red"} : {color:"#676767"}}>{discussionPost.authorRole}</small>
                                                         </a>
                                                         <div className="media-body ml-3">
-                                                            <a href="javascript:void(0)" className="text-secondary">{discussionPost.author}</a>
+                                                            <a href="javascript:void(0)" className="text-secondary">{discussionPost.authorRole === "Doctor"? "Dr. "+discussionPost.author : discussionPost.author}</a>
                                                             <small className="text-muted ml-2">- {(new Date(discussionPost.createdAt)).toLocaleString('default', { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' })}</small>
                                                             {discussionPost.updatedAt && <small className="text-muted ml-1">- <i>Last edited: {(new Date(discussionPost.updatedAt)).toLocaleString('default', { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' })}</i></small>}
                                                             <h5 className="mt-1">{discussionPost.title}</h5>

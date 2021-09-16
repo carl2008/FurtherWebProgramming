@@ -28,7 +28,15 @@ export default function Reply({ id, reset, reloadReply }) {
 
     useEffect(() => {
         if (userInfo) {
-            setUser(JSON.parse(userInfo))
+            let json = JSON.parse(userInfo)
+            fetch(`${endPoint}/api/users/getOneUser/${json._id}`)
+                .then((response) => {
+                    if (!response.ok) throw new Error(response.status);
+                    else return response.json();
+                })
+                .then(data => {
+                    setUser(data)
+                })
         }
     }, [])
 
@@ -168,7 +176,7 @@ export default function Reply({ id, reset, reloadReply }) {
                                                 <small className="d-block text-center" style={reply.authorRole === "Admin" ? { color: "red" } : { color: "#676767" }}>{reply.authorRole}</small>
                                             </a>
                                             <div className="media-body ml-3">
-                                                <a href="javascript:void(0)" className="text-secondary">{reply.author}</a>
+                                                <a href="javascript:void(0)" className="text-secondary">{reply.authorRole === "Doctor"? "Dr. "+reply.author : reply.author}</a>
                                                 <small className="text-muted ml-2">{(new Date(reply.createdAt)).toLocaleDateString('default', { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' })}</small>
                                                 <div className="mt-3 font-size-sm">
                                                     <p>{reply.content}</p>

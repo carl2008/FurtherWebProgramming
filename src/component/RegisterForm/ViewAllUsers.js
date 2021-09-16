@@ -1,4 +1,4 @@
-import { USER_ID, API_URL } from "../../constants";
+import { USER_ID, USER_INFO, API_URL } from "../../constants";
 import { useState, useEffect } from "react";
 import { Redirect } from "react-router-dom";
 import { Spin } from 'antd';
@@ -77,6 +77,9 @@ export default function ViewAllUsers() {
                     else return response.json();
                 })
                 .then(data => {
+                    if(id === user._id){
+                        localStorage.setItem(USER_INFO,JSON.stringify(data))
+                    }
                     setReload(!reload)
                     setLoading(false)
                 })
