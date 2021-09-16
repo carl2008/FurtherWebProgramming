@@ -8,7 +8,6 @@ float:left;
 p#form-styling1{
     margin:auto;
     text-align:center;
-
 }
 
 #button-form{
@@ -18,10 +17,10 @@ p#form-styling1{
 }
 
 #formBorder{
-
- border: 0.5px solid grey;
+ /* border: 0.5px solid grey; */
  margin:auto;
- padding: 1em 2em 1em 2em;
+ padding: 3em 2em 3em 2em;
+ background-color: white;
 }
 
 

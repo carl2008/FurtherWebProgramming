@@ -1,6 +1,6 @@
-import { USER_INFO, USER_NAME, USER_TOKEN, USER_ROLE, USER_ID } from '../../constants'
+import { USER_INFO, USER_NAME, USER_TOKEN, USER_ROLE, USER_ID, API_URL } from '../../constants'
 import "./RegisterForm.css";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import "./Bootstrap.css";
 import axios from "axios";
 import Loading from "./Loading";
@@ -32,7 +32,7 @@ export default function LogInForm() {
             setLoading(true);
 
             const { data } = await axios.post(
-                "http://localhost:9000/api/users/login",
+                `${API_URL}/api/users/login`,
                 {
                     username,
                     password,
@@ -60,10 +60,8 @@ export default function LogInForm() {
 
     return (
 
-        <div>
-
-
-            <div className='container' id="formBorder">
+        <div style={{minHeight: "500px"}}>
+            <div className='container shadow' id="formBorder">
                 {error && <ErrorMessage variant="danger">{error}</ErrorMessage>}
                 {loading && <Loading />}
                 <form className="row g-3" id="form-styling1" onSubmit={submitHandler}>

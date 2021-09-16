@@ -9,10 +9,10 @@ export default function ChatbotComponent() {
     const theme = {
         background: '#f5f8fb',
         fontFamily: 'Open Sans',
-        headerBgColor: '#0097ef',
+        headerBgColor: '#4FB0B9',
         headerFontColor: '#fff',
         headerFontSize: '1em',
-        botBubbleColor: '#0097ef',
+        botBubbleColor: '#4FB0B9',
         botFontColor: '#fff',
         userBubbleColor: '#fff',
         userFontColor: '#4a4a4a',

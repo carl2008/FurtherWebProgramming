@@ -1,4 +1,4 @@
-import { USER_NAME, USER_ID, USER_ROLE, API_URL } from '../../constants'
+import { USER_ID, USER_ROLE, API_URL } from '../../constants'
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router';
 import { Redirect } from 'react-router-dom';
@@ -18,13 +18,13 @@ function ArticlePost(props) {
     const history = useHistory();
     // temp user id, will change to logged in user id later
     const userID = localStorage.getItem(USER_ID)
-    const userName = localStorage.getItem(USER_NAME)
     const userRole = localStorage.getItem(USER_ROLE)
 
     const [article, setarticle] = useState('')
     const [loadingArticle, setloadingArticle] = useState(false)
 
     const [comments, setComments] = useState([])
+
     const [likeCount, setLikeCount] = useState(0)
     const [liked, setLiked] = useState(null)
 
@@ -58,7 +58,9 @@ function ArticlePost(props) {
                     title: data.title,
                     content: data.content,
                     authorId: data.author._id,
-                    author: `${data.author.firstName} ${data.author.lastName}`,
+                    authorName: `${data.author.firstName} ${data.author.lastName}`,
+                    authorSpe: data.author.specialties,
+                    authorIntro: data.author.introduction,
                     createdAt: data.created_at,
                 }
                 setarticle(article)
@@ -102,16 +104,18 @@ function ArticlePost(props) {
                 else return response.json();
             })
             .then(data => {
+                setLikeCount(data.length)
                 for (let i = 0; i < data.length; i++) {
-                    if (data[i].author._id === userID) {
-                        setLiked(data[i]._id)
-                        console.log(data[i]._id)
+                    if (data[i].author !== null) {
+                        if (data[i].author._id === userID) {
+                            setLiked(data[i]._id)
+                            console.log(data[i]._id)
+                        }
                     }
                 }
-                setLikeCount(data.length)
             })
             .catch((err) => {
-                setErrorCmt(err.message)
+                console.log(err)
             })
     }
 
@@ -151,7 +155,7 @@ function ArticlePost(props) {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                author: userID,
+                author: String(userID),
             })
         })
             .then((response) => {
@@ -203,7 +207,11 @@ function ArticlePost(props) {
                 id: article.id,
                 category: article.category,
                 title: article.title,
-                content: article.content
+                content: article.content,
+                authorName: article.authorName,
+                authorIntro: article.authorIntro,
+                authorSpe: article.authorSpe,
+                authorId: article.authorId,
             }}
         />;
     }
@@ -242,9 +250,9 @@ function ArticlePost(props) {
                                                 <div className="img-wrapper my-4 rounded-circle shadow">
                                                     <a href="# "><img src="https://i.ibb.co/hCyPJWx/PriceCo.png" className="" alt="" /></a>
                                                 </div>
-                                                <h4 className="author-name">Dr. {article.author}</h4>
-                                                <h6 className="author-title">Neurologist</h6>
-                                                <p>Itaque quidem optio quia voluptatibus dolorem dolor. Modi eum sed possimus accusantium. Quas repellat voluptatem officia numquam sint aspernatur voluptas. Esse et accusantium ut unde voluptas.</p>
+                                                <h4 className="author-name">Dr. {article.authorName}</h4>
+                                                <h6 className="author-title">{article.authorSpe}</h6>
+                                                <p>{article.authorIntro}</p>
                                             </Skeleton>
                                         </div>
                                     </div>
@@ -256,9 +264,9 @@ function ArticlePost(props) {
                                             <Skeleton active loading={loadingArticle}>
                                                 <a href="# "><img src="https://i.ibb.co/hCyPJWx/PriceCo.png" className="rounded-circle float-left shadow" alt="" /></a>
                                                 <div className="ml-2">
-                                                    <h4 className="author-name mb-1">Dr. {article.author}</h4>
-                                                    <h6 className="author-title mb-1">Neurologist</h6>
-                                                    <p>Itaque quidem optio quia voluptatibus dolorem dolor. Modi eum sed possimus accusantium. Quas repellat voluptatem officia numquam sint aspernatur voluptas. Esse et accusantium ut unde voluptas.</p>
+                                                    <h4 className="author-name mb-1">Dr. {article.authorName}</h4>
+                                                    <h6 className="author-title mb-1">{article.authorSpe}</h6>
+                                                    <p>{article.authorIntro}</p>
                                                 </div>
                                             </Skeleton>
                                         </div>
@@ -273,7 +281,7 @@ function ArticlePost(props) {
                                                 <div className="d-flex justify-content-between">
                                                     <h5 className="entry-category mb-3">{article.category}</h5>
                                                     {/* Only show edit button if this post wrtten by this user */}
-                                                    {(article.authorId === userID || userRole === "admin") &&
+                                                    {(String(article.authorId) === String(userID) || userRole === "admin") &&
                                                         <Popover
                                                             placement="leftTop"
                                                             trigger="click"
@@ -308,11 +316,12 @@ function ArticlePost(props) {
                                                     <ul>
                                                         <li className="d-flex align-items-center"><i className="fa fa-clock"></i> <a href="# ">{moment(article.createdAt).format("MMM DD, YYYY")}</a></li>
                                                         <li className="d-flex align-items-center"><i className="fa fa-comment"></i> <a href="# ">{comments.length} {comments.length <= 1 ? `Comment` : `Comments`} </a></li>
-                                                        {liked ? <>
+                                                        {(liked ? <>
                                                             <li className="d-flex align-items-center liked" onClick={handleUnlike}><i className="fa fa-heart"></i> <a href="# ">{likeCount} {(likeCount <= 1) ? `Like` : `Likes`}</a></li>
                                                         </> : <>
                                                             <li className="d-flex align-items-center unliked" onClick={handleLike}><i className="fa fa-heart"></i> <a href="# ">{likeCount} {(likeCount <= 1) ? `Like` : `Likes`}</a></li>
-                                                        </>}
+                                                        </>)}
+                                                        {!userID && <li className="d-flex align-items-center"><i className="fa fa-heart"></i> <a href="# ">{likeCount} {(likeCount <= 1) ? `Like` : `Likes`}</a></li>}
                                                     </ul>
                                                 </div>
                                                 <div className="entry-content">
@@ -320,7 +329,7 @@ function ArticlePost(props) {
                                                 </div>
                                                 <div class="entry-footer">
                                                     <div className="d-flex justify-content-between flex-row w-100">
-                                                        {liked ? <>
+                                                        {userID && (liked ? <>
                                                             <div className="like-btn" onClick={handleUnlike}>
                                                                 <i className="fa fa-heart press"></i>
                                                                 <div className="press fa fa-heart"></div>
@@ -332,7 +341,13 @@ function ArticlePost(props) {
                                                                 <div className="fa fa-heart unpress"></div>
                                                                 <small className="pl-2">{likeCount} {(likeCount <= 1) ? `user` : `users`} like this.</small>
                                                             </div>
-                                                        </>}
+                                                        </>)}
+                                                        {!userID &&
+                                                            <div className="like-btn">
+                                                                <i className="fa fa-heart"></i>
+                                                                <small className="pl-2">{likeCount} {(likeCount <= 1) ? `user` : `users`} like this.</small>
+                                                            </div>
+                                                        }
                                                         <div>
                                                             <small>Share this post: </small>
                                                             <FacebookShareButton
@@ -369,7 +384,6 @@ function ArticlePost(props) {
                                     </div>
                                 </div>
                                 <div class="post-comments">
-                                    {errorCmt && <div>Something went wrong with comment section. Sorry for this inconvenience.</div>}
                                     {loadingArticle && <>
                                         <Skeleton avatar={{ shape: "square" }} active></Skeleton>
                                         <Skeleton avatar={{ shape: "square" }} active></Skeleton>
@@ -399,7 +413,7 @@ function ArticlePost(props) {
                                                                         <small className="text-muted">{moment(cmt.createdAt).format("MMM DD, YYYY, HH:MM:SS")}</small>
                                                                         <p>{cmt.content}</p>
                                                                     </div>
-                                                                    {(cmt.authorId === userID || userRole === "admin") &&
+                                                                    {(cmt.authorId === String(userID) || String(userRole) === "admin") &&
                                                                         <div className="d-inline-block">
                                                                             <Popconfirm title="Are you sure you want to delete？" okText="Yes" cancelText="No"
                                                                                 onConfirm={(e) => { e.preventDefault(); handleDeleteCmt(cmt.id) }}>

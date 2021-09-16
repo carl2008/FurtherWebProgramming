@@ -1,4 +1,4 @@
-import { USER_INFO } from '../../constants'
+import { USER_INFO, API_URL } from '../../constants'
 import "./RegisterForm.css";
 import React, { useState } from "react";
 import { Redirect } from "react-router-dom";
@@ -45,7 +45,7 @@ export default function RegisterForm() {
             setLoading(true);
 
             const { data } = await axios.post(
-                "http://localhost:9000/api/users",
+                `${API_URL}/api/users`,
                 { firstName, lastName, emailAddress, username, password },
                 config
             );
@@ -72,10 +72,10 @@ export default function RegisterForm() {
 
 
     return (
-        <div>
+        <div style={{minHeight: "500px"}}>
             {error && <ErrorMessage variant = "danger">{error}</ErrorMessage>}
             {loading && <Loading/>}
-            <div className='container' id="formBorder">
+            <div className='container shadow' id="formBorder">
 
                 <form className="row g-5" id="form-styling1" onSubmit={submitHandler}>
                     <div className="col-md-12">
