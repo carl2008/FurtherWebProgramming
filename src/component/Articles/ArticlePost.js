@@ -316,7 +316,7 @@ function ArticlePost(props) {
                                                     <ul>
                                                         <li className="d-flex align-items-center"><i className="fa fa-clock"></i> <a href="# ">{moment(article.createdAt).format("MMM DD, YYYY")}</a></li>
                                                         <li className="d-flex align-items-center"><i className="fa fa-comment"></i> <a href="# ">{comments.length} {comments.length <= 1 ? `Comment` : `Comments`} </a></li>
-                                                        {(liked ? <>
+                                                        {userID && (liked ? <>
                                                             <li className="d-flex align-items-center liked" onClick={handleUnlike}><i className="fa fa-heart"></i> <a href="# ">{likeCount} {(likeCount <= 1) ? `Like` : `Likes`}</a></li>
                                                         </> : <>
                                                             <li className="d-flex align-items-center unliked" onClick={handleLike}><i className="fa fa-heart"></i> <a href="# ">{likeCount} {(likeCount <= 1) ? `Like` : `Likes`}</a></li>
