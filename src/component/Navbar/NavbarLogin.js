@@ -6,18 +6,27 @@ import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import { useHistory } from "react-router-dom";
-import { USER_INFO } from "../../constants";
+import { USER_INFO, API_URL } from "../../constants";
 
 export default function NavbarLogin() {
   const history = useHistory();
   const userInfo = localStorage.getItem(USER_INFO)
+  const endPoint = `${API_URL}`
   const [user, setUser] = useState({})
 
   useEffect(() => {
     if (userInfo) {
-        setUser(JSON.parse(userInfo))
+      let json = JSON.parse(userInfo)
+      fetch(`${endPoint}/api/users/getOneUser/${json._id}`)
+        .then((response) => {
+          if (!response.ok) throw new Error(response.status);
+          else return response.json();
+        })
+        .then(data => {
+          setUser(data)
+        })
     }
-}, [])
+  }, [])
 
   return (
     <div className="removing-space">
