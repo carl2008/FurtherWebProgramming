@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useState, useEffect } from "react";
 import "./Navbar.css";
 import logo from "./logo.png";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -6,9 +6,18 @@ import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import { useHistory } from "react-router-dom";
+import { USER_INFO } from "../../constants";
 
 export default function NavbarLogin() {
   const history = useHistory();
+  const userInfo = localStorage.getItem(USER_INFO)
+  const [user, setUser] = useState({})
+
+  useEffect(() => {
+    if (userInfo) {
+        setUser(JSON.parse(userInfo))
+    }
+}, [])
 
   return (
     <div className="removing-space">
@@ -43,6 +52,7 @@ export default function NavbarLogin() {
                 Log out
               </Nav.Link>
               <Nav.Link href="/UserProfile">Profile</Nav.Link>
+              {user.role === "admin" ? <Nav.Link href="/Admin/view-users">Admin Panel</Nav.Link> : ''}
             </Nav>
           </Navbar.Collapse>
         </Container>

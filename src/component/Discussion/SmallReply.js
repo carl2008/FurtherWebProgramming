@@ -83,7 +83,7 @@ export default function SmallReply({ topicId, replyId, setName, load, changeNum 
                                         <small className="d-block text-center" style={reply.authorRole === "Admin" ? {color:"red"} : {color:"#676767"}}>{reply.authorRole}</small>
                                     </a>
                                     <div className="media-body ml-3">
-                                        <a href="javascript:void(0)" className="text-secondary">{reply.author}</a>
+                                        <a href="javascript:void(0)" className="text-secondary">{reply.authorRole === "Doctor"? "Dr. "+reply.author : reply.author}</a>
                                         <small className="text-muted ml-2">{(new Date(reply.createdAt)).toLocaleDateString('default', { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' })}</small>
                                         <div className="mt-3 font-size-sm">
                                             <p>{reply.content}</p>

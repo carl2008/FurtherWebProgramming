@@ -161,7 +161,7 @@ export default function DiscussionList() {
                                                             <p className="text-secondary">
                                                                 {discussionPost.content}
                                                             </p>
-                                                            <p className="text-muted">Asked by <a href="javascript:void(0)">{discussionPost.author} </a>
+                                                            <p className="text-muted">Asked by <a href="javascript:void(0)">{discussionPost.authorRole === "Doctor"? "Dr. "+discussionPost.author : discussionPost.author} </a>
                                                                 <span className="text-secondary font-weight-bold">
                                                                     - {(new Date(discussionPost.createdAt)).toLocaleDateString('default', { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' })}
                                                                 </span>

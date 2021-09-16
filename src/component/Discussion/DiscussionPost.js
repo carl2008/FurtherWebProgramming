@@ -197,7 +197,7 @@ export default function DiscussionPost() {
                                                             <small className="d-block text-center" style={discussionPost.authorRole === "Admin" ? {color:"red"} : {color:"#676767"}}>{discussionPost.authorRole}</small>
                                                         </a>
                                                         <div className="media-body ml-3">
-                                                            <a href="javascript:void(0)" className="text-secondary">{discussionPost.author}</a>
+                                                            <a href="javascript:void(0)" className="text-secondary">{discussionPost.authorRole === "Doctor"? "Dr. "+discussionPost.author : discussionPost.author}</a>
                                                             <small className="text-muted ml-2">- {(new Date(discussionPost.createdAt)).toLocaleString('default', { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' })}</small>
                                                             {discussionPost.updatedAt && <small className="text-muted ml-1">- <i>Last edited: {(new Date(discussionPost.updatedAt)).toLocaleString('default', { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' })}</i></small>}
                                                             <h5 className="mt-1">{discussionPost.title}</h5>
