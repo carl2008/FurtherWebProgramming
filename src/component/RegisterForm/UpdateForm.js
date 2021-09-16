@@ -1,9 +1,9 @@
-import { USER_ID, USER_INFO, USER_NAME } from "../../constants";
+import { USER_ID, API_URL } from "../../constants";
 import "./RegisterForm.css";
 import React, { Component } from "react";
 import "./Bootstrap.css";
-import { useHistory } from "react-router-dom";
 import axios from "axios";
+import { Alert } from 'antd';
 
 export default class UpdateForm extends Component {
 
@@ -33,7 +33,7 @@ export default class UpdateForm extends Component {
     }
 
     componentDidMount() {
-        fetch('http://localhost:9000/api/users/getOneUser/' + localStorage.getItem(USER_ID))
+        fetch(`${API_URL}/api/users/getOneUser/` + localStorage.getItem(USER_ID))
             .then((response) => {
                 if (!response.ok) throw new Error(response.status);
                 else return response.json();
@@ -92,7 +92,7 @@ export default class UpdateForm extends Component {
             introduction: this.state.introduction
         };
 
-        axios.put(`http://localhost:9000/api/users/userUpdate/${id}`, userObject)
+        axios.put(`${API_URL}/api/users/userUpdate/${id}`, userObject)
             .then((res) => {
                 console.log(res.data)
                 console.log('User successfully updated')
@@ -103,24 +103,20 @@ export default class UpdateForm extends Component {
             }).catch((error) => {
                 console.log(error)
             })
-        // Set localStorage to new info (DOESN'T WORK)
-        // localStorage.setItem(USER_INFO, userObject)
-        // localStorage.setItem(USER_NAME, userObject.username)
-
-        // Redirect to Student List 
-        // this.props.history.push('/')
     }
 
     render() {
         return (
-
-            <div className='container' id="formBorder">
-
-                <form className="row g-5" id="form-styling1" onSubmit={this.onSubmit}>
-                    <div className="col-md-12">
-                        <h1 id="form-title">Update</h1><br /><br />
-                        <p>NOTE: After updating, you will be automatically logged out and will need to log in again.</p>
-                    </div>
+            <div className='container shadow' id="formBorder">
+                <h1 id="form-title">Update</h1><br /><br />
+                <br/>
+                <Alert
+                    message="Note: "
+                    description="After updating, you will be automatically logged out and will need to log in again."
+                    type="warning"
+                    showIcon
+                />
+                <form className="row g-5 pt-3" id="form-styling1" onSubmit={this.onSubmit}>
                     <div className="col-md-6">
                         <input type="text" className="form-control" id="inputFirstName" placeholder="FirstName"
                             value={this.state.firstName} onChange={this.onChangeFirstName} />
@@ -170,9 +166,7 @@ export default class UpdateForm extends Component {
                         </button>
                     </div>
                 </form>
-
             </div>
-
         )
     }
 }

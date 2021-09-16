@@ -143,14 +143,14 @@ function Articles() {
                         <div className="article-sidebar">
                             <div className="card sidebar-container shadow mb-3">
                                 <div className="card-body">
-                                    {((userRole === "doctor") || (userRole === "admin")) &&
-                                        <div className="sidebar-item">
+                                    {(userRole === "doctor") &&
+                                        <div className="sidebar-item mb-4">
                                             <Link to='/Articles/create'><button className="btn btn-custom btn-block" type="button"><i className="fa fa-plus"></i> New Article</button></Link>
                                         </div>
                                     }
                                     
                                     <Skeleton active loading={loading}>
-                                        <div className="sidebar-item mt-4">
+                                        <div className="sidebar-item">
                                             <h4 className="mb-3 d-none d-md-block">Search</h4>
                                             <div class="input-group mb-3">
                                                 <input type="text" class="form-control" placeholder="Enter keyword" value={searchKeyword} onChange={(e) => setSearchKeyword(e.target.value)} />

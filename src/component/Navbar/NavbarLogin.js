@@ -12,7 +12,7 @@ export default function NavbarLogin() {
 
   return (
     <div className="removing-space">
-      <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+      <Navbar collapseOnSelect expand="lg" variant="dark" style={{ backgroundColor: "#1E3A6A" }}>
         <Container>
           <Navbar.Brand href="/">
             <img
@@ -40,9 +40,11 @@ export default function NavbarLogin() {
                   history.go(0)
                 }}
               >
-                Log out
+                <span class="btn rounded-pill me-2" href="# " role="button" style={{ color: '#4FB0B9', border: '3px solid #4FB0B9' }}><span class="mx-2">Log out</span></span>
               </Nav.Link>
-              <Nav.Link href="/UserProfile">Profile</Nav.Link>
+              <Nav.Link href="/UserProfile">
+                <span class="btn rounded-pill me-2" href="# " role="button" style={{ color: 'white', backgroundColor: '#4FB0B9' }}><span class="mx-2">Profile</span></span>
+              </Nav.Link>
             </Nav>
           </Navbar.Collapse>
         </Container>

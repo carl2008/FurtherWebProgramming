@@ -5,7 +5,7 @@ class Home extends Component {
     render() {
         return (
             <div>
-                <div className="container">
+                <div className="container" style={{minHeight: "800px"}}>
                     <CovidAPI />
                 </div>
             </div>

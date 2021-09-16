@@ -2,6 +2,7 @@ import { USER_NAME, USER_INFO } from '../../constants'
 import { useEffect, useState } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './API.css';
+import { Spin } from 'antd';
 
 export default function CovidAPI() {
     const userName = localStorage.getItem(USER_NAME)
@@ -9,6 +10,7 @@ export default function CovidAPI() {
 
     const endPoint = "https://api.covid19api.com/dayone/country/vietnam"
     const [data, setData] = useState([])
+    const [loading, setLoading] = useState(false)
     let yesterdayTotalCase = 0
     let dayBeforeYesterdayTotalCase = 0
     let yesterdayTotalDeath = 0
@@ -18,9 +20,13 @@ export default function CovidAPI() {
     const vnPopulation = 98326682
 
     const load = () => {
+        setLoading(true);
         fetch(endPoint)
             .then(response => response.json())
-            .then(data => setData(data))
+            .then(data => {
+                setData(data)
+                setLoading(false)
+            })
     }
 
     // initial API load
@@ -63,11 +69,11 @@ export default function CovidAPI() {
                 <div className="pb-5">
                     <h1>Welcome, {userName}</h1>
                 </div>}
-
-            <div className="jumbotron stat-panel">
+            <Spin spinning={loading} tip="Loading...">
+            <div className="jumbotron stat-panel pb-5">
                 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></link>
                 <div className="d-flex justify-content-center" style={{ margin: "5px 0px 10px 0px" }}>
-                    <h3 style={{ marginBottom: "20px" }}>Vietnam COVID-19 Statistics <span style={{ fontSize: "16px" }}>*</span></h3>
+                    <h3 style={{ marginBottom: "50px", color: "#1E3A6A"}}>Vietnam COVID-19 Statistics <span style={{ fontSize: "16px" }}>*</span></h3>
                 </div>
                 {data.map((item, index) => {
                     // store each day within 7 days from previous day's total cases
@@ -137,7 +143,7 @@ export default function CovidAPI() {
                         }
                         // if today's cases is not updated then use yesterday's data set
                         return (
-                            <div key="index" className="row">
+                            <div key="index" className="row px-3 pb-3">
                                 <div className="stat">
                                     <div className="stat-icon-bg" style={{ background: "#ECEAF8" }}>
                                         <i className="fa fa-users stat-icon" style={{ margin: "30% 32%", color: "#7367f0" }}></i>
@@ -187,6 +193,7 @@ export default function CovidAPI() {
                 <p className="pull-right" style={{ fontSize: "10px", marginBottom: "0" }}><i>* These statistics are not official and should only be used for reference purposes</i></p><br></br>
                 <p className="pull-right" style={{ fontSize: "10px", marginTop: "0" }}><i>Data fetched from: <a href="https://api.covid19api.com/dayone/country/vietnam" target="_blank" rel="noreferrer">https://api.covid19api.com/dayone/country/vietnam</a></i></p>
             </div>
+            </Spin>
         </>
     )
 }

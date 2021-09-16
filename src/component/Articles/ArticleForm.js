@@ -1,4 +1,4 @@
-import { USER_NAME, USER_ID, USER_ROLE, API_URL } from '../../constants'
+import { USER_INFO, API_URL } from '../../constants'
 import React, { useState, useEffect } from 'react';
 import moment from 'moment';
 import { useHistory } from 'react-router';
@@ -12,8 +12,9 @@ const { TabPane } = Tabs;
 function ArticleForm(props) {
     const history = useHistory();
     // temp user id, will change to logged in user id later
-    const userID = localStorage.getItem(USER_ID).toString()
-    const userName = localStorage.getItem(USER_NAME).toString()
+    // const userID = localStorage.getItem(USER_ID)
+    // const userName = localStorage.getItem(USER_NAME)
+    const userInfo = localStorage.getItem(USER_INFO)
 
     const endPoint = `${API_URL}`
 
@@ -23,6 +24,12 @@ function ArticleForm(props) {
     const [content, setContent] = useState('');
     const [contentText, setContentText] = useState('');
     const [contentError, setContentError] = useState('')
+    const [author, setAuthor] = useState({
+        id : '',
+        name : '',
+        introduction: '',
+        specialties : ''
+    })
 
     const [submitted, setSubmitted] = useState(false)
     const [loading, setLoading] = useState(false)
@@ -46,7 +53,7 @@ function ArticleForm(props) {
     const handlePostArticle = () => {
         if (id === null) {
             setLoading(true)
-            fetch(endPoint + `/users/${userID}/article`, {
+            fetch(endPoint + `/users/${author.id}/article`, {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
@@ -104,11 +111,27 @@ function ArticleForm(props) {
     })
 
     useEffect(() => {
+        if (userInfo) {
+            setAuthor({
+                id: JSON.parse(userInfo)._id,
+                name: `${JSON.parse(userInfo).firstName} ${JSON.parse(userInfo).lastName}`,
+            })
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [userInfo])
+
+    useEffect(() => {
         if (props.location.id) {
             setId(props.location.id)
             setTitle(props.location.title)
             setContent(props.location.content)
             setCategory(props.location.category)
+            setAuthor({
+                id: props.location.authorId,
+                name: props.location.authorName,
+                specialties: props.location.authorSpe,
+                introduction: props.location.authorIntro
+            })
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.location.id])
@@ -136,9 +159,9 @@ function ArticleForm(props) {
                                         <div className="img-wrapper my-4 rounded-circle shadow">
                                             <a href="# "><img src="https://i.ibb.co/hCyPJWx/PriceCo.png" className="" alt="" /></a>
                                         </div>
-                                        <h4 className="author-name">Dr. {userName}</h4>
-                                        <h6 className="author-title">Neurologist</h6>
-                                        <p>Itaque quidem optio quia voluptatibus dolorem dolor. Modi eum sed possimus accusantium. Quas repellat voluptatem officia numquam sint aspernatur voluptas. Esse et accusantium ut unde voluptas.</p>
+                                        <h4 className="author-name">Dr. {author.name}</h4>
+                                        <h6 className="author-title">{author.specialties}</h6>
+                                        <p>{author.introduction}</p>
                                         {/* </Skeleton> */}
                                     </div>
                                 </div>
@@ -150,9 +173,9 @@ function ArticleForm(props) {
                                         {/* <Skeleton active loading={loadingArticle}> */}
                                         <a href="# "><img src="https://i.ibb.co/hCyPJWx/PriceCo.png" className="rounded-circle float-left shadow" alt="" /></a>
                                         <div className="ml-2">
-                                            <h4 className="author-name mb-1">Dr. {userName}</h4>
-                                            <h6 className="author-title mb-1">Neurologist</h6>
-                                            <p>Itaque quidem optio quia voluptatibus dolorem dolor. Modi eum sed possimus accusantium. Quas repellat voluptatem officia numquam sint aspernatur voluptas. Esse et accusantium ut unde voluptas.</p>
+                                            <h4 className="author-name mb-1">Dr. {author.name}</h4>
+                                            <h6 className="author-title mb-1">{author.specialties}</h6>
+                                            <p>{author.introduction}</p>
                                         </div>
                                         {/* </Skeleton> */}
                                     </div>
