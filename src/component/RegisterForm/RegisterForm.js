@@ -1,12 +1,15 @@
-import { USER_INFO } from '../../constants'
+import { USER_INFO, API_URL } from '../../constants'
 import "./RegisterForm.css";
 import React, { useState } from "react";
+import { Redirect } from "react-router-dom";
 import "./Bootstrap.css";
 import axios from "axios";
 import Loading from "./Loading";
 import ErrorMessage from "./ErrorMessage";
+import { useHistory } from "react-router-dom";
 
 export default function RegisterForm() {
+    const history = useHistory();
     //use useState hook for input handlings React form
 
     const [firstName, setFirstName] = useState("");
@@ -22,6 +25,10 @@ export default function RegisterForm() {
     const [picMessage, setPicMessage] = useState(null);
     const [error, setError] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [redirect, setRedirect] = useState(false)
+
+    const userInfo = localStorage.getItem(USER_INFO)
+
 
     const submitHandler = async (e) => {
         e.preventDefault();
@@ -38,26 +45,37 @@ export default function RegisterForm() {
             setLoading(true);
 
             const { data } = await axios.post(
-                "http://localhost:9000/api/users",
+                `${API_URL}/api/users`,
                 { firstName, lastName, emailAddress, username, password },
                 config
             );
-
             setLoading(false);
-            localStorage.setItem(USER_INFO, JSON.stringify(data));
+            setFirstName('')
+            setLastName('')
+            setEmailAddress('')
+            setUsername('')
+            setPassword('')
+            alert('Account registration successful! Please log in with your new account.')
+            setRedirect(true)
         } catch (error) {
             setError(error.response.data.message);
         }
-
-        console.log(username);
     }
 
-    return (
-        <div>
-            {error && <ErrorMessage variant = "danger">{error}</ErrorMessage>}
-            {loading && <Loading/>}
-            <div className='container' id="formBorder">
+    if(redirect){
+        return <Redirect to="/Login"/>
+    }
 
+    if(userInfo){
+        return <Redirect to="/"/>
+    }
+
+
+    return (
+        <div style={{minHeight: "500px"}}>
+            {error && <ErrorMessage variant = "danger">{error}</ErrorMessage>}
+            <div className='container shadow' id="formBorder">
+                {loading && <Loading/>}
                 <form className="row g-5" id="form-styling1" onSubmit={submitHandler}>
                     <div className="col-md-12">
                         <h1 id="form-title">Sign Up</h1>

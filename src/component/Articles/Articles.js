@@ -1,4 +1,4 @@
-import { API_URL } from '../../constants'
+import { API_URL, USER_ROLE } from '../../constants'
 import React, { useState, useEffect } from 'react';
 import moment from 'moment';
 import { Link } from "react-router-dom";
@@ -7,18 +7,25 @@ import { List, Skeleton, ConfigProvider } from 'antd';
 import './Article.css'
 
 function Articles() {
-    const USER_ROLE = 'doctor';
+    // get logged in user role 
+    const userRole = localStorage.getItem(USER_ROLE)
 
+    // article list states
     const [articleList, setArticleList] = useState([])
-    const [loading, setLoading] = useState(false)
-    const endPoint = `${API_URL}/articles`
     const [categoryCount, setCategoryCount] = useState(null)
 
+    // loading state
+    const [loading, setLoading] = useState(false)
+    // API endPoint
+    const endPoint = `${API_URL}/articles`
+
+    // display article shorten content
     const displayText = (text, count) => {
         var stripedHtml = text.replace(/<[^>]+>/g, ' ');
         return stripedHtml.slice(0, count) + (stripedHtml.length > count ? "..." : "");
     }
-    //get data from api
+
+    //get all articles from api
     const load = () => {
         let listData = []
         let covid = 0, healthy = 0, heart = 0, disease = 0, mind = 0, other = 0
@@ -32,6 +39,7 @@ function Articles() {
                 console.log("Loaded")
                 console.log(data)
                 for (let i = 0; i < data.length; i++) {
+                    // count number of articles for each category
                     if (data[i].category === "Covid-19") {
                         covid += 1
                     } else if (data[i].category === "Staying Healthy") {
@@ -43,6 +51,7 @@ function Articles() {
                     } else if (data[i].category === "Mind & Mood") {
                         mind += 1
                     } else { other += 1 }
+                    // push article to list
                     listData.push({
                         id: data[i]._id,
                         category: data[i].category,
@@ -54,6 +63,7 @@ function Articles() {
                         cmtCount: Number(data[i].comments.length),
                     });
                 }
+                // set states
                 setCategoryCount({
                     general: data.length,
                     covid: covid,
@@ -68,25 +78,31 @@ function Articles() {
             });
     }
 
+    // filter/ sort/ search article states
     const [filterKeyword, setFilterKeyword] = useState('')
     const [sortKeyword, setSortKeyword] = useState('')
     const [searchKeyword, setSearchKeyword] = useState('')
 
+    // handle change sort value
     const handleSort = (e) => {
         e.preventDefault()
         setSortKeyword(e.target.value)
     }
 
+    // update the list of articles based on filter, sort, and search values
     const results = (list) => {
         let results = list;
+        // if search
         if (searchKeyword !== "") {
             let temp = results.filter(article => article.title.toLowerCase().includes(searchKeyword.toString().toLowerCase()));
             results = temp;
         }
+        // if filter category
         if (filterKeyword !== "") {
             let temp = results.filter(article => article.category.includes(filterKeyword));
             results = temp;
         }
+        // if sort 
         switch (sortKeyword) {
             case "newdate":
                 results.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
@@ -104,6 +120,7 @@ function Articles() {
                 results.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
                 break;
         }
+        // return final results
         return results
     }
 
@@ -143,13 +160,16 @@ function Articles() {
                         <div className="article-sidebar">
                             <div className="card sidebar-container shadow mb-3">
                                 <div className="card-body">
-                                    {((USER_ROLE === "doctor") || (USER_ROLE === "admin")) &&
-                                        <div className="sidebar-item">
+                                    {/* Showing the create button for only doctor */}
+                                    {(userRole === "doctor") &&
+                                        <div className="sidebar-item mb-4">
                                             <Link to='/Articles/create'><button className="btn btn-custom btn-block" type="button"><i className="fa fa-plus"></i> New Article</button></Link>
                                         </div>
                                     }
+                                    {/* Side bar */}
                                     <Skeleton active loading={loading}>
-                                        <div className="sidebar-item mt-4">
+                                        {/* Search bar */}
+                                        <div className="sidebar-item">
                                             <h4 className="mb-3 d-none d-md-block">Search</h4>
                                             <div class="input-group mb-3">
                                                 <input type="text" class="form-control" placeholder="Enter keyword" value={searchKeyword} onChange={(e) => setSearchKeyword(e.target.value)} />
@@ -158,6 +178,7 @@ function Articles() {
                                                 </div>
                                             </div>
                                         </div>
+                                        {/* Category list */}
                                         {categoryCount &&
                                             <div className="sidebar-item mt-4">
                                                 <h4 className="mb-3">Category</h4>
@@ -210,20 +231,6 @@ function Articles() {
                                             </div>
                                         }
                                     </Skeleton>
-                                    {/* <div className="sidebar-item mt-4 d-none d-md-block">
-                                        <h4 className="mb-3">Tags</h4>
-                                        <div className="tags">
-                                            <ul>
-                                                <li><a href="# ">nutrition</a></li>
-                                                <li><a href="# ">vacination</a></li>
-                                                <li><a href="# ">stressfull</a></li>
-                                                <li><a href="# ">pcr</a></li>
-                                                <li><a href="# ">lockdown</a></li>
-                                                <li><a href="# ">self-quarantine</a></li>
-                                                <li><a href="# ">outbreak</a></li>
-                                            </ul>
-                                        </div>
-                                    </div> */}
                                 </div>
                             </div>
                         </div>
@@ -233,11 +240,13 @@ function Articles() {
                         <div className="article-panel">
                             {/* article card list */}
                             <div className="panel-list">
-                                <ConfigProvider renderEmpty={() => (
-                                    <div style={{ textAlign: 'center' }}>
-                                        <i class="fas fa-box-open" style={{ fontSize: "40px" }}></i>
-                                        <p style={{ fontSize: "20px" }}>There are no posts yet.</p>
-                                    </div>)}>
+                                <ConfigProvider
+                                    // Message when there are no articles 
+                                    renderEmpty={() => (
+                                        <div style={{ textAlign: 'center' }}>
+                                            <i class="fas fa-box-open" style={{ fontSize: "40px" }}></i>
+                                            <p style={{ fontSize: "20px" }}>There are no posts yet.</p>
+                                        </div>)}>
                                     <List
                                         loading={loading}
                                         grid={{
@@ -271,7 +280,6 @@ function Articles() {
                                     />
                                 </ConfigProvider>
                             </div>
-                            <div className="pagination"></div>
                         </div>
                     </div>
                 </div>

@@ -1,14 +1,22 @@
+import { USER_ID, USER_INFO } from '../../constants'
 import { API_URL } from '../../constants'
-import React, { useState} from 'react';
+import { Link } from "react-router-dom"
+import React, { useState, useEffect } from 'react';
 import './Article.css'
 
 function ArticleComment(props) {
-    // temp user id, will change to logged in user id later
-    const USER_ID = "612b8998a60dea66123c3835"
-    const USER_NAME = "Linh Nguyen"
+    // Get logged in user
+    const userID = localStorage.getItem(USER_ID)
+    const userInfo = localStorage.getItem(USER_INFO)
+    const [user, setUser] = useState(null)
+
+    // Cmt state
     const [cmtContent, setCmtContent] = useState('')
+
+    // API endPoint
     const endPoint = `${API_URL}/articles/${props.id}/comments`
 
+    // Add new comment
     const handleLeaveComment = () => {
         fetch(endPoint, {
             method: 'POST',
@@ -17,7 +25,7 @@ function ArticleComment(props) {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                author: USER_ID,
+                author: userID,
                 content: cmtContent,
             })
         }).then(res => {
@@ -26,32 +34,49 @@ function ArticleComment(props) {
         }).catch((err) => console.log(err))
     }
 
+    // handle submit
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(cmtContent)
         handleLeaveComment()
     }
 
+    // load logged in user
+    useEffect(() => {
+        if (userInfo) {
+            setUser(JSON.parse(userInfo))
+        }
+    }, [userInfo])
+
     return (
         <>
-            <div class="reply-form card shadow mb-5">
-                <div className="card-body">
-                    <h4>Leave a Reply</h4>
-                    <form onSubmit={handleSubmit}>
-                        <div class="d-flex my-3">
-                            <div class="comment-img mr-3"><img src="https://i.ibb.co/N6SXWfm/Price-Co-1.png" alt="" /></div>
-                            <textarea name="comment" class="form-control" placeholder="Enter your comment" required
-                                value={cmtContent}
-                                onChange={(e) => setCmtContent(e.target.value)}
-                            ></textarea>
-                        </div>
-                        <div className="d-flex justify-content-between">
-                            <p>Signed in as <b>{USER_NAME}</b></p>
-                            <button type="submit" class="btn btn-custom">Post Comment</button>
-                        </div>
-                    </form>
+            {userInfo ?
+                // Only logged in users can comment
+                <div class="reply-form card shadow mb-5">
+                    <div className="card-body">
+                        <h4>Leave a Reply</h4>
+                        <form onSubmit={handleSubmit}>
+                            <div class="d-flex my-3">
+                                <div class="comment-img mr-3"><img src="https://i.ibb.co/N6SXWfm/Price-Co-1.png" alt="" /></div>
+                                <textarea name="comment" class="form-control" placeholder="Enter your comment" required
+                                    value={cmtContent}
+                                    onChange={(e) => setCmtContent(e.target.value)}
+                                ></textarea>
+                            </div>
+                            <div className="d-flex justify-content-between">
+                                {user && <p>Signed in as <b>{user.firstName} {user.lastName}</b></p>}
+                                <button type="submit" class="btn btn-custom">Post Comment</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-            </div>
+                :
+                <div class="reply-form card shadow mb-5">
+                    <div className="card-body text-center">
+                        <div className="py-4">Please <Link to={`/Login`}>login</Link> to leave a comment.</div>
+                    </div>
+                </div>
+            }
+
         </>
     )
 }

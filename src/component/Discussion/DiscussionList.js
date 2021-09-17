@@ -1,22 +1,20 @@
 import { useState, useEffect } from "react";
+import { API_URL, USER_INFO } from '../../constants';
 import './DiscussionList.css';
 import 'jquery/dist/jquery.min.js';
 import 'bootstrap/dist/js/bootstrap.min.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { List } from 'antd';
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 
 export default function DiscussionList() {
     const [discussions, setDiscussions] = useState([])
-    const [replies, setReplies] = useState({})
-    const [show, setShow] = useState(true)
-    const [pagination, setPagination] = useState(true);
     const [loading, setLoading] = useState(false)
-    const [activeID, setActiveID] = useState('')
     const [showSideBar, setShowSideBar] = useState(false)
-    const [resetRepValue, setResetRepValue] = useState(false)
 
-    const endPoint = 'http://localhost:9000/discussions'
+    const endPoint = `${API_URL}/discussions`
+
+    const userInfo = localStorage.getItem(USER_INFO)
 
     const loadDiscussions = () => {
         setLoading(true)
@@ -25,18 +23,20 @@ export default function DiscussionList() {
             .then(response => response.json())
             .then(data => {
                 for(let i = 0; i< data.length; i++){
-                    let allReplies = data[i].replies
+                    /*let allReplies = data[i].replies
                     let smallNum = 0
                     for(let i = 0; i<allReplies.length;i++){
                         smallNum = Number(smallNum) + Number(allReplies[i].smallreplies.length)
-                    }
+                    }*/
                     tempList.push({
                         id: data[i]._id,
                         title: data[i].title,
                         content: data[i].content,
+                        authorRole: data[i].author.role.charAt(0).toUpperCase()+data[i].author.role.slice(1),
+                        authorpic: data[i].author.pic,
                         author: `${data[i].author.firstName} ${data[i].author.lastName}`,
                         createdAt: data[i].created_at,
-                        totalReplyCount: Number(data[i].replies.length)+smallNum
+                        totalReplyCount: Number(data[i].replies.length)+Number(data[i].smallreplies.length)
                     })
                 }
                 setDiscussions(tempList)
@@ -84,13 +84,13 @@ export default function DiscussionList() {
                         <div className={showSideBar ? "inner-sidebar active" : "inner-sidebar"} id="inner-sidebar">
                             {/*Inner sidebar header*/}
                             <div className="inner-sidebar-header justify-content-center">
-                            <Link to='/Discussion/new'>
-                                <button className="btn btn-primary has-icon btn-block" type="button" id="new-discussion-btn">
+                            <Link to={userInfo?'/Discussion/new':'/Login'}>
+                                <button className="btn btn-primary has-icon btn-block" type="button" id="new-discussion-btn" style={userInfo ? {backgroundColor:"#1F51FF", border:"#1F51FF"}:{backgroundColor:"#89CFF0", border:"#89CFF0"}}>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="feather feather-plus mr-2">
                                         <line x1="12" y1="5" x2="12" y2="19"></line>
                                         <line x1="5" y1="12" x2="19" y2="12"></line>
                                     </svg>
-                                    NEW DISCUSSION
+                                    {userInfo? "NEW DISCUSSION":"LOG IN TO POST"}
                                 </button>
                                 </Link>
                                 <a className="nav-link nav-icon rounded-circle nav-link-faded mr-3 d-md-none" href="#" onClick={() => setShowSideBar(!showSideBar)}><i className="fas fa-bars"></i></a>
@@ -155,13 +155,13 @@ export default function DiscussionList() {
                                             <div className="card mb-2" style={{ display: "block" }}>
                                                 <div className="card-body p-2 p-sm-3">
                                                     <div className="media forum-item">
-                                                        <a href="#"><img src="https://i.stack.imgur.com/l60Hf.png" className="mr-3 rounded-circle" width="50" alt="User" /></a>
+                                                        <a href="#"><img src={discussionPost.authorRole === "Doctor" ? "https://i.imgur.com/irK1Y0P.jpg" : discussionPost.authorpic} className="mr-3 rounded-circle" width="50" alt="User" /></a>
                                                         <div className="media-body">
                                                             <h6><a href={`/Discussion/${discussionPost.id}`} className="text-body">{discussionPost.title}</a></h6>
                                                             <p className="text-secondary">
                                                                 {discussionPost.content}
                                                             </p>
-                                                            <p className="text-muted">Asked by <a href="javascript:void(0)">{discussionPost.author} </a>
+                                                            <p className="text-muted">Asked by <a href="javascript:void(0)">{discussionPost.authorRole === "Doctor"? "Dr. "+discussionPost.author : discussionPost.author} </a>
                                                                 <span className="text-secondary font-weight-bold">
                                                                     - {(new Date(discussionPost.createdAt)).toLocaleDateString('default', { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' })}
                                                                 </span>
@@ -181,41 +181,6 @@ export default function DiscussionList() {
                         </div>
                         {/*Inner main*/}
                     </div>
-
-                    {/*New Thread Modal*/}
-                    {/*<div className="modal fade" id="threadModal" tabindex="-1" role="dialog" aria-labelledby="threadModalLabel" aria-hidden="true">
-                        <div className="modal-dialog modal-lg" role="document">
-                            <div className="modal-content">
-                                <form>
-                                    <div className="modal-header d-flex align-items-center bg-primary text-white">
-                                        <h6 className="modal-title mb-0" id="threadModalLabel" style={{ color: 'white' }}>New Discussion</h6>
-                                        <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">×</span>
-                                        </button>
-                                    </div>
-                                    <div className="modal-body">
-                                        <div className="form-group">
-                                            <label for="threadTitle">Title</label>
-                                            <input type="text" className="form-control" id="threadTitle" placeholder="Enter title" autofocus="" ref={postTitle}/>
-                                        </div>
-                                        <div className="form-group">
-                                            <label for="threadContent">Content</label>
-                                            <textarea className="form-control summernote" style={{ display: 'block' }} id="threadContent" placeholder="Post your content here" ref={postContent}></textarea>
-                                        </div>
-
-                                        <div className="custom-file form-control-sm mt-3" style={{ maxWidth: '300px' }}>
-                                            <input type="file" className="custom-file-input" id="customFile" multiple="" />
-                                            <label className="custom-file-label" for="customFile">Attachment</label>
-                                        </div>
-                                    </div>
-                                    <div className="modal-footer">
-                                        <button type="button" className="btn btn-light" data-dismiss="modal">Cancel</button>
-                                        <button type="button" className="btn btn-primary" onClick={() => postDiscussion()}>Post</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>*/}
                 </div>
             </div>
 

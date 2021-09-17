@@ -1,6 +1,6 @@
-import { USER_INFO, USER_NAME, USER_TOKEN, USER_ROLE } from '../../constants'
+import { USER_INFO, USER_NAME, USER_TOKEN, USER_ROLE, USER_ID, API_URL } from '../../constants'
 import "./RegisterForm.css";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import "./Bootstrap.css";
 import axios from "axios";
 import Loading from "./Loading";
@@ -17,13 +17,7 @@ export default function LogInForm() {
     const [redirect, setRedirect] = useState(false);
     const history = useHistory();
 
-    // const handleLogin = () => {
-    //     const userInfo = localStorage.getItem("userInfo");
-
-    //     if(userInfo){
-    //        history.push("/user");
-    //   }
-    // }
+    const userInfo = localStorage.getItem(USER_INFO)
 
     const submitHandler = async (e) => {
         e.preventDefault();
@@ -38,7 +32,7 @@ export default function LogInForm() {
             setLoading(true);
 
             const { data } = await axios.post(
-                "http://localhost:9000/api/users/login",
+                `${API_URL}/api/users/login`,
                 {
                     username,
                     password,
@@ -50,6 +44,7 @@ export default function LogInForm() {
             localStorage.setItem(USER_NAME, data.username);
             localStorage.setItem(USER_TOKEN, data.token);
             localStorage.setItem(USER_ROLE, data.role);
+            localStorage.setItem(USER_ID, data._id);
             setLoading(false);
             setRedirect(true)
         } catch (error) {
@@ -58,19 +53,15 @@ export default function LogInForm() {
         }
     };
 
-    if (redirect) {
-        console.log("user is directed");
+    if (redirect || userInfo) {
         history.push("/");
-        history.go(0)
-        console.log('directed');
+        history.go(0);
     }
 
     return (
 
-        <div>
-
-
-            <div className='container' id="formBorder">
+        <div style={{minHeight: "500px"}}>
+            <div className='container shadow' id="formBorder">
                 {error && <ErrorMessage variant="danger">{error}</ErrorMessage>}
                 {loading && <Loading />}
                 <form className="row g-3" id="form-styling1" onSubmit={submitHandler}>

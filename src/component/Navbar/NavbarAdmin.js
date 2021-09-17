@@ -1,4 +1,4 @@
-import React, { Component, useState, useEffect } from "react";
+import React, { Component } from "react";
 import "./Navbar.css";
 import logo from "./logo.png";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -6,31 +6,13 @@ import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import { useHistory } from "react-router-dom";
-import { USER_INFO, API_URL } from "../../constants";
 
 export default function NavbarLogin() {
   const history = useHistory();
-  const userInfo = localStorage.getItem(USER_INFO)
-  const endPoint = `${API_URL}`
-  const [user, setUser] = useState({})
-
-  useEffect(() => {
-    if (userInfo) {
-      let json = JSON.parse(userInfo)
-      fetch(`${endPoint}/api/users/getOneUser/${json._id}`)
-        .then((response) => {
-          if (!response.ok) throw new Error(response.status);
-          else return response.json();
-        })
-        .then(data => {
-          setUser(data)
-        })
-    }
-  }, [])
 
   return (
     <div className="removing-space">
-      <Navbar collapseOnSelect expand="lg" variant="dark" style={{ backgroundColor: "#1E3A6A" }}>
+      <Navbar collapseOnSelect expand="lg" style={{ backgroundColor: "#1E3A6A" }} variant="dark">
         <Container>
           <Navbar.Brand href="/">
             <img
@@ -49,6 +31,7 @@ export default function NavbarLogin() {
               <Nav.Link href="/AboutUs">About Us</Nav.Link>
               <Nav.Link href="/Discussion">Discussion</Nav.Link>
               <Nav.Link href="/Articles">Articles</Nav.Link>
+              <Nav.Link href="/AdminPanel">Admin Panel</Nav.Link>
             </Nav>
             <Nav>
               <Nav.Link

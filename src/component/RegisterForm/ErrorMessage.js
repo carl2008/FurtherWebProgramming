@@ -8,8 +8,6 @@ const ErrorMessage = ({ variant = "info" , children}) => {
             <strong>{children}</strong>
         </Alert>
     );
-
-
 };
 
 export default ErrorMessage;

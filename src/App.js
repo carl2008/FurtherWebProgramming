@@ -1,4 +1,4 @@
-import { USER_NAME } from './constants';
+import { USER_ROLE } from './constants';
 import './App.css';
 import 'antd/dist/antd.css';
 import './index.css'
@@ -7,6 +7,7 @@ import React from 'react';
 import RegisterForm from './component/RegisterForm/RegisterForm';
 import NavigationBar from './component/Navbar/NavigationBar';
 import NavbarLogin from './component/Navbar/NavbarLogin';
+import NavbarAdmin from './component/Navbar/NavbarAdmin';
 import AboutUs from './component/AboutUs/AboutUs';
 import Articles from './component/Articles/Articles';
 import ArticlePost from './component/Articles/ArticlePost';
@@ -17,24 +18,24 @@ import Footer from './component/Navbar/Footer';
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import LogInForm from './component/RegisterForm/LogInForm';
 import UpdateForm from './component/RegisterForm/UpdateForm';
-import UpdateFormDoctors from './component/RegisterForm/UpdateFormDoctors';
 import PageNotFound from './component/ErrorHandling/PageNotFound';
 import DiscussionForm from './component/Discussion/DiscussionForm';
 import DiscussionPost from './component/Discussion/DiscussionPost';
 import ChatbotComponent from './component/Discussion/ChatbotComponent';
+import ViewAllUsers from './component/RegisterForm/ViewAllUsers';
 
 function App() {
-  const userName = localStorage.getItem(USER_NAME)
-
+  const userRole = localStorage.getItem(USER_ROLE)
   return (
     <div className="App">
       <Router>
-        {userName ?
-          <NavbarLogin /> :
-          <NavigationBar />
+        {userRole === 'user' || userRole === 'doctor' ?
+          <NavbarLogin />
+          : (userRole === 'admin') ?
+            <NavbarAdmin />
+            :
+            <NavigationBar />
         }
-
-
         <br />
 
         <Switch>
@@ -48,6 +49,8 @@ function App() {
           <Route exact path="/Articles/create" component={ArticleForm} />
           <Route exact path="/Login" component={LogInForm} />
           <Route exact path="/Register" component={RegisterForm} />
+          <Route exact path="/UserProfile" component={UpdateForm} />
+          <Route exact path="/CustomerList" component={ViewAllUsers} />
           <Route component={PageNotFound} />
         </Switch>
 

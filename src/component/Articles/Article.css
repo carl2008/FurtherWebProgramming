@@ -1,8 +1,7 @@
 /* Color code */
 /* 
-#3438A3
-#767BBC
-#697790
+#3B8894
+#708A90
 #556270
 #b7b7b7
 #cbd5e0
@@ -22,8 +21,8 @@
 .ant-pagination .ant-pagination-prev:hover .ant-pagination-item-link,
 .ant-pagination .ant-pagination-next:hover .ant-pagination-item-link,
 .ant-pagination.ant-pagination-simple .ant-pagination-simple-pager input:hover{
-  border-color: #3438A3;
-  color: #3438A3
+  border-color: #16427D;
+  color: #16427D
 }
 
 /*--------------------------------------------------------------
@@ -31,24 +30,24 @@
 --------------------------------------------------------------*/
 
 .btn.btn-outline-custom{
-  color: #3438A3;
+  color: #16427D;
   background-color: #fff;
-  border: 1px solid #3438A3;
+  border: 1px solid #16427D;
 }
 .btn.btn-outline-custom:hover{
-  background-color: #3438A3;
+  background-color: #16427D;
   color: #fff
 }
 
 .btn.btn-custom{
-  background-color: #3438A3;
+  background-color: #16427D;
   color: #fff
 }
 
 .btn.btn-custom:hover{
-  color: #3438A3;
+  color: #16427D;
   background-color: #fff;
-  border: 1px solid #3438A3;
+  border: 1px solid #16427D;
 }
 /*--------------------------------------------------------------
 # article/ Article
@@ -107,13 +106,13 @@
 .article-sidebar .sidebar-item .tags ul a:hover {
   text-decoration: none;
   color: #fff;
-  border: 1px solid #3438A3;
-  background: #3438A3;
+  border: 1px solid #3B8894;
+  background: #3B8894;
 }
 
 /* Single post card on articles page  */
 .single_post .post-category,.post-entry .entry-title a, .text-preview .entry-title a {
-  color: #3438A3;
+  color: #3B8894;
   font-weight: bold;
 }
 .post-entry .entry-title a, .text-preview .entry-title a {
@@ -127,11 +126,11 @@
   text-transform: uppercase;
 }
 .sidebar-item .categories li a.category-active{
-  color: #3438A3;
+  color: #3B8894;
   font-weight: bold;
 }
 .single_post .post-title a:hover, .sidebar-item .categories li a:hover, .post-entry .entry-title a:hover {
-  color: #3438A3;
+  color: #3B8894;
   text-decoration: none;
   font-weight: bold;
   transition: 0.3s;
@@ -193,11 +192,11 @@
 h4.author-name{
   font-weight: 600;
   font-size: 22px;
-  color: #3438A3;
+  color: #3B8894;
 }
 h6.author-title{
   font-weight: 600;
-  color: #697790;
+  color: #708A90;
 }
 .post-author p, .post-author-md p {
   font-style: italic;
@@ -244,7 +243,7 @@ h6.author-title{
 
 .entry-content h1, .entry-content h2, .entry-content h3 {
   font-weight: bold;
-  color:#697790
+  color:#708A90
 }
 
 .entry-content p, .entry-content li{
@@ -394,7 +393,7 @@ h6.author-title{
   color: #96a2af;
 }
 .post-comments .comment .btn-detail:hover{
-  color: #697790;
+  color: #708A90;
 }
 
 /* Edit/ Delete post button */
@@ -404,7 +403,7 @@ h6.author-title{
 }
 .post-entry .btn-detail:hover{
   font-size: 12px;
-  color: #697790;
+  color: #708A90;
 }
 
 .popover-content div{
@@ -417,7 +416,7 @@ h6.author-title{
   text-decoration: none;
 }
 .popover-content a:hover{
-  color: #3438A3;
+  color: #3B8894;
   font-weight: bold;
 }
 
@@ -431,7 +430,7 @@ h6.author-title{
   font-size: 16px;
   margin-bottom: 2px;
   font-weight: bold;
-  color: #697790;
+  color: #708A90;
   transition: 0.3s;
 }
 
@@ -447,7 +446,7 @@ h6.author-title{
 /* Reply form */
 .reply-form h4{
   font-weight: bold;
-  color:#697790
+  color:#708A90
 }
 
 /* Create Form */
@@ -477,7 +476,7 @@ h6.author-title{
 [data-theme='compact'] .card-container .ant-tabs-card .ant-tabs-tab-active {
   background: #fff;
   border-color: #fff;
-  border-top: 3px solid #3438A3;
+  border-top: 3px solid #3B8894;
   font-weight: bold;
 }
 .card-container .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
@@ -503,7 +502,7 @@ h6.author-title{
 
 .card-container .ql-editor h1, .card-container .ql-editor  h2, .card-container .ql-editor  h3 {
   font-weight: bold;
-  color:#697790
+  color:#708A90
 }
 
 .card-container .ql-editor p, .card-container .ql-editor li{
@@ -519,4 +518,3 @@ h6.author-title{
   padding-top: 1em;
   padding-bottom: 1em;
 }
-

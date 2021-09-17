@@ -3,7 +3,7 @@ import ReactQuill from 'react-quill';
 import './Article.css'
 import 'react-quill/dist/quill.snow.css';
 
-
+// Rich text editor
 function TextEditor(props) {
     return (
         <ReactQuill
@@ -16,7 +16,7 @@ function TextEditor(props) {
         />
     );
 }
-
+// customize toolbar
 var toolbar = [
     [{ 'header': [1, 2, 3, false] }],
     ['bold', 'italic', 'underline', 'strike'],
@@ -25,6 +25,7 @@ var toolbar = [
     ['clean']
 ]
 
+// handle update pic by url link
 function imageHandler() {
     const tooltip = this.quill.theme.tooltip;
     const originalSave = tooltip.save;
