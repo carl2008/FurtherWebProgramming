@@ -50,7 +50,7 @@ function App() {
           <Route exact path="/Login" component={LogInForm} />
           <Route exact path="/Register" component={RegisterForm} />
           <Route exact path="/UserProfile" component={UpdateForm} />
-          <Route exact path="/CustomerList" component={ViewAllUsers} />
+          <Route exact path="/AdminPanel" component={ViewAllUsers} />
           <Route component={PageNotFound} />
         </Switch>
 
