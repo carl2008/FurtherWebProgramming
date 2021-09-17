@@ -5,14 +5,18 @@ import React, { useState, useEffect } from 'react';
 import './Article.css'
 
 function ArticleComment(props) {
-    // temp user id, will change to logged in user id later
+    // Get logged in user
     const userID = localStorage.getItem(USER_ID)
     const userInfo = localStorage.getItem(USER_INFO)
-
     const [user, setUser] = useState(null)
+
+    // Cmt state
     const [cmtContent, setCmtContent] = useState('')
+
+    // API endPoint
     const endPoint = `${API_URL}/articles/${props.id}/comments`
 
+    // Add new comment
     const handleLeaveComment = () => {
         fetch(endPoint, {
             method: 'POST',
@@ -30,12 +34,13 @@ function ArticleComment(props) {
         }).catch((err) => console.log(err))
     }
 
+    // handle submit
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(cmtContent)
         handleLeaveComment()
     }
 
+    // load logged in user
     useEffect(() => {
         if (userInfo) {
             setUser(JSON.parse(userInfo))
@@ -45,6 +50,7 @@ function ArticleComment(props) {
     return (
         <>
             {userInfo ?
+                // Only logged in users can comment
                 <div class="reply-form card shadow mb-5">
                     <div className="card-body">
                         <h4>Leave a Reply</h4>

@@ -16,31 +16,36 @@ const { confirm } = Modal;
 
 function ArticlePost(props) {
     const history = useHistory();
-    // temp user id, will change to logged in user id later
+    // get  logged in user
     const userID = localStorage.getItem(USER_ID)
     const userRole = localStorage.getItem(USER_ROLE)
 
+    // articles states
     const [article, setarticle] = useState('')
     const [loadingArticle, setloadingArticle] = useState(false)
-
+    // cmt states
     const [comments, setComments] = useState([])
-
+    // likes states 
     const [likeCount, setLikeCount] = useState(0)
     const [liked, setLiked] = useState(null)
-
+    // error states
     const [error, setError] = useState(null)
     const [errorCmt, setErrorCmt] = useState(null)
+    // proccessing status
     const [proccessing, setProccessing] = useState(false)
     const [redirect, setRedirect] = useState(false)
 
+    // get article url for sharing
     const currentURL = `${window.location.href}`
+    // API endPoint
     const endPoint = `${API_URL}`
 
+    // convert text to html
     function createMarkup(val) {
         return { __html: val };
     }
 
-    //get data from api
+    //get article from api
     const load = () => {
         let id = props.match.params.id
         let article = ''
@@ -71,6 +76,7 @@ function ArticlePost(props) {
                 setError(err.message)
             })
     }
+    // load comments of this article
     const loadCmt = () => {
         let id = props.match.params.id
         let comments = []
@@ -95,7 +101,7 @@ function ArticlePost(props) {
                 setErrorCmt(err.message)
             })
     }
-
+    // load likes of this article
     const loadLike = () => {
         let id = props.match.params.id
         fetch(endPoint + `/articles/${id}/likes`)
@@ -118,12 +124,12 @@ function ArticlePost(props) {
                 console.log(err)
             })
     }
-
+    // handle click "edit"
     const handleEdit = () => {
         setProccessing(true)
         setRedirect(true)
     }
-
+    // handle click "delete"
     const handleDelete = (id) => {
         setProccessing(true)
         fetch(endPoint + `/articles/${id}`, {
@@ -131,11 +137,13 @@ function ArticlePost(props) {
         })
             .then((res) => {
                 setProccessing(false)
+                // go back to articles page
                 history.push(`/Articles`);
             })
             .catch((err) => console.log(err))
 
     }
+    // confirm modal before delete article
     function showConfirm(id) {
         confirm({
             title: 'Are you sure you want to delete this article?',
@@ -145,6 +153,7 @@ function ArticlePost(props) {
             }
         });
     }
+    // handle like this article
     const handleLike = () => {
         let id = props.match.params.id
         setLiked("temp")
@@ -169,6 +178,7 @@ function ArticlePost(props) {
             .catch((err) => console.log(err))
     }
 
+    // handle unlike this article
     const handleUnlike = () => {
         setLiked(null)
         fetch(endPoint + `/likes/${liked}`, {
@@ -180,6 +190,7 @@ function ArticlePost(props) {
             .catch((err) => console.log(err))
     }
 
+    // handle edit comment (only delete the cmt this.user post)
     const handleDeleteCmt = (cmtId) => {
         fetch(endPoint + `/comments/${cmtId}`, {
             method: 'DELETE'
@@ -190,7 +201,7 @@ function ArticlePost(props) {
             .catch((err) => console.log(err))
     }
 
-    // Useffect: Fetch data 
+    // Useffect: Fetch all data 
     useEffect(() => {
         if (props.match.params.id) {
             load()
@@ -200,6 +211,7 @@ function ArticlePost(props) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.match.params.id])
 
+    // redirect to edit page
     if (redirect) {
         return <Redirect
             to={{
@@ -216,12 +228,11 @@ function ArticlePost(props) {
         />;
     }
 
-
-
     return (
         <>
             <div className="article-container" id="article">
                 <div className="container">
+                    {/* Show error if cannot find user with id from params */}
                     {error ? <>
                         <Result
                             status="500"
@@ -276,11 +287,12 @@ function ArticlePost(props) {
                             <div className="col-lg-9 col-12">
                                 <div className="post-entry card shadow mb-5">
                                     <div className="card-body">
+                                        {/* Spin, Skeleton: loading overlay screen */}
                                         <Spin spinning={proccessing} tip="Proccessing...">
                                             <Skeleton active loading={loadingArticle}>
                                                 <div className="d-flex justify-content-between">
                                                     <h5 className="entry-category mb-3">{article.category}</h5>
-                                                    {/* Only show edit button if this post wrtten by this user */}
+                                                    {/* Only show edit button if this post written by this user OR user have admin role */}
                                                     {(String(article.authorId) === String(userID) || userRole === "admin") &&
                                                         <Popover
                                                             placement="leftTop"
@@ -311,11 +323,13 @@ function ArticlePost(props) {
                                                         </Popover>
                                                     }
                                                 </div>
+                                                {/* Article header */}
                                                 <h2 className="entry-title"><a href="# ">{article.title}</a></h2>
                                                 <div className="entry-meta">
                                                     <ul>
                                                         <li className="d-flex align-items-center"><i className="fa fa-clock"></i> <a href="# ">{moment(article.createdAt).format("MMM DD, YYYY")}</a></li>
                                                         <li className="d-flex align-items-center"><i className="fa fa-comment"></i> <a href="# ">{comments.length} {comments.length <= 1 ? `Comment` : `Comments`} </a></li>
+                                                        {/* Showing like/unlike button based on data */}
                                                         {userID && (liked ? <>
                                                             <li className="d-flex align-items-center liked" onClick={handleUnlike}><i className="fa fa-heart"></i> <a href="# ">{likeCount} {(likeCount <= 1) ? `Like` : `Likes`}</a></li>
                                                         </> : <>
@@ -324,11 +338,14 @@ function ArticlePost(props) {
                                                         {!userID && <li className="d-flex align-items-center"><i className="fa fa-heart"></i> <a href="# ">{likeCount} {(likeCount <= 1) ? `Like` : `Likes`}</a></li>}
                                                     </ul>
                                                 </div>
+                                                {/* Article content */}
                                                 <div className="entry-content">
                                                     <div dangerouslySetInnerHTML={createMarkup(article.content)} />
                                                 </div>
+                                                {/* Article footer */}
                                                 <div class="entry-footer">
                                                     <div className="d-flex justify-content-between flex-row w-100">
+                                                        {/* Showing like/unlike button based on data */}
                                                         {userID && (liked ? <>
                                                             <div className="like-btn" onClick={handleUnlike}>
                                                                 <i className="fa fa-heart press"></i>
@@ -348,6 +365,7 @@ function ArticlePost(props) {
                                                                 <small className="pl-2">{likeCount} {(likeCount <= 1) ? `user` : `users`} like this.</small>
                                                             </div>
                                                         }
+                                                        {/* Share panel */}
                                                         <div>
                                                             <small>Share this post: </small>
                                                             <FacebookShareButton
@@ -384,6 +402,7 @@ function ArticlePost(props) {
                                     </div>
                                 </div>
                                 <div class="post-comments">
+                                    {/* Loading cmt overlay screen */}
                                     {loadingArticle && <>
                                         <Skeleton avatar={{ shape: "square" }} active></Skeleton>
                                         <Skeleton avatar={{ shape: "square" }} active></Skeleton>
@@ -392,10 +411,13 @@ function ArticlePost(props) {
                                     {!loadingArticle &&
                                         <>
                                             <h4 class="comments-count font-weight-bold pb-4">{comments.length} Comments</h4>
-                                            <ConfigProvider renderEmpty={() => (
-                                                <div style={{ textAlign: 'center' }}>
-                                                    <p>There are no comments yet.</p>
-                                                </div>)}>
+                                            <ConfigProvider
+                                                // If there are no comments yet
+                                                renderEmpty={() => (
+                                                    <div style={{ textAlign: 'center' }}>
+                                                        <p>There are no comments yet.</p>
+                                                    </div>)}
+                                            >
                                                 <List
                                                     grid={{
                                                         gutter: 16,
@@ -413,6 +435,7 @@ function ArticlePost(props) {
                                                                         <small className="text-muted">{moment(cmt.createdAt).format("MMM DD, YYYY, HH:MM:SS")}</small>
                                                                         <p>{cmt.content}</p>
                                                                     </div>
+                                                                    {/* Only show delete button for the user post cmt OR admin */}
                                                                     {(cmt.authorId === String(userID) || String(userRole) === "admin") &&
                                                                         <div className="d-inline-block">
                                                                             <Popconfirm title="Are you sure you want to delete？" okText="Yes" cancelText="No"
@@ -432,6 +455,7 @@ function ArticlePost(props) {
                                         </>
                                     }
                                 </div>
+                                {/* Leave comment form */}
                                 <ArticleComment id={props.match.params.id} reloadPage={loadCmt} />
                             </div>
                         </div>

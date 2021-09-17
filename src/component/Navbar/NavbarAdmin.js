@@ -31,7 +31,7 @@ export default function NavbarLogin() {
               <Nav.Link href="/AboutUs">About Us</Nav.Link>
               <Nav.Link href="/Discussion">Discussion</Nav.Link>
               <Nav.Link href="/Articles">Articles</Nav.Link>
-              <Nav.Link href="/CustomerList">Admin Panel</Nav.Link>
+              <Nav.Link href="/AdminPanel">Admin Panel</Nav.Link>
             </Nav>
             <Nav>
               <Nav.Link

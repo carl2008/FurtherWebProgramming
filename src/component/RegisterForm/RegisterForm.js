@@ -74,9 +74,8 @@ export default function RegisterForm() {
     return (
         <div style={{minHeight: "500px"}}>
             {error && <ErrorMessage variant = "danger">{error}</ErrorMessage>}
-            {loading && <Loading/>}
             <div className='container shadow' id="formBorder">
-
+                {loading && <Loading/>}
                 <form className="row g-5" id="form-styling1" onSubmit={submitHandler}>
                     <div className="col-md-12">
                         <h1 id="form-title">Sign Up</h1>
